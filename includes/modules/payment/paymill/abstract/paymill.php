@@ -95,8 +95,6 @@ class paymill implements Services_Paymill_LoggingInterface
         } else {
             $amount = round($xtPrice->xtcCalculateCurrEx($total, $order->info['currency']), $xtPrice->get_decimal_places($order->info['currency']));
         }
-        
-        
 
         $paymill = new Services_Paymill_PaymentProcessor();
         $paymill->setAmount((int)(string)($amount * 100));
@@ -121,7 +119,7 @@ class paymill implements Services_Paymill_LoggingInterface
     
     function after_process()
     {
-        global $order, $insert_id;
+        global $insert_id;
 
         if ($this->order_status) {
 		xtc_db_query("UPDATE ".TABLE_ORDERS." SET orders_status='".$this->order_status."' WHERE orders_id='".$insert_id."'");
