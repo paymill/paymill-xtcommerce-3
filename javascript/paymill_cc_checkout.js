@@ -46,6 +46,7 @@ $(document).ready(function () {
     { 
         isCcSubmitted = true;
         if (error) {
+            isCcSubmitted = false;
             paymillCcLog("An API error occured: " + error.apierror);
             return false;
         } else {
