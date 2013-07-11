@@ -17,7 +17,7 @@ class paymill_cc extends paymill
         $this->tmpStatus = MODULE_PAYMENT_PAYMILL_CC_TMP_STATUS_ID;
         $this->order_status = MODULE_PAYMENT_PAYMILL_CC_ORDER_STATUS_ID;
         $this->form_action_url = '';
-        $this->logging = MODULE_PAYMENT_PAYMILL_CC_LOGGING;
+        $this->logging = ((MODULE_PAYMENT_PAYMILL_CC_LOGGING == 'True') ? true : false);
     }
 
     function selection()

@@ -18,7 +18,7 @@ class paymill_elv extends paymill
         $this->tmpStatus = MODULE_PAYMENT_PAYMILL_ELV_TMP_STATUS_ID;
         $this->order_status = MODULE_PAYMENT_PAYMILL_ELV_ORDER_STATUS_ID;
         $this->form_action_url = '';
-        $this->logging = MODULE_PAYMENT_PAYMILL_ELV_LOGGING;
+        $this->logging = ((MODULE_PAYMENT_PAYMILL_ELV_LOGGING == 'True') ? true : false);;
     }
 
     function selection()
