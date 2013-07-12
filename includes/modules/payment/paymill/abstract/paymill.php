@@ -108,7 +108,7 @@ class paymill implements Services_Paymill_LoggingInterface
         $paymill->setToken((string) $_SESSION['paymill_token']);
         $paymill->setLogger($this);
         $paymill->setSource($this->version . '_' . str_replace(' ', '_', PROJECT_VERSION));
-        $paymill->setDifferentAmount((int) (string) ($this->differentAmount * 100));
+        $paymill->setDifferentAmount((int) (string) ($this->getDifferentAmount() * 100));
 
         $result = $paymill->processPayment();
 
@@ -178,7 +178,7 @@ class paymill implements Services_Paymill_LoggingInterface
         }
     }
 
-    private function getDifferentAmount()
+    protected function getDifferentAmount()
     {
         $differenceAmount = $this->differentAmount;
         if(empty($differenceAmount) || !is_numeric($differenceAmount)) {
