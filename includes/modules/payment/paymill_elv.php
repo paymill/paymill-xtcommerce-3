@@ -58,7 +58,7 @@ class paymill_elv extends paymill
               . '<div class="paymill_powered">'
                    . '<div class="paymill_credits">'
                        . MODULE_PAYMENT_PAYMILL_ELV_TEXT_SAVED
-                      . ' <a href="http://www.paymill.de" target="_blank">Paymill</a>'
+                      . ' <a href="http://www.paymill.de" target="_blank">PAYMILL</a>'
                    . '</div>'
                . '</div>'
            . '</div>'
