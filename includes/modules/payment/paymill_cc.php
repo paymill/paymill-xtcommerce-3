@@ -118,7 +118,7 @@ class paymill_cc extends paymill
         
         $formArray[] = array(
             'title' => '',
-            'field' => '<br/><input type="hidden" value="' . ($amount + $this->differentAmount) * 100 . '" id="amount" name="amount"/>'
+            'field' => '<br/><input type="hidden" value="' . ($amount + $this->getDifferentAmount()) * 100 . '" id="amount" name="amount"/>'
         );
 
         $formArray[] = array(
