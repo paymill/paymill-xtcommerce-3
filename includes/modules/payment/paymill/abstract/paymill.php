@@ -2,6 +2,7 @@
 
 require_once(dirname(dirname(__FILE__)) . '/lib/Services/Paymill/PaymentProcessor.php');
 require_once(dirname(dirname(__FILE__)) . '/lib/Services/Paymill/LoggingInterface.php');
+
 /**
  * Paymill payment plugin
  */
@@ -12,6 +13,7 @@ class paymill implements Services_Paymill_LoggingInterface
     var $bridgeUrl = 'https://bridge.paymill.com/';
     var $apiUrl = 'https://api.paymill.com/v2/';
     var $logging;
+    var $differentAmount = 0;
 
     function pre_confirmation_check()
     {
@@ -26,8 +28,7 @@ class paymill implements Services_Paymill_LoggingInterface
             $amount = round($total, $xtPrice->get_decimal_places($order->info['currency']));
         } else {
             $amount = round(
-                $xtPrice->xtcCalculateCurrEx($total, $order->info['currency']),
-                $xtPrice->get_decimal_places($order->info['currency'])
+                    $xtPrice->xtcCalculateCurrEx($total, $order->info['currency']), $xtPrice->get_decimal_places($order->info['currency'])
             );
         }
 
@@ -88,8 +89,8 @@ class paymill implements Services_Paymill_LoggingInterface
             $total = $order->info['total'] + $order->info['tax'];
         } else {
             $total = $order->info['total'];
-        } 
-        
+        }
+
         if ($_SESSION['currency'] == $order->info['currency']) {
             $amount = round($total, $xtPrice->get_decimal_places($order->info['currency']));
         } else {
@@ -97,16 +98,17 @@ class paymill implements Services_Paymill_LoggingInterface
         }
 
         $paymill = new Services_Paymill_PaymentProcessor();
-        $paymill->setAmount((int)(string)($amount * 100));
-        $paymill->setApiUrl((string)$this->apiUrl);
-        $paymill->setCurrency((string)strtoupper($order->info['currency']));
-        $paymill->setDescription((string)STORE_NAME . ' Bestellnummer: ' . $_SESSION['tmp_oID']);
-        $paymill->setEmail((string)$order->customer['email_address']);
-        $paymill->setName((string)$order->customer['lastname'] . ', ' . $order->customer['firstname']);
-        $paymill->setPrivateKey((string)$this->privateKey);
-        $paymill->setToken((string)$_SESSION['paymill_token']);
+        $paymill->setAmount((int) (string) ($amount * 100));
+        $paymill->setApiUrl((string) $this->apiUrl);
+        $paymill->setCurrency((string) strtoupper($order->info['currency']));
+        $paymill->setDescription((string) STORE_NAME . ' Bestellnummer: ' . $_SESSION['tmp_oID']);
+        $paymill->setEmail((string) $order->customer['email_address']);
+        $paymill->setName((string) $order->customer['lastname'] . ', ' . $order->customer['firstname']);
+        $paymill->setPrivateKey((string) $this->privateKey);
+        $paymill->setToken((string) $_SESSION['paymill_token']);
         $paymill->setLogger($this);
-        $paymill->setSource($this->version . '_' . str_replace(' ','_', PROJECT_VERSION));
+        $paymill->setSource($this->version . '_' . str_replace(' ', '_', PROJECT_VERSION));
+        $paymill->setDifferentAmount((int) (string) ($this->differentAmount * 100));
 
         $result = $paymill->processPayment();
 
@@ -116,13 +118,13 @@ class paymill implements Services_Paymill_LoggingInterface
             xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PROCESS, 'SSL', true, false));
         }
     }
-    
+
     function after_process()
     {
         global $insert_id;
 
         if ($this->order_status) {
-		xtc_db_query("UPDATE ".TABLE_ORDERS." SET orders_status='".$this->order_status."' WHERE orders_id='".$insert_id."'");
+            xtc_db_query("UPDATE " . TABLE_ORDERS . " SET orders_status='" . $this->order_status . "' WHERE orders_id='" . $insert_id . "'");
         }
 
         return true;
@@ -163,8 +165,9 @@ class paymill implements Services_Paymill_LoggingInterface
         return $shippingTaxRate;
     }
 
-    public function log($messageInfo, $debugInfo) {
-        if($this->logging) {
+    public function log($messageInfo, $debugInfo)
+    {
+        if ($this->logging) {
             $logfile = dirname(dirname(__FILE__)) . '/log/log.txt';
             if (file_exists($logfile) && is_writable($logfile)) {
                 $handle = fopen($logfile, 'a');
@@ -175,4 +178,14 @@ class paymill implements Services_Paymill_LoggingInterface
         }
     }
 
+    private function getDifferentAmount()
+    {
+        $differenceAmount = $this->differentAmount;
+        if(empty($differenceAmount) || !is_numeric($differenceAmount)) {
+            $differenceAmount = 0;
+        }
+        
+        return $differenceAmount;
+    }
+    
 }

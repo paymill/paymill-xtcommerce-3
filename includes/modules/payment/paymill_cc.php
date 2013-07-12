@@ -18,6 +18,7 @@ class paymill_cc extends paymill
         $this->order_status = MODULE_PAYMENT_PAYMILL_CC_ORDER_STATUS_ID;
         $this->form_action_url = '';
         $this->logging = ((MODULE_PAYMENT_PAYMILL_CC_LOGGING == 'True') ? true : false);
+        $this->differentAmount = MODULE_PAYMENT_PAYMILL_CC_ADD_AMOUNT;
     }
 
     function selection()
@@ -115,14 +116,9 @@ class paymill_cc extends paymill
            . '</div>'
         );
         
-        $difference_amount = MODULE_PAYMENT_PAYMILL_CC_ADD_AMOUNT;
-        if(!is_numeric($difference_amount)) {
-            $difference_amount = 0;
-        }
-        
         $formArray[] = array(
             'title' => '',
-            'field' => '<br/><input type="hidden" value="' . ($amount+$difference_amount) * 100 . '" id="amount" name="amount"/>'
+            'field' => '<br/><input type="hidden" value="' . ($amount + $this->differentAmount) * 100 . '" id="amount" name="amount"/>'
         );
 
         $formArray[] = array(
