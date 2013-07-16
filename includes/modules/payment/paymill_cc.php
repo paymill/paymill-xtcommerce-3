@@ -39,6 +39,8 @@ class paymill_cc extends paymill
 
         $amount = $amount + $this->getShippingTaxAmount($order);
 
+        $_SESSION['paymill_authorized_amount'] = ($amount + $this->getDifferentAmount()) * 100;
+        
         $today = getdate();
         for ($i = $today['year']; $i < $today['year'] + 10; $i++) {//
             $expires_year[] = array(
@@ -118,7 +120,7 @@ class paymill_cc extends paymill
         
         $formArray[] = array(
             'title' => '',
-            'field' => '<br/><input type="hidden" value="' . ($amount + $this->getDifferentAmount()) * 100 . '" id="amount" name="amount"/>'
+            'field' => '<br/><input type="hidden" value="' . $_SESSION['paymill_authorized_amount'] . '" id="amount" name="amount"/>'
         );
 
         $formArray[] = array(

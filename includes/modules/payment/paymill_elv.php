@@ -91,6 +91,13 @@ class paymill_elv extends paymill
 
         return $selection;
     }
+    
+    function pre_confirmation_check()
+    {
+        parent::pre_confirmation_check();
+        
+        unset($_SESSION['paymill_authorized_amount']);
+    }
 
     function check()
     {
