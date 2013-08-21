@@ -23,6 +23,7 @@ define('MODULE_PAYMENT_PAYMILL_CC_TMP_STATUS_ID_DESC', 'Setzt den tempor&auml;re
 define('MODULE_PAYMENT_PAYMILL_CC_TEXT_TITLE','Kreditkartenzahlung');
 define('MODULE_PAYMENT_PAYMILL_CC_TEXT_PUBLIC_TITLE','Kreditkartenzahlung');
 define('MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_NUMBER','Kreditkarten-Nummer');
+define('MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_OWNER','Kreditkarten-Inhaber');
 define('MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_EXPIRY','G&uuml;ltigkeitsdatum');
 define('MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_CVC','CVC-Code');
 define('MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_SAVED','Sichere Kreditkartenzahlung powered by');

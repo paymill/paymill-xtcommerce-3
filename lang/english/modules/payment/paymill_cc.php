@@ -22,6 +22,7 @@ define('MODULE_PAYMENT_PAYMILL_CC_TMP_STATUS_ID_TITLE', 'Temporarily Order Statu
 define('MODULE_PAYMENT_PAYMILL_CC_TMP_STATUS_ID_DESC', 'Sets the temporarily order status for temporarily orders which are not paid.');
 define('MODULE_PAYMENT_PAYMILL_CC_TEXT_TITLE','Creditcard');
 define('MODULE_PAYMENT_PAYMILL_CC_TEXT_PUBLIC_TITLE','Creditcard');
+define('MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_OWNER','Creditcard-Owner');
 define('MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_NUMBER','Creditcard-Number');
 define('MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_EXPIRY','Valid until');
 define('MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_CVC','CVC-Code');

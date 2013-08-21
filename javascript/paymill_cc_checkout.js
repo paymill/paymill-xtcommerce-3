@@ -33,7 +33,8 @@ $(document).ready(function () {
                     exp_year: $("#card-expiry-year option:selected").val(), 
                     cvc: $("#card-cvc").val(),
                     amount_int: $("#amount").val(),
-                    currency: $("#currency").val()
+                    currency: $("#currency").val(),
+					cardholder: $('#card-owner').val()
                 }, PaymillCcResponseHandler);
                 
                 return false; 

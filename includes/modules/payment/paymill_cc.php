@@ -86,7 +86,12 @@ class paymill_cc extends paymill
         $formArray[] = array(
             'field' => $this->accepted
         );
-
+        
+        $formArray[] = array(
+            'title' => MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_OWNER,
+            'field' => '<br/><input type="text" id="card-owner" class="form-row-paymill"/>'
+        );
+        
         $formArray[] = array(
             'title' => MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_NUMBER,
             'field' => '<br/><input type="text" id="card-number" class="form-row-paymill"/>'

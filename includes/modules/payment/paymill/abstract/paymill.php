@@ -120,18 +120,18 @@ class paymill implements Services_Paymill_LoggingInterface
         if (!$result) {
             xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'step=step2&payment_error=' . $this->code . '&error=200', 'SSL', true, false));
         } else {
-            xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PROCESS, 'SSL', true, false));
+            xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL', true, false));
         }
     }
 
     function after_process()
     {
         global $insert_id;
-
+        
         if ($this->order_status) {
             xtc_db_query("UPDATE " . TABLE_ORDERS . " SET orders_status='" . $this->order_status . "' WHERE orders_id='" . $insert_id . "'");
         }
-
+        
         return true;
     }
 
