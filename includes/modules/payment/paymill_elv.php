@@ -23,7 +23,7 @@ class paymill_elv extends paymill
 
     function selection()
     {
-        $resourcesDir = HTTPS_SERVER . DIR_WS_CATALOG . '/includes/modules/payment/paymill/resources/';
+        $resourcesDir = HTTPS_SERVER . DIR_WS_CATALOG . 'includes/modules/payment/paymill/resources/';
 
         $formArray = array();
 
