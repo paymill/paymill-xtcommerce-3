@@ -61,8 +61,8 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
         if (($this->enabled == true) && ((int) $zone_id > 0)) {
             $check_flag = false;
 
-            $check_query = tep_db_query("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . (int) $zone_id . "' and zone_country_id = '" . $order->billing['country']['id'] . "' order by zone_id");
-            while ($check = tep_db_fetch_array($check_query)) {
+            $check_query = xtc_db_query("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . (int) $zone_id . "' and zone_country_id = '" . $order->billing['country']['id'] . "' order by zone_id");
+            while ($check = xtc_db_fetch_array($check_query)) {
                 if ($check['zone_id'] < 1) {
                     $check_flag = true;
                     break;
@@ -142,7 +142,7 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
         $this->paymentProcessor->setPrivateKey((string) $this->privateKey);
         $this->paymentProcessor->setToken((string) $_POST['paymill_token']);
         $this->paymentProcessor->setLogger($this);
-        $this->paymentProcessor->setSource($this->version . '_OSCOM_' . tep_get_version());
+        $this->paymentProcessor->setSource($this->version . '_OSCOM_' . xtc_get_version());
 
         $this->fastCheckout->setFastCheckoutFlag($this->fastCheckoutFlag);
         
@@ -159,7 +159,7 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
         $_SESSION['paymill']['transaction_id'] = $this->paymentProcessor->getTransactionId();
 
         if (!$result) {
-            tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false) . '?step=step2&payment_error=' . $this->code . '&error=200');
+            xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false) . '?step=step2&payment_error=' . $this->code . '&error=200');
         }
         
         if ($this->fastCheckoutFlag) {
@@ -252,38 +252,38 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
             'customer_notified' => '0',
             'comments' => 'Payment approved, Transaction ID: ' . $_SESSION['paymill']['transaction_id']);
 
-        tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+        xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
 
         unset($_SESSION['paymill']);
     }
 
     function remove()
     {
-        tep_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key IN ('" . implode("', '", $this->keys()) . "')");
+        xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key IN ('" . implode("', '", $this->keys()) . "')");
     }
 
     function getOrderStatusTransactionID()
     {
-        $check_query = tep_db_query("select orders_status_id from " . TABLE_ORDERS_STATUS . " where orders_status_name = 'Paymill [Transactions]' limit 1");
+        $check_query = xtc_db_query("select orders_status_id from " . TABLE_ORDERS_STATUS . " where orders_status_name = 'Paymill [Transactions]' limit 1");
 
-        if (tep_db_num_rows($check_query) < 1) {
-            $status_query = tep_db_query("select max(orders_status_id) as status_id from " . TABLE_ORDERS_STATUS);
-            $status = tep_db_fetch_array($status_query);
+        if (xtc_db_num_rows($check_query) < 1) {
+            $status_query = xtc_db_query("select max(orders_status_id) as status_id from " . TABLE_ORDERS_STATUS);
+            $status = xtc_db_fetch_array($status_query);
 
             $status_id = $status['status_id'] + 1;
 
-            $languages = tep_get_languages();
+            $languages = xtc_get_languages();
 
             foreach ($languages as $lang) {
-                tep_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . $status_id . "', '" . $lang['id'] . "', 'Paymill [Transactions]')");
+                xtc_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . $status_id . "', '" . $lang['id'] . "', 'Paymill [Transactions]')");
             }
 
-            $flags_query = tep_db_query("describe " . TABLE_ORDERS_STATUS . " public_flag");
-            if (tep_db_num_rows($flags_query) == 1) {
-                tep_db_query("update " . TABLE_ORDERS_STATUS . " set public_flag = 0 and downloads_flag = 0 where orders_status_id = '" . $status_id . "'");
+            $flags_query = xtc_db_query("describe " . TABLE_ORDERS_STATUS . " public_flag");
+            if (xtc_db_num_rows($flags_query) == 1) {
+                xtc_db_query("update " . TABLE_ORDERS_STATUS . " set public_flag = 0 and downloads_flag = 0 where orders_status_id = '" . $status_id . "'");
             }
         } else {
-            $check = tep_db_fetch_array($check_query);
+            $check = xtc_db_fetch_array($check_query);
 
             $status_id = $check['orders_status_id'];
         }
@@ -316,12 +316,12 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
             $currency_value = $currencies->currencies[$currency_code]['value'];
         }
 
-        return number_format(tep_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '', '');
+        return number_format(xtc_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '', '');
     }
 
     function install()
     {
-        tep_db_query(
+        xtc_db_query(
             "CREATE TABLE IF NOT EXISTS `pi_paymill_fastcheckout` ("
            . "`userID` varchar(100),"
            . "`clientID` varchar(100),"

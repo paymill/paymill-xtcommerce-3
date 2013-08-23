@@ -42,7 +42,7 @@ class FastCheckout
             $sql = "INSERT INTO `pi_paymill_fastcheckout` (`userID`, `clientID`, `paymentID_CC`) VALUES ('$userId', '$newClientId', '$newPaymentId')";
         }
 
-        tep_db_query($sql);
+        xtc_db_query($sql);
     }
     
     public function saveElvIds($userId, $newClientId, $newPaymentId)
@@ -53,7 +53,7 @@ class FastCheckout
             $sql = "INSERT INTO `pi_paymill_fastcheckout` (`userID`, `clientID`, `paymentID_ELV`) VALUES ('$userId', '$newClientId', '$newPaymentId')";
         }
         
-       tep_db_query($sql);
+       xtc_db_query($sql);
     }
     
     private function _canUpdate($userId)
@@ -66,7 +66,7 @@ class FastCheckout
     {
         $sql = "SELECT * FROM `pi_paymill_fastcheckout` WHERE `userID` = '$userId'";
         
-        return tep_db_fetch_array(tep_db_query($sql));
+        return xtc_db_fetch_array(xtc_db_query($sql));
     }
     
     public function hasElvPaymentId($userId)
