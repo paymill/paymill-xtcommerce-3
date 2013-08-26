@@ -80,11 +80,7 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
 
     function pre_confirmation_check()
     {
-        global $oscTemplate;
-
-        $oscTemplate->addBlock('<link rel="stylesheet" type="text/css" href="ext/modules/payment/paymill/public/css/paymill.css" />', 'header_tags');
-        $oscTemplate->addBlock('<script type="text/javascript">var PAYMILL_PUBLIC_KEY = "' . $this->publicKey . '";</script>', 'header_tags');
-        $oscTemplate->addBlock('<script type="text/javascript" src="' . $this->bridgeUrl . '"></script>', 'header_tags');
+        return false;
     }
 
     function get_error()
@@ -115,13 +111,30 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
 
     function selection()
     {
-        return array('id' => $this->code,
-            'module' => $this->public_title);
+        return array(
+            'id'     => $this->code,
+            'module' => $this->public_title
+        );
     }
 
     function confirmation()
     {
-        return false;
+        return array(
+            'fields' => array(
+                array(
+                    'title' => '',
+                    'field' => '<link rel="stylesheet" type="text/css" href="ext/modules/payment/paymill/public/css/paymill.css" />'
+                ),
+                array(
+                    'title' => '',
+                    'field' => '<script type="text/javascript">var PAYMILL_PUBLIC_KEY = "' . $this->publicKey . '";</script>'
+                ),
+                array(
+                    'title' => '',
+                    'field' => '<script type="text/javascript" src="' . $this->bridgeUrl . '"></script>'
+                ),
+            )
+        );
     }
 
     function process_button()
@@ -142,7 +155,7 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
         $this->paymentProcessor->setPrivateKey((string) $this->privateKey);
         $this->paymentProcessor->setToken((string) $_POST['paymill_token']);
         $this->paymentProcessor->setLogger($this);
-        $this->paymentProcessor->setSource($this->version . '_OSCOM_' . xtc_get_version());
+        $this->paymentProcessor->setSource($this->version . '_' . str_replace(' ', '_', PROJECT_VERSION));
 
         $this->fastCheckout->setFastCheckoutFlag($this->fastCheckoutFlag);
         
@@ -159,7 +172,7 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
         $_SESSION['paymill']['transaction_id'] = $this->paymentProcessor->getTransactionId();
 
         if (!$result) {
-            xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false) . '?step=step2&payment_error=' . $this->code . '&error=200');
+            xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'step=step2&payment_error=' . $this->code . '&error=200', 'SSL', true, false));
         }
         
         if ($this->fastCheckoutFlag) {
@@ -304,19 +317,9 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
         }
     }
 
-    function format_raw($number, $currency_code = '', $currency_value = '')
+    function format_raw($number)
     {
-        global $currencies, $currency;
-
-        if (empty($currency_code) || !$currencies->is_set($currency_code)) {
-            $currency_code = $currency;
-        }
-
-        if (empty($currency_value) || !is_numeric($currency_value)) {
-            $currency_value = $currencies->currencies[$currency_code]['value'];
-        }
-
-        return number_format(xtc_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '', '');
+        return number_format(round($number, 2), 2, '', '');
     }
 
     function install()
