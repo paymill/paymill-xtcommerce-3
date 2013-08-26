@@ -149,9 +149,9 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
         $this->paymentProcessor->setAmount((int) $this->format_raw($order->info['total']));
         $this->paymentProcessor->setApiUrl((string) $this->apiUrl);
         $this->paymentProcessor->setCurrency((string) strtoupper($order->info['currency']));
-        $this->paymentProcessor->setDescription((string) STORE_NAME);
+        $this->paymentProcessor->setDescription(utf8_encode((string) STORE_NAME . ' ' . $order->customer['lastname'] . ', ' . $order->customer['firstname']));
         $this->paymentProcessor->setEmail((string) $order->customer['email_address']);
-        $this->paymentProcessor->setName((string) $order->customer['lastname'] . ', ' . $order->customer['firstname']);
+        $this->paymentProcessor->setName($order->customer['lastname'] . ', ' . $order->customer['firstname']);
         $this->paymentProcessor->setPrivateKey((string) $this->privateKey);
         $this->paymentProcessor->setToken((string) $_POST['paymill_token']);
         $this->paymentProcessor->setLogger($this);

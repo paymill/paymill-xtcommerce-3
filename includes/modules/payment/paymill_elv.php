@@ -96,7 +96,7 @@ class paymill_elv extends paymill_abstract
                 . 'var elv_bank_owner_invalid = "' . utf8_decode(MODULE_PAYMENT_PAYMILL_ELV_TEXT_ACCOUNT_HOLDER_INVALID) . '";'
                 . 'var paymill_account_name = ' . json_encode($order->billing['firstname'] . ' ' . $order->billing['lastname']) . ';'
                 . 'var paymill_elv_code = "' . $payment['code'] . '";'
-                . 'var paymill_elv_holder = "' . $payment['holder'] . '";'
+                . 'var paymill_elv_holder = "' . utf8_decode($payment['holder']) . '";'
                 . 'var paymill_elv_account = "' . $payment['account'] . '";'
                 . 'var paymill_elv_fastcheckout = ' . $this->fastCheckout->canCustomerFastCheckoutElvTemplate($_SESSION['customer_id']) . ';'
                 . '</script>'
