@@ -82,21 +82,21 @@ class paymill_elv extends paymill_abstract
         
         array_push($confirmation['fields'], 
             array(
-                'title' => MODULE_PAYMENT_PAYMILL_ELV_TEXT_ACCOUNT_HOLDER,
+                'title' => '<div class="paymill-label-field">' . MODULE_PAYMENT_PAYMILL_ELV_TEXT_ACCOUNT_HOLDER . '</div>',
                 'field' => '<span id="account-name-field"></span>'
             )
         );
         
         array_push($confirmation['fields'], 
             array(
-                'title' => MODULE_PAYMENT_PAYMILL_ELV_TEXT_ACCOUNT,
+                'title' => '<div class="paymill-label-field">' . MODULE_PAYMENT_PAYMILL_ELV_TEXT_ACCOUNT . '</div>',
                 'field' => '<span id="account-number-field"></span>'
             )
         );
         
         array_push($confirmation['fields'], 
             array(
-                'title' => MODULE_PAYMENT_PAYMILL_ELV_TEXT_BANKCODE,
+                'title' => '<div class="paymill-label-field">' . MODULE_PAYMENT_PAYMILL_ELV_TEXT_BANKCODE . '</div>',
                 'field' => '<span id="bank-code-field"></span>'
             )
         );       
