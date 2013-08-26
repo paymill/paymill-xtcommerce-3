@@ -5,6 +5,8 @@ define('MODULE_PAYMENT_PAYMILL_CC_STATUS_TITLE', 'Kreditkartenmodul aktivieren')
 define('MODULE_PAYMENT_PAYMILL_CC_STATUS_DESC', '');
 define('MODULE_PAYMENT_PAYMILL_CC_FASTCHECKOUT_TITLE', 'Fast Checkout');
 define('MODULE_PAYMENT_PAYMILL_CC_FASTCHECKOUT_DESC', '');
+define('MODULE_PAYMENT_PAYMILL_CC_LABEL_TITLE', 'Zeige Paymill Label');
+define('MODULE_PAYMENT_PAYMILL_CC_LABEL_DESC', '');
 define('MODULE_PAYMENT_PAYMILL_CC_SORT_ORDER_TITLE', 'Anzeigereihenfolge');
 define('MODULE_PAYMENT_PAYMILL_CC_SORT_ORDER_DESC', 'Reihenfolge der Anzeige. Kleinste Ziffer wird zuerst angezeigt.');
 define('MODULE_PAYMENT_PAYMILL_CC_PRIVATEKEY_TITLE', 'Geheimer API Key');

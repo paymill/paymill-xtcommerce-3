@@ -20,6 +20,7 @@ class paymill_cc extends paymill_abstract
             $this->sort_order = MODULE_PAYMENT_PAYMILL_CC_SORT_ORDER;
             $this->privateKey = trim(MODULE_PAYMENT_PAYMILL_CC_PRIVATEKEY);
             $this->logging = ((MODULE_PAYMENT_PAYMILL_CC_LOGGING == 'True') ? true : false);
+            $this->label = ((MODULE_PAYMENT_PAYMILL_CC_LABEL == 'True') ? true : false);
             $this->publicKey = MODULE_PAYMENT_PAYMILL_CC_PUBLICKEY;
             $this->fastCheckoutFlag = ((MODULE_PAYMENT_PAYMILL_CC_FASTCHECKOUT == 'True') ? true : false);
             $this->payments = new Services_Paymill_Payments(trim($this->privateKey), $this->apiUrl);
@@ -31,7 +32,37 @@ class paymill_cc extends paymill_abstract
 
         if (is_object($order)) $this->update_status();
     }
+    
+    function selection()
+    {
+        $selection = parent::selection();
         
+        
+        if ($this->label) {
+            $label = '<div class="form-row">'
+                      . '<div class="paymill_powered">'
+                           . '<div class="paymill_credits">'
+                               . MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_SAVED
+                              . ' <a href="http://www.paymill.de" target="_blank">PAYMILL</a>'
+                           . '</div>'
+                       . '</div>'
+                   . '</div>';
+
+            $formArray = array();
+            $formArray[] = array(
+                'field' => '<link rel="stylesheet" type="text/css" href="ext/modules/payment/paymill/public/css/paymill.css" />'
+            );
+
+            $formArray[] = array(
+                'field' => $label
+            );
+
+            $selection['fields'] = $formArray;
+        }
+        
+        return $selection;
+    }
+    
     function getPayment($userId)
     {
         $payment = array(
@@ -100,7 +131,6 @@ class paymill_cc extends paymill_abstract
         
         array_push($confirmation['fields'], 
             array(
-                'title' => '',
                 'field' => $script
             )
         );
@@ -135,11 +165,10 @@ class paymill_cc extends paymill_abstract
         
         array_push($confirmation['fields'], 
             array(
-                'title' => '',
                 'field' => '<form id="paymill_form" action="' . xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL') . '" method="post" style="display: none;"></form>'
             )
         );
-
+        
         return $confirmation;
     }
 
@@ -158,6 +187,7 @@ class paymill_cc extends paymill_abstract
         
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PAYMENT_PAYMILL_CC_STATUS', 'True', '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PAYMENT_PAYMILL_CC_FASTCHECKOUT', 'False', '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PAYMENT_PAYMILL_CC_LABEL', 'False', '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_PAYMENT_PAYMILL_CC_SORT_ORDER', '0', '6', '0', now())");
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_PAYMENT_PAYMILL_CC_PRIVATEKEY', '0', '6', '0', now())");
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_PAYMENT_PAYMILL_CC_PUBLICKEY', '0', '6', '0', now())");
@@ -172,6 +202,7 @@ class paymill_cc extends paymill_abstract
         return array(
             'MODULE_PAYMENT_PAYMILL_CC_STATUS',
             'MODULE_PAYMENT_PAYMILL_CC_FASTCHECKOUT',
+            'MODULE_PAYMENT_PAYMILL_CC_LABEL',
             'MODULE_PAYMENT_PAYMILL_CC_PRIVATEKEY',
             'MODULE_PAYMENT_PAYMILL_CC_PUBLICKEY',
             'MODULE_PAYMENT_PAYMILL_CC_ORDER_STATUS_ID',

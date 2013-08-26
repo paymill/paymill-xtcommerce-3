@@ -12,7 +12,7 @@ require_once(DIR_FS_CATALOG . 'ext/modules/payment/paymill/FastCheckout.php');
 class paymill_abstract implements Services_Paymill_LoggingInterface
 {
 
-    var $code, $title, $description = '', $enabled, $privateKey, $logging, $fastCheckoutFlag;
+    var $code, $title, $description = '', $enabled, $privateKey, $logging, $fastCheckoutFlag, $label;
     var $bridgeUrl = 'https://bridge.paymill.com/';
     var $apiUrl = 'https://api.paymill.com/v2/';
     
@@ -113,7 +113,7 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
     {
         return array(
             'id'     => $this->code,
-            'module' => $this->public_title
+            'module' => $this->public_title      
         );
     }
 
