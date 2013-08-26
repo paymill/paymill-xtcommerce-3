@@ -83,7 +83,6 @@ $(document).ready(function () {
 	}
 
     $('#checkout_confirmation').submit(function () {
-		alert($("#paymill-card-number").val());
 		if (!isCcSubmitted) {
 			if (!paymill_cc_fastcheckout) {
 				if (!paymill.validateExpiry($("#paymill-card-expiry-month option:selected").val(), $("#paymill-card-expiry-year option:selected").val())) {

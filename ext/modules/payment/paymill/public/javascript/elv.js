@@ -14,7 +14,7 @@ $(document).ready(function () {
     $('#account-number-field').html('<input type="text" value="' + paymill_elv_account + '" id="paymill-account-number" class="form-row-paymill" />');
     $('#bank-code-field').html('<input type="text" value="' + paymill_elv_code + '" id="paymill-bank-code" class="form-row-paymill" />');
 
-    $('form[name="checkout_confirmation"]').submit(function () {
+    $('#checkout_confirmation').submit(function () {
 		if (!isElvSubmitted) {
 			if (!paymill_elv_fastcheckout) {
 				if (false === paymill.validateAccountNumber($('#paymill-account-number').val())) {

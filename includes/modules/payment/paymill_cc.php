@@ -95,7 +95,8 @@ class paymill_cc extends paymill_abstract
                     . 'var paymill_cc_expiry_month_val = "' . $payment['expire_month'] . '";'
                     . 'var paymill_cc_expiry_year_val = "' . $payment['expire_year'] . '";'
                     . 'var paymill_cc_fastcheckout = ' . $this->fastCheckout->canCustomerFastCheckoutCcTemplate($_SESSION['customer_id']) . ';'
-                . '</script>';
+                . '</script>'
+                . '<script type="text/javascript" src="ext/modules/payment/paymill/public/javascript/cc.js"></script>';
         
         array_push($confirmation['fields'], 
             array(
@@ -136,13 +137,6 @@ class paymill_cc extends paymill_abstract
             array(
                 'title' => '',
                 'field' => '<form id="paymill_form" action="' . xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL') . '" method="post" style="display: none;"></form>'
-            )
-        );
-        
-        array_push($confirmation['fields'], 
-            array(
-                'title' => '',
-                'field' => '<script type="text/javascript" src="ext/modules/payment/paymill/public/javascript/cc.js"></script>'
             )
         );
 
