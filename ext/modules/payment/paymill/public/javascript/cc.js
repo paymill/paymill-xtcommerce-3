@@ -82,7 +82,8 @@ $(document).ready(function() {
 		$('.card-icon :first-child').css('position', 'absolute');
 	}
 
-	$('#checkout_confirmation').submit(function() {
+	$('#checkout_confirmation').submit(function(event) {
+		event.preventDefault();
 		if (!isCcSubmitted) {
 			if (!paymill_cc_fastcheckout) {
 				
@@ -171,7 +172,6 @@ $(document).ready(function() {
 		isCcSubmitted = true;
 		if (error) {
 			isCcSubmitted = false;
-			console.log("An API error occured: " + error.apierror);
 			window.location = checkout_payment_link;
 		} else {
 			$('#paymill_form').html('<input type="hidden" name="paymill_token" value="' + result.token + '" />');

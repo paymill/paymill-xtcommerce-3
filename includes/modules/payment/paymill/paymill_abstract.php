@@ -12,7 +12,7 @@ require_once(DIR_FS_CATALOG . 'ext/modules/payment/paymill/FastCheckout.php');
 class paymill_abstract implements Services_Paymill_LoggingInterface
 {
 
-    var $code, $title, $description = '', $enabled, $privateKey, $logging, $fastCheckoutFlag, $label;
+    var $code, $title, $description = '', $enabled, $privateKey, $logging, $fastCheckoutFlag, $label, $order_status;
     var $bridgeUrl = 'https://bridge.paymill.com/';
     var $apiUrl = 'https://api.paymill.com/v2/';
     
@@ -270,6 +270,10 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
 
         xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
 
+        if ($this->order_status) {
+            xtc_db_query("UPDATE " . TABLE_ORDERS . " SET orders_status='" . $this->order_status . "' WHERE orders_id='" . $insert_id . "'");
+        }
+        
         unset($_SESSION['paymill']);
     }
 

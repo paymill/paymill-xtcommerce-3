@@ -14,7 +14,8 @@ $(document).ready(function () {
     $('#account-number-field').html('<input type="text" value="' + paymill_elv_account + '" id="paymill-account-number" class="form-row-paymill" />');
     $('#bank-code-field').html('<input type="text" value="' + paymill_elv_code + '" id="paymill-bank-code" class="form-row-paymill" />');
 
-    $('#checkout_confirmation').submit(function () {
+    $('#checkout_confirmation').submit(function (event) {
+		event.preventDefault();
 		if (!isElvSubmitted) {
 			if (!paymill_elv_fastcheckout) {
 				
@@ -84,10 +85,8 @@ $(document).ready(function () {
 		isElvSubmitted = true;
         if (error) {
 			isElvSubmitted = false;
-            console.log("An API error occured: " + error.apierror);
             window.location = checkout_payment_link;
         } else {
-            console.log(result.token);
             $('#paymill_form').html('<input type="hidden" name="paymill_token" value="' + result.token + '" />').submit();
             return false;
         }
