@@ -154,7 +154,7 @@ class paymill_cc extends paymill_abstract
         array_push($confirmation['fields'], 
             array(
                 'title' => '<div class="paymill-label-field">' . MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_NUMBER . '</div>',
-                'field' => '<div><span id="card-number-field"></span><span class="card-icon"></span><span id="card-number-error" class="paymill-error"></span></div>'
+                'field' => '<span id="card-number-field"></span><span id="card-number-error" class="paymill-error"></span>'
             )
         );
         

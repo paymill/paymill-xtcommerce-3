@@ -32,54 +32,41 @@ $(document).ready(function() {
 
 	$('#paymill-card-expiry-month').val(paymill_cc_expiry_month_val);
 	$('#paymill-card-expiry-year').val(paymill_cc_expiry_year_val);
-
+	
+	var cssClass = "paymill-card-number-";
+	
 	$('#paymill-card-number').keyup(function() {
+		
 		switch (paymill.cardType($('#paymill-card-number').val()).toLowerCase()) {
 			case 'visa':
-				$('.card-icon').html('<img src="ext/modules/payment/paymill/public/images/32x20_visa.png" >');
-				$('.card-icon').show();
+				$('#paymill-card-number').addClass(cssClass + 'visa');
 				break;
 			case 'mastercard':
-				$('.card-icon').html('<img src="ext/modules/payment/paymill/public/images/32x20_mastercard.png" >');
-				$('.card-icon').show();
+				$('#paymill-card-number').addClass(cssClass + 'mastercard');
 				break;
 			case 'american express':
-				$('.card-icon').html('<img src="ext/modules/payment/paymill/public/images/32x20_amex.png" >');
-				$('.card-icon').show();
+				$('#paymill-card-number').addClass(cssClass + 'amex');
 				break;
 			case 'jcb':
-				$('.card-icon').html('<img src="ext/modules/payment/paymill/public/images/32x20_jcb.png" >');
-				$('.card-icon').show();
+				$('#paymill-card-number').addClass(cssClass + 'jcb');
 				break;
 			case 'maestro':
-				$('.card-icon').html('<img src="ext/modules/payment/paymill/public/images/32x20_maestro.png" >');
-				$('.card-icon').show();
+				$('#paymill-card-number').addClass(cssClass + 'maestro');
 				break;
 			case 'diners club':
-				$('.card-icon').html('<img src="ext/modules/payment/paymill/public/images/32x20_dinersclub.png" >');
-				$('.card-icon').show();
+				$('#paymill-card-number').addClass(cssClass + 'diners');
 				break;
 			case 'discover':
-				$('.card-icon').html('<img src="ext/modules/payment/paymill/public/images/32x20_discover.png" >');
-				$('.card-icon').show();
+				$('#paymill-card-number').addClass(cssClass + 'discover');
 				break;
 			case 'unionpay':
-				$('.card-icon').html('<img src="ext/modules/payment/paymill/public/images/32x20_unionpay.png" >');
-				$('.card-icon').show();
-				break;
-			case 'unknown':
-			default:
-				$('.card-icon').hide();
+				$('#paymill-card-number').addClass(cssClass + 'carte-bleue');
 				break;
 		}
-
-		$('.card-icon :first-child').css('position', 'absolute');
 	});
 
 	if (brand !== '') {
-		$('.card-icon').html('<img src="ext/modules/payment/paymill/public/images/32x20_' + brand + '.png" >');
-		$('.card-icon').show();
-		$('.card-icon :first-child').css('position', 'absolute');
+		$('#paymill-card-number').addClass(cssClass + brand);
 	}
 
 	$('#checkout_confirmation').submit(function(event) {
