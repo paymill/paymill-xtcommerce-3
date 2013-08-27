@@ -90,12 +90,20 @@ class paymill_cc extends paymill_abstract
         global $order;
         
         $confirmation = parent::confirmation();        
-
+        
         $months_array = array();
-
-        for ($i=1; $i<13; $i++) {
-            $months_array[$i] = array(sprintf('%02d', $i), strftime('%B',mktime(0,0,0,$i,1,2000)));
-        }
+        $months_array[1] = array('01', MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_JANUARY);
+        $months_array[2] = array('02', MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_FEBRUARY);
+        $months_array[3] = array('03', MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_MARCH);
+        $months_array[4] = array('04', MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_APRIL);
+        $months_array[5] = array('05', MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_MAY);
+        $months_array[6] = array('06', MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_JUNE);
+        $months_array[7] = array('07', MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_JULY);
+        $months_array[8] = array('08', MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_AUGUST);
+        $months_array[9] = array('09', MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_SEPTEMBER);
+        $months_array[10] = array('10', MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_OCTOBER);
+        $months_array[11] = array('11', MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_NOVEMBER);
+        $months_array[12] = array('12', MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_DECEMBER);
 
         $today = getdate(); 
         $years_array = array();
