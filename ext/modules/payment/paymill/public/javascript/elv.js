@@ -17,19 +17,31 @@ $(document).ready(function () {
     $('#checkout_confirmation').submit(function () {
 		if (!isElvSubmitted) {
 			if (!paymill_elv_fastcheckout) {
+				
+				hideErrorBoxes();
+				
+				var elvErrorFlag = true;
+				
 				if (false === paymill.validateAccountNumber($('#paymill-account-number').val())) {
-					alert(elv_account_number_invalid);
-					return false;
+					$("#elv-account-error").text(elv_account_number_invalid);
+					$("#elv-account-error").css('display', 'block');
+					elvErrorFlag = false;
 				}
 
 				if (false === paymill.validateBankCode($('#paymill-bank-code').val())) {
-					alert(elv_bank_code_invalid);
-					return false;
+					$("#elv-bankcode-error").text(elv_bank_code_invalid);
+					$("#elv-bankcode-error").css('display', 'block');
+					elvErrorFlag = false;
 				}
 
 				if ($('#paymill-bank-owner').val() === "") {
-					alert(elv_bank_owner_invalid);
-					return false; 
+					$("#elv-holder-error").text(elv_bank_owner_invalid);
+					$("#elv-holder-error").css('display', 'block');
+					elvErrorFlag = false; 
+				}
+				
+				if (!elvErrorFlag) {
+					return elvErrorFlag;
 				}
 
 				paymill.createToken({
@@ -60,15 +72,20 @@ $(document).ready(function () {
         paymill_elv_fastcheckout = false;
     });
 	
+	function hideErrorBoxes()
+	{
+		$("#elv-bankcode-error").css('display', 'none');
+		$("#elv-account-error").css('display', 'none');
+		$("#card-holder-error").css('display', 'none');
+	}
 
     function PaymillElvResponseHandler(error, result) 
     { 
 		isElvSubmitted = true;
         if (error) {
 			isElvSubmitted = false;
-			alert("An API error occured!");
             console.log("An API error occured: " + error.apierror);
-            return false;
+            window.location = checkout_payment_link;
         } else {
             console.log(result.token);
             $('#paymill_form').html('<input type="hidden" name="paymill_token" value="' + result.token + '" />').submit();

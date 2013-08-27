@@ -54,17 +54,18 @@
     width: 90px;
 }
 
-.payment-error
+.paymill-error
 {
-    padding:2px 4px;
-    margin:0px;
-    border:solid 1px #FBD3C6;
-    background:#FDE4E1;
-    color:#CB4721;
-    font-family:Arial, Helvetica, sans-serif;
-    font-size:14px;
-    font-weight:bold;
-    text-align:center;
+    padding-top: 5px;
+    padding: 2px 4px;
+    margin: 0px;
+    border: solid 1px #FBD3C6;
+    background: #FDE4E1;
+    color: #CB4721;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    font-weight: bold;
+    text-align: center;
     display: none;
 }
 

@@ -99,6 +99,7 @@ class paymill_elv extends paymill_abstract
                 . 'var paymill_elv_holder = "' . utf8_decode($payment['holder']) . '";'
                 . 'var paymill_elv_account = "' . $payment['account'] . '";'
                 . 'var paymill_elv_fastcheckout = ' . $this->fastCheckout->canCustomerFastCheckoutElvTemplate($_SESSION['customer_id']) . ';'
+                . 'var checkout_payment_link = "' . xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'step=step2&payment_error=' . $this->code . '&error=300', 'SSL', true, false) . '";'
                 . '</script>'
                 . '<script type="text/javascript" src="ext/modules/payment/paymill/public/javascript/elv.js"></script>';
         
@@ -111,21 +112,21 @@ class paymill_elv extends paymill_abstract
         array_push($confirmation['fields'], 
             array(
                 'title' => '<div class="paymill-label-field">' . MODULE_PAYMENT_PAYMILL_ELV_TEXT_ACCOUNT_HOLDER . '</div>',
-                'field' => '<span id="account-name-field"></span>'
+                'field' => '<span id="account-name-field"></span><span id="elv-holder-error" class="paymill-error"></span>'
             )
         );
         
         array_push($confirmation['fields'], 
             array(
                 'title' => '<div class="paymill-label-field">' . MODULE_PAYMENT_PAYMILL_ELV_TEXT_ACCOUNT . '</div>',
-                'field' => '<span id="account-number-field"></span>'
+                'field' => '<span id="account-number-field"></span><span id="elv-account-error" class="paymill-error"></span>'
             )
         );
         
         array_push($confirmation['fields'], 
             array(
                 'title' => '<div class="paymill-label-field">' . MODULE_PAYMENT_PAYMILL_ELV_TEXT_BANKCODE . '</div>',
-                'field' => '<span id="bank-code-field"></span>'
+                'field' => '<span id="bank-code-field"></span><span id="elv-bankcode-error" class="paymill-error"></span>'
             )
         );       
         

@@ -17,6 +17,7 @@ define('MODULE_PAYMENT_PAYMILL_CC_TRANSACTION_ORDER_STATUS_ID_TITLE', 'Transacti
 define('MODULE_PAYMENT_PAYMILL_CC_TRANSACTION_ORDER_STATUS_ID_DESC', '');
 define('MODULE_PAYMENT_PAYMILL_TEXT_ERROR_100', 'Payment could not be processed. The payment status is "open"');
 define('MODULE_PAYMENT_PAYMILL_TEXT_ERROR_200', 'Payment could not be processed.');
+define('MODULE_PAYMENT_PAYMILL_TEXT_ERROR_300', 'An API error occured!');
 define('MODULE_PAYMENT_PAYMILL_CC_LOGGING_TITLE', 'Activate Logging');
 define('MODULE_PAYMENT_PAYMILL_CC_LOGGING_DESC', '');
 define('MODULE_PAYMENT_PAYMILL_CC_ORDER_STATUS_ID_TITLE', 'Order Status');

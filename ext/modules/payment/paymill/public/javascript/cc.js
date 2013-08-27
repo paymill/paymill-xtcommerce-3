@@ -85,24 +85,37 @@ $(document).ready(function() {
 	$('#checkout_confirmation').submit(function() {
 		if (!isCcSubmitted) {
 			if (!paymill_cc_fastcheckout) {
+				
+				hideErrorBoxes();
+				
+				var ccErrorFlag = true;
+				
 				if (!paymill.validateExpiry($("#paymill-card-expiry-month option:selected").val(), $("#paymill-card-expiry-year option:selected").val())) {
-					alert(cc_expiery_invalid);
-					return false;
+					$("#card-expiry-error").text(cc_expiery_invalid);
+					$("#card-expiry-error").css('display', 'block');
+					ccErrorFlag = false;
 				}
 
 				if (!paymill.validateCardNumber($("#paymill-card-number").val())) {
-					alert(cc_card_number_invalid);
-					return false;
+					$("#card-number-error").text(cc_card_number_invalid);
+					$("#card-number-error").css('display', 'block');
+					ccErrorFlag = false;
 				}
 
 				if ($("#paymill-card-owner").val() === '') {
-					alert(cc_owner_invalid);
-					return false;
+					$("#card-owner-error").text(cc_owner_invalid);
+					$("#card-owner-error").css('display', 'block');
+					ccErrorFlag = false;
 				}
 
 				if (!paymill.validateCvc($("#paymill-card-cvc").val())) {
-					alert(cc_cvc_number_invalid);
-					return false;
+					$("#card-cvc-error").text(cc_cvc_number_invalid);
+					$("#card-cvc-error").css('display', 'block');
+					ccErrorFlag = false;
+				}
+				
+				if (!ccErrorFlag) {
+					return ccErrorFlag;
 				}
 
 				paymill.createToken({
@@ -144,15 +157,22 @@ $(document).ready(function() {
 		paymill_cc_fastcheckout = false;
 		$('#paymill-card-owner').val('');
 	});
-
+	
+	function hideErrorBoxes()
+	{
+		$("#card-cvc-error").css('display', 'none');
+		$("#card-owner-error").css('display', 'none');
+		$("#card-number-error").css('display', 'none');
+		$("#card-expiry-error").css('display', 'none');
+	}
+	
 	function PaymillCcResponseHandler(error, result)
 	{
 		isCcSubmitted = true;
 		if (error) {
 			isCcSubmitted = false;
-			alert("An API error occured!");
 			console.log("An API error occured: " + error.apierror);
-			return false;
+			window.location = checkout_payment_link;
 		} else {
 			$('#paymill_form').html('<input type="hidden" name="paymill_token" value="' + result.token + '" />');
 			$('#paymill_form').submit();
