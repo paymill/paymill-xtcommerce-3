@@ -145,11 +145,22 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
         return false;
     }
 
+    function _getAmount()
+    {
+        global $order, $ot_coupon;
+        $amount = $order->info['total'];
+        if (!is_null($ot_coupon)) {
+            $amount = $order->info['total'] - $ot_coupon->deduction;
+        }
+        
+        return $this->format_raw($amount);
+    }
+    
     function before_process()
     {
         global $order;
 
-        $this->paymentProcessor->setAmount((int) $this->format_raw($order->info['total']));
+        $this->paymentProcessor->setAmount((int) $this->_getAmount());
         $this->paymentProcessor->setApiUrl((string) $this->apiUrl);
         $this->paymentProcessor->setCurrency((string) strtoupper($order->info['currency']));
         $this->paymentProcessor->setDescription(utf8_encode((string) STORE_NAME . ' ' . $order->customer['lastname'] . ', ' . $order->customer['firstname']));
