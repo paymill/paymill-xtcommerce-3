@@ -69,8 +69,15 @@
     display: none;
 }
 
+.number-extra-field
+{
+    width: 500px;
+}
+
 .card-icon
 {
+    width: 31px;
+    height: 19px;
     margin-left: 5px;
     position: absolute;
 }
