@@ -87,7 +87,8 @@ class paymill_cc extends paymill_abstract
 
     function confirmation()
     {
-        global $order, $ot_coupon;
+        global $order;
+
         $confirmation = parent::confirmation();        
         
         $months_array     = array();
@@ -123,7 +124,7 @@ class paymill_cc extends paymill_abstract
                     . 'var cc_card_number_invalid = "' . utf8_decode(MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_CARDNUMBER_INVALID) . '";'
                     . 'var cc_cvc_number_invalid = "' . utf8_decode(MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_CVC_INVALID) . '";'
                     . 'var brand = "' . $payment['card_type'] . '";'
-                    . 'var paymill_total = ' . json_encode((int) $this->_getAmount()) . ';'
+                    . 'var paymill_total = ' . json_encode((int) $_SESSION['paymill']['amount']) . ';'
                     . 'var paymill_currency = ' . json_encode(strtoupper($order->info['currency'])) . ';'
                     . 'var paymill_cc_months = ' . json_encode($months_array) . ';'
                     . 'var paymill_cc_years = ' . json_encode($years_array) . ';'
