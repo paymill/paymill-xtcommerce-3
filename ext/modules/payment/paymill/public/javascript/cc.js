@@ -39,28 +39,36 @@ $(document).ready(function() {
 		
 		switch (paymill.cardType($('#paymill-card-number').val()).toLowerCase()) {
 			case 'visa':
-				$('#paymill-card-number').addClass(cssClass + 'visa');
+				$('#paymill-card-number').removeClass();
+				$('#paymill-card-number').addClass('form-row-paymill ' + cssClass + 'visa');
 				break;
 			case 'mastercard':
-				$('#paymill-card-number').addClass(cssClass + 'mastercard');
+				$('#paymill-card-number').removeClass();
+				$('#paymill-card-number').addClass('form-row-paymill ' + cssClass + 'mastercard');
 				break;
 			case 'american express':
-				$('#paymill-card-number').addClass(cssClass + 'amex');
+				$('#paymill-card-number').removeClass();
+				$('#paymill-card-number').addClass('form-row-paymill ' + cssClass + 'amex');
 				break;
 			case 'jcb':
-				$('#paymill-card-number').addClass(cssClass + 'jcb');
+				$('#paymill-card-number').removeClass();
+				$('#paymill-card-number').addClass('form-row-paymill ' + cssClass + 'jcb');
 				break;
 			case 'maestro':
-				$('#paymill-card-number').addClass(cssClass + 'maestro');
+				$('#paymill-card-number').removeClass();
+				$('#paymill-card-number').addClass('form-row-paymill ' + cssClass + 'maestro');
 				break;
 			case 'diners club':
-				$('#paymill-card-number').addClass(cssClass + 'diners');
+				$('#paymill-card-number').removeClass();
+				$('#paymill-card-number').addClass('form-row-paymill ' + cssClass + 'diners');
 				break;
 			case 'discover':
-				$('#paymill-card-number').addClass(cssClass + 'discover');
+				$('#paymill-card-number').removeClass();
+				$('#paymill-card-number').addClass('form-row-paymill ' + cssClass + 'discover');
 				break;
 			case 'unionpay':
-				$('#paymill-card-number').addClass(cssClass + 'carte-bleue');
+				$('#paymill-card-number').removeClass();
+				$('#paymill-card-number').addClass('form-row-paymill ' + cssClass + 'carte-bleue');
 				break;
 		}
 	});

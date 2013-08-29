@@ -59,9 +59,8 @@
 
 .paymill-error
 {
-    padding-top: 5px;
+    margin-top: 5px;
     padding: 2px 4px;
-    margin: 0px;
     border: solid 1px #FBD3C6;
     background: #FDE4E1;
     color: #CB4721;
@@ -77,26 +76,12 @@
     width: 500px;
 }
 
-.card-icon-container
-{
-    width: 30px;
-    height: 18px;
-}
-
-.card-icon
-{
-    padding-top: 2px;
-    width: 31px;
-    height: 19px;
-    position: absolute;
-}
-
 .paymill-card-number-visa
 {
     background: url('../images/32x20_visa.png') no-repeat center right;
 }
 
-.paymill-card-number-master
+.paymill-card-number-mastercard
 {
     background: url('../images/32x20_mastercard.png') no-repeat center right;
 }

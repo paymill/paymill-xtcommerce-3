@@ -316,13 +316,7 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
     function log($messageInfo, $debugInfo)
     {
         if ($this->logging) {
-            $logfile = dirname(__FILE__) . '/log.txt';
-            if (file_exists($logfile) && is_writable($logfile)) {
-                $handle = fopen($logfile, 'a');
-                fwrite($handle, "[" . date(DATE_RFC822) . "] " . $messageInfo . "\n");
-                fwrite($handle, "[" . date(DATE_RFC822) . "] " . $debugInfo . "\n");
-                fclose($handle);
-            }
+            xtc_db_query("INSERT INTO `pi_paymill_logging` (debug, message) VALUES('$debugInfo', '$messageInfo')");
         }
     }
 
@@ -333,6 +327,23 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
 
     function install()
     {
+        if (xtc_db_num_rows(xtc_db_query("show columns from admin_access like 'paymill_%'")) == 0) {
+            xtc_db_query("ALTER TABLE admin_access ADD paymill_logging INT(1) NOT NULL DEFAULT '0'");
+            xtc_db_query("ALTER TABLE admin_access ADD paymill_log INT(1) NOT NULL DEFAULT '0'");
+        }
+        
+        xtc_db_query("UPDATE admin_access SET paymill_logging = '1', paymill_log = '1' WHERE customers_id= '1' OR customers_id = 'groups'");
+        
+        xtc_db_query(
+            "CREATE TABLE IF NOT EXISTS `pi_paymill_logging` ("
+          . "`id` int(11) NOT NULL AUTO_INCREMENT,"
+          . "`debug` text NOT NULL,"
+          . "`message` text NOT NULL,"
+          . "`date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,"
+          . "PRIMARY KEY (`id`)"
+        . ") AUTO_INCREMENT=1"
+        );
+        
         xtc_db_query(
             "CREATE TABLE IF NOT EXISTS `pi_paymill_fastcheckout` ("
            . "`userID` varchar(100),"
