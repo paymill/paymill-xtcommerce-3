@@ -28,6 +28,11 @@ class paymill_cc extends paymill_abstract
             if ((int) MODULE_PAYMENT_PAYMILL_CC_ORDER_STATUS_ID > 0) {
                 $this->order_status = MODULE_PAYMENT_PAYMILL_CC_ORDER_STATUS_ID;
             }
+            
+            if ($this->logging) {
+                $this->description = '<a href="' . xtc_href_link('paymill_logging.php') . '">' . MODULE_PAYMENT_PAYMILL_CC_DESCRIPTION . '</a>';
+            }
+            
         }
 
         if (is_object($order)) $this->update_status();

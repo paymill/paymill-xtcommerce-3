@@ -1,7 +1,7 @@
 <?php
 
 require_once ('includes/application_top.php');
-
+$logs = xtc_db_query("SELECT * FROM `pi_paymill_logging`");
 ?>
 <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
 <script language="javascript" src="includes/general.js"></script>
@@ -28,7 +28,7 @@ require_once ('includes/application_top.php');
                     <td>
                         <table border="0" width="100%" cellspacing="0" cellpadding="2" height="40">
                             <tr>
-                                <td class="pageHeading"></td>
+                                <td class="pageHeading">PAYMILL Log</td>
                             </tr>
                             <tr>
                                 <td><img width="100%" height="1" border="0" alt="" src="images/pixel_black.gif"></td>
@@ -36,15 +36,24 @@ require_once ('includes/application_top.php');
                         </table>
                     </td>
                 </tr>
-                <?php if (true): ?>
                 <tr>
-                    <td class="messageStackSuccess">
-                        <img border="0" title="" alt="" src="images/icons/success.gif">
-                    </td>
-                </tr>
-                <?php endif; ?>
-                <tr>
-                    <td> 
+                    <td>
+                        <table>
+                            <tr class="dataTableHeadingRow">
+                                <th class="dataTableHeadingContent">ID</th>
+                                <th class="dataTableHeadingContent">Debug</th>
+                                <th class="dataTableHeadingContent">Message</th>
+                                <th class="dataTableHeadingContent">Date</th>
+                            </tr>
+                            <?php while ($log = xtc_db_fetch_array($logs)): ?>
+                            <tr class="dataTableRow">
+                                <td class="dataTableContent"><?php echo $log['id']; ?></td>
+                                <td class="dataTableContent"><?php echo $log['debug']; ?></td>
+                                <td class="dataTableContent"><?php echo $log['message']; ?></td>
+                                <td class="dataTableContent"><?php echo $log['date']; ?></td>
+                            </tr>
+                            <?php endwhile; ?>
+                        </table>
                     </td>
                 </tr>
                 <tr>
