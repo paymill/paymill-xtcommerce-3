@@ -27,6 +27,8 @@ define('MODULE_PAYMENT_PAYMILL_CC_TRANS_ORDER_STATUS_ID_TITLE', 'Transaction Ord
 define('MODULE_PAYMENT_PAYMILL_CC_TRANS_ORDER_STATUS_ID_DESC', 'Include transaction information in this order status level.');
 define('MODULE_PAYMENT_PAYMILL_CC_ZONE_TITLE', 'Payment Zone');
 define('MODULE_PAYMENT_PAYMILL_CC_ZONE_DESC', 'If a zone is selected, only enable this payment method for that zone.');
+define('MODULE_PAYMENT_PAYMILL_CC_ALLOWED_TITLE' , 'Allowed Zones');
+define('MODULE_PAYMENT_PAYMILL_CC_ALLOWED_DESC' , 'Please enter the zones <b>individually</b> that should be allowed to use this module (e.g. US, UK (leave blank to allow all zones))');
 define('MODULE_PAYMENT_PAYMILL_CC_TEXT_TITLE','Paymill Credit Card');
 define('MODULE_PAYMENT_PAYMILL_CC_TEXT_PUBLIC_TITLE','Credit Card');
 define('MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_OWNER','Credit Card Owner');
