@@ -316,7 +316,7 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
     function log($messageInfo, $debugInfo)
     {
         if ($this->logging) {
-            xtc_db_query("INSERT INTO `pi_paymill_logging` (debug, message) VALUES('$debugInfo', '$messageInfo')");
+            xtc_db_query("INSERT INTO `pi_paymill_logging` (debug, message) VALUES('" . xtc_db_input($debugInfo) . "', '" . xtc_db_input($messageInfo) . "')");
         }
     }
 
