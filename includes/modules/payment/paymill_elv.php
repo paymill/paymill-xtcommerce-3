@@ -181,6 +181,7 @@ class paymill_elv extends paymill_abstract
             'MODULE_PAYMENT_PAYMILL_ELV_TRANSACTION_ORDER_STATUS_ID',
             'MODULE_PAYMENT_PAYMILL_ELV_ZONE',
             'MODULE_PAYMENT_PAYMILL_ELV_LOGGING',
+            'MODULE_PAYMENT_PAYMILL_ELV_ALLOWED',
             'MODULE_PAYMENT_PAYMILL_ELV_SORT_ORDER'
         );
     }

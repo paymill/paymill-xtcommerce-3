@@ -224,6 +224,7 @@ class paymill_cc extends paymill_abstract
             'MODULE_PAYMENT_PAYMILL_CC_TRANSACTION_ORDER_STATUS_ID',
             'MODULE_PAYMENT_PAYMILL_CC_ZONE',
             'MODULE_PAYMENT_PAYMILL_CC_LOGGING',
+            'MODULE_PAYMENT_PAYMILL_CC_ALLOWED',
             'MODULE_PAYMENT_PAYMILL_CC_SORT_ORDER'
         );
     }
