@@ -1,11 +1,13 @@
 <?php
 
 require_once 'Apiclient/Curl.php';
+
 /**
  * Paymill API wrapper super class
  */
 abstract class Services_Paymill_Base
 {
+
     /**
      * Resource relative url path name ending with '/', set or override in subclass
      *
@@ -43,9 +45,7 @@ abstract class Services_Paymill_Base
     public function get($filters = array(), $identifier = '')
     {
         $response = $this->_httpClient->request(
-            $this->_serviceResource . $identifier,
-            $filters,
-            Services_Paymill_Apiclient_Interface::HTTP_GET
+                $this->_serviceResource . $identifier, $filters, Services_Paymill_Apiclient_Interface::HTTP_GET
         );
 
         return $response['data'];
@@ -64,9 +64,9 @@ abstract class Services_Paymill_Base
         if (!$identifier) {
             return null;
         }
-        
+
         $filters = array("count" => 1, 'offset' => 0);
-        
+
         return $this->get($filters, $identifier);
     }
 
@@ -80,10 +80,8 @@ abstract class Services_Paymill_Base
      */
     public function delete($clientId = null)
     {
-        $response =  $this->_httpClient->request(
-            $this->_serviceResource . $clientId,
-            array(),
-            Services_Paymill_Apiclient_Interface::HTTP_DELETE
+        $response = $this->_httpClient->request(
+                $this->_serviceResource . $clientId, array(), Services_Paymill_Apiclient_Interface::HTTP_DELETE
         );
 
         return $response['data'];
@@ -100,9 +98,7 @@ abstract class Services_Paymill_Base
     public function create($itemData = array())
     {
         $response = $this->_httpClient->request(
-            $this->_serviceResource,
-            $itemData,
-            Services_Paymill_Apiclient_Interface::HTTP_POST
+                $this->_serviceResource, $itemData, Services_Paymill_Apiclient_Interface::HTTP_POST
         );
 
         return $response['data'];
@@ -118,28 +114,28 @@ abstract class Services_Paymill_Base
      */
     public function update(array $itemData = array())
     {
-        if (!isset($itemData['id']) ) {
+        if (!isset($itemData['id'])) {
             return null;
         }
 
         $itemId = $itemData['id'];
-        unset ($itemData['id']);
+        unset($itemData['id']);
 
         $response = $this->_httpClient->request(
-            $this->_serviceResource . $itemId,
-            $itemData,
-            Services_Paymill_Apiclient_Interface::HTTP_PUT
+                $this->_serviceResource . $itemId, $itemData, Services_Paymill_Apiclient_Interface::HTTP_PUT
         );
 
         return $response['data'];
     }
-    
+
     /**
      * Returns the response of the last request as an array
      * @return mixed Response
      * @todo Add Unit test
      */
-    public function getResponse(){
+    public function getResponse()
+    {
         return $this->_httpClient->getResponse();
     }
+
 }
