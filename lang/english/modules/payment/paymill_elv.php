@@ -29,7 +29,7 @@ define('MODULE_PAYMENT_PAYMILL_ELV_ALLOWED_TITLE' , 'Allowed Zones');
 define('MODULE_PAYMENT_PAYMILL_ELV_ALLOWED_DESC' , 'Please enter the zones <b>individually</b> that should be allowed to use this module (e.g. US, UK (leave blank to allow all zones))');
 define('MODULE_PAYMENT_PAYMILL_ELV_TRANS_ORDER_STATUS_ID_TITLE', 'Transaction Order Status');
 define('MODULE_PAYMENT_PAYMILL_ELV_TRANS_ORDER_STATUS_ID_DESC', 'Include transaction information in this order status level.');
-define('MODULE_PAYMENT_PAYMILL_ELV_TEXT_PUBLIC_TITLE', 'Debit Card');
+define('MODULE_PAYMENT_PAYMILL_ELV_TEXT_PUBLIC_TITLE', 'Direct Debit');
 define('MODULE_PAYMENT_PAYMILL_ELV_TEXT_ACCOUNT', 'Account Number');
 define('MODULE_PAYMENT_PAYMILL_ELV_TEXT_BANKCODE', 'Bank Code');
 define('MODULE_PAYMENT_PAYMILL_ELV_TEXT_ACCOUNT_HOLDER', 'Account Holder');
