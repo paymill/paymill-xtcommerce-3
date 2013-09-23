@@ -1,7 +1,14 @@
 <?php
 
 require_once ('includes/application_top.php');
-$logs = xtc_db_query("SELECT * FROM `pi_paymill_logging`");
+require_once (DIR_FS_CATALOG . 'ext/modules/payment/paymill/lib/Services/Paymill/Log.php');
+
+$sql = "SELECT * FROM `pi_paymill_logging`";
+if (isset($_POST['submit'])) {
+    $sql = "SELECT * FROM `pi_paymill_logging` WHERE debug like '%" . xtc_db_input($_POST['search_key']) . "%'";
+}
+$logs = xtc_db_query($sql);
+$logModel = new Services_Paymill_Log();
 ?>
 <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
 <script language="javascript" src="includes/general.js"></script>
@@ -38,22 +45,46 @@ $logs = xtc_db_query("SELECT * FROM `pi_paymill_logging`");
                 </tr>
                 <tr>
                     <td>
+                        <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+                            <input value="" name="search_key"/><input type="submit" value="Search..." name="submit"/>
+                        </form>
                         <table>
                             <tr class="dataTableHeadingRow">
                                 <th class="dataTableHeadingContent">ID</th>
                                 <th class="dataTableHeadingContent">Debug</th>
-                                <th class="dataTableHeadingContent">Message</th>
                                 <th class="dataTableHeadingContent">Date</th>
                             </tr>
                             <?php while ($log = xtc_db_fetch_array($logs)): ?>
                             <tr class="dataTableRow">
                                 <td class="dataTableContent"><?php echo $log['id']; ?></td>
-                                <td class="dataTableContent"><?php echo $log['debug']; ?></td>
-                                <td class="dataTableContent"><?php echo $log['message']; ?></td>
+                                <td class="dataTableContent">
+                                    <?php $logModel->fill($log['debug']) ?>
+                                    <table>
+                                        <tr class="dataTableHeadingRow">
+                                            <?php foreach ($logModel->toArray() as $key => $value): ?>
+                                                <th class="dataTableHeadingContent"><?php echo strtoupper(str_replace('_', ' ', $key)); ?></th>
+                                            <?php endforeach; ?>
+                                        </tr>
+                                        <tr class="dataTableRow">
+                                            <?php foreach ($logModel->toArray() as $key => $value): ?>
+                                            <td class="dataTableContent">
+                                                <?php if (strlen($value) > 300): ?>
+                                                    <a href="<?php echo xtc_href_link('paymill_log.php', 'id=' . $log['id'] . '&key=' . $key, 'SSL', true, false); ?>">See more</a>
+                                                <?php else: ?>
+                                                    <pre><?php echo $value; ?></pre>
+                                                <?php endif; ?>
+                                            </td>
+                                            <?php endforeach; ?>
+                                        </tr>
+                                    </table>
+                                </td>
                                 <td class="dataTableContent"><?php echo $log['date']; ?></td>
                             </tr>
                             <?php endwhile; ?>
                         </table>
+                        <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+                            <input value="" name="search_key"/><input type="submit" value="Search..." name="submit"/>
+                        </form>
                     </td>
                 </tr>
                 <tr>

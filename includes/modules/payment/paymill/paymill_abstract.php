@@ -1,5 +1,6 @@
 <?php
 
+require_once(DIR_FS_CATALOG . 'ext/modules/payment/paymill/lib/Services/Paymill/Log.php');
 require_once(DIR_FS_CATALOG . 'ext/modules/payment/paymill/lib/Services/Paymill/PaymentProcessor.php');
 require_once(DIR_FS_CATALOG . 'ext/modules/payment/paymill/lib/Services/Paymill/LoggingInterface.php');
 require_once(DIR_FS_CATALOG . 'ext/modules/payment/paymill/lib/Services/Paymill/Payments.php');
@@ -182,6 +183,7 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
 
         if (!$result) {
             xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'step=step2&payment_error=' . $this->code . '&error=200', 'SSL', true, false));
+            unset($_SESSION['log_id']);
         }
         
         if ($this->fastCheckoutFlag) {
@@ -189,6 +191,8 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
         } else {
             $this->saveClient();
         }
+        
+        unset($_SESSION['log_id']);
     }
 
     function existingClient($data)
@@ -319,9 +323,23 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
 
     function log($messageInfo, $debugInfo)
     {
+        $log = new Services_Paymill_Log();
+        
+        $param = $this->paramName;
+        $log->$param = $debugInfo;
+        $log->message = $messageInfo;
+        
         if ($this->logging) {
-            xtc_db_query("INSERT INTO `pi_paymill_logging` (debug, message) VALUES('" . xtc_db_input($debugInfo) . "', '" . xtc_db_input($messageInfo) . "')");
-        }
+            if (array_key_exists('log_id', $_SESSION)) {
+                $data = xtc_db_fetch_array(xtc_db_query('SELECT debug from `pi_paymill_logging` WHERE ' . $_SESSION['log_id']));
+                $log->fill($data['debug']);
+                xtc_db_query("UPDATE `pi_paymill_logging` SET debug = '" . xtc_db_input($log->toJson()) . "' WHERE id = " . $_SESSION['log_id']);
+            } else {
+                xtc_db_query("INSERT INTO `pi_paymill_logging` (debug) VALUES('" . xtc_db_input($log->toJson()) . "')");
+                $data = xtc_db_fetch_array(xtc_db_query("SELECT LAST_INSERT_ID();"));
+                $_SESSION['log_id'] = $data['LAST_INSERT_ID()'];
+            }
+        } 
     }
 
     function format_raw($number)
@@ -342,7 +360,6 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
             "CREATE TABLE IF NOT EXISTS `pi_paymill_logging` ("
           . "`id` int(11) NOT NULL AUTO_INCREMENT,"
           . "`debug` text NOT NULL,"
-          . "`message` text NOT NULL,"
           . "`date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,"
           . "PRIMARY KEY (`id`)"
         . ") AUTO_INCREMENT=1"
