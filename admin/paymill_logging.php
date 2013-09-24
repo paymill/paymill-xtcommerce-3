@@ -3,32 +3,39 @@
 require_once ('includes/application_top.php');
 require_once (DIR_FS_CATALOG . 'ext/modules/payment/paymill/lib/Services/Paymill/Log.php');
 
+$recordLimit = 10;
+
+if(isset($_GET['page'])) {
+   $page = $_GET['page'] + 1;
+   $offset = $recordLimit * $page ;
+} else {
+   $page = 0;
+   $offset = 0;
+}
+
 $sql = "SELECT * FROM `pi_paymill_logging`";
 if (isset($_POST['submit'])) {
-    $sql = "SELECT * FROM `pi_paymill_logging` WHERE debug like '%" . xtc_db_input($_POST['search_key']) . "%'";
+    $sql = "SELECT * FROM `pi_paymill_logging` WHERE debug like '%" . xtc_db_input($_POST['search_key']) . "%' LIMIT $offset, $recordLimit";
 }
+
 $logs = xtc_db_query($sql);
+$recordCount = xtc_db_num_rows($logs);
+$leftRecords = $recordCount - ($page * $recordLimit);
 $logModel = new Services_Paymill_Log();
+
 ?>
 <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
 <script language="javascript" src="includes/general.js"></script>
-<!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
-<!-- header_eof //-->
-
-<!-- body //-->
 <table border="0" width="100%" cellspacing="2" cellpadding="2">
     <tr>
         <td width="<?php echo BOX_WIDTH; ?>" valign="top">
             <?php if (CURRENT_TEMPLATE != 'xtc5'): ?>
             <table border="0" width="<?php echo BOX_WIDTH; ?>" cellspacing="1" cellpadding="1" class="columnLeft">
-                <!-- left_navigation //-->
                 <?php require(DIR_WS_INCLUDES . 'column_left.php'); ?>
-                <!-- left_navigation_eof //-->
             </table>
             <?php endif;?>
         </td>
-        <!-- body_text //-->
         <td width="100%" valign="top">
             <table border="0" width="100%" cellspacing="0" cellpadding="2">
                 <tr>
@@ -48,6 +55,16 @@ $logModel = new Services_Paymill_Log();
                         <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
                             <input value="" name="search_key"/><input type="submit" value="Search..." name="submit"/>
                         </form>
+                        <?php if( $page > 0 ) : ?>
+                           <?php $last = $page - 2; ?>
+                           <a href="<?php echo $_SERVER['PHP_SELF']; ?>?page=<?php echo $last; ?>">Last 10 Records</a> |
+                           <a href="<?php echo $_SERVER['PHP_SELF']; ?>?page=<?php echo $page; ?>">Next 10 Records</a>
+                        <?php elseif( $page == 0 ): ?>
+                           <a href="<?php echo $_SERVER['PHP_SELF']; ?>?page=<?php echo $page; ?>">Next 10 Records</a>
+                        <?php elseif( $leftRecords < $recordLimit ): ?>
+                           <?php $last = $page - 2; ?>
+                           <a href="<?php echo $_SERVER['PHP_SELF']; ?>?page=<?php echo $last; ?>">Last 10 Records</a>
+                        <?php endif; ?>
                         <table>
                             <tr class="dataTableHeadingRow">
                                 <th class="dataTableHeadingContent">ID</th>
@@ -85,6 +102,16 @@ $logModel = new Services_Paymill_Log();
                         <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
                             <input value="" name="search_key"/><input type="submit" value="Search..." name="submit"/>
                         </form>
+                        <?php if( $page > 0 ) : ?>
+                           <?php $last = $page - 2; ?>
+                           <a href="<?php echo $_SERVER['PHP_SELF']; ?>?page=<?php echo $last; ?>">Last 10 Records</a> |
+                           <a href="<?php echo $_SERVER['PHP_SELF']; ?>?page=<?php echo $page; ?>">Next 10 Records</a>
+                        <?php elseif( $page == 0 ): ?>
+                           <a href="<?php echo $_SERVER['PHP_SELF']; ?>?page=<?php echo $page; ?>">Next 10 Records</a>
+                        <?php elseif( $leftRecords < $recordLimit ): ?>
+                           <?php $last = $page - 2; ?>
+                           <a href="<?php echo $_SERVER['PHP_SELF']; ?>?page=<?php echo $last; ?>">Last 10 Records</a>
+                        <?php endif; ?>
                     </td>
                 </tr>
                 <tr>
@@ -97,8 +124,5 @@ $logModel = new Services_Paymill_Log();
         </td>
     </tr>
 </table>
-<!-- body_eof //-->
-<!-- footer //-->
 <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
-<!-- footer_eof //-->
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
