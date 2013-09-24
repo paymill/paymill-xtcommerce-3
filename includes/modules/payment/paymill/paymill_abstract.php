@@ -330,8 +330,10 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
             $param = 'default';
         }
         
-        $log->$param = $debugInfo;
-        $log->message = $messageInfo;
+        $log->$param = array(
+            'debug' => $debugInfo,
+            'message' => $messageInfo
+        );
         
         if ($this->logging) {
             if (array_key_exists('log_id', $_SESSION)) {
