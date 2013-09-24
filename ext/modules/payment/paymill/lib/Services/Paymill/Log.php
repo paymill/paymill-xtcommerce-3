@@ -24,8 +24,7 @@ class Services_Paymill_Log
      */
     public function __get($name)
     {
-        if (isset($this->$name))
-        {
+        if (isset($this->$name)) {
             return $this->$name;
         }
         

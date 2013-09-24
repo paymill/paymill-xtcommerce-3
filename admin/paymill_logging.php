@@ -18,10 +18,10 @@ if (isset($_POST['submit'])) {
     $sql = "SELECT * FROM `pi_paymill_logging` WHERE debug like '%" . xtc_db_input($_POST['search_key']) . "%' LIMIT $offset, $recordLimit";
 }
 
-$logs = xtc_db_query($sql);
+$logs        = xtc_db_query($sql);
 $recordCount = xtc_db_num_rows($logs);
 $leftRecords = $recordCount - ($page * $recordLimit);
-$logModel = new Services_Paymill_Log();
+$logModel    = new Services_Paymill_Log();
 
 ?>
 <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">

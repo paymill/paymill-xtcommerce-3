@@ -326,6 +326,10 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
         $log = new Services_Paymill_Log();
         
         $param = $this->paramName;
+        if (is_null($param)) {
+            $param = 'default';
+        }
+        
         $log->$param = $debugInfo;
         $log->message = $messageInfo;
         
@@ -339,7 +343,7 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
                 $data = xtc_db_fetch_array(xtc_db_query("SELECT LAST_INSERT_ID();"));
                 $_SESSION['log_id'] = $data['LAST_INSERT_ID()'];
             }
-        } 
+        }
     }
 
     function format_raw($number)
