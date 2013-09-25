@@ -4,25 +4,22 @@ require_once ('includes/application_top.php');
 require_once (DIR_FS_CATALOG . 'ext/modules/payment/paymill/lib/Services/Paymill/Log.php');
 
 $recordLimit = 10;
+$page = $_GET['page'];
+if(!isset($_GET['page'])) {
+   $page = 1;
+} 
 
-if(isset($_GET['page'])) {
-   $page = $_GET['page'] + 1;
-   $offset = $recordLimit * $page ;
-} else {
-   $page = 0;
-   $offset = 0;
-}
+$start = $page * $recordLimit - $recordLimit;
 
-$sql = "SELECT * FROM `pi_paymill_logging`";
+$sql = "SELECT * FROM `pi_paymill_logging` LIMIT $start, $recordLimit";
 if (isset($_POST['submit'])) {
-    $sql = "SELECT * FROM `pi_paymill_logging` WHERE debug like '%" . xtc_db_input($_POST['search_key']) . "%' LIMIT $offset, $recordLimit";
+    $sql = "SELECT * FROM `pi_paymill_logging` WHERE debug like '%" . xtc_db_input($_POST['search_key']) . "%' LIMIT $start, $recordLimit";
 }
 
 $logs        = xtc_db_query($sql);
 $recordCount = xtc_db_num_rows($logs);
-$leftRecords = $recordCount - ($page * $recordLimit);
+$pageCount = $recordCount / $recordLimit;
 $logModel    = new Services_Paymill_Log();
-
 ?>
 <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
 <script language="javascript" src="includes/general.js"></script>
@@ -52,19 +49,20 @@ $logModel    = new Services_Paymill_Log();
                 </tr>
                 <tr>
                     <td>
-                        <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+                        <div>
+                            <b>Page: </b>
+                            <?php for ($a = 0; $a < $pageCount; $a++) : ?>
+                                <?php $b = $a + 1; ?>
+                                <?php if ($page == $b) : ?>
+                                    <b><?php echo $b; ?></b>
+                                <?php else : ?>
+                                    <a href="<?php echo xtc_href_link('paymill_logging.php'); ?>?seite=<?php echo $b; ?>"><?php echo $b; ?></a>
+                                <?php endif; ?>
+                            <?php endfor; ?>
+                        </div>
+                        <form action="<?php echo xtc_href_link('paymill_logging.php'); ?>" method="POST">
                             <input value="" name="search_key"/><input type="submit" value="Search..." name="submit"/>
                         </form>
-                        <?php if( $page > 0 ) : ?>
-                           <?php $last = $page - 2; ?>
-                           <a href="<?php echo $_SERVER['PHP_SELF']; ?>?page=<?php echo $last; ?>">Last 10 Records</a> |
-                           <a href="<?php echo $_SERVER['PHP_SELF']; ?>?page=<?php echo $page; ?>">Next 10 Records</a>
-                        <?php elseif( $page == 0 ): ?>
-                           <a href="<?php echo $_SERVER['PHP_SELF']; ?>?page=<?php echo $page; ?>">Next 10 Records</a>
-                        <?php elseif( $leftRecords < $recordLimit ): ?>
-                           <?php $last = $page - 2; ?>
-                           <a href="<?php echo $_SERVER['PHP_SELF']; ?>?page=<?php echo $last; ?>">Last 10 Records</a>
-                        <?php endif; ?>
                         <table>
                             <tr class="dataTableHeadingRow">
                                 <th class="dataTableHeadingContent">ID</th>
@@ -99,19 +97,20 @@ $logModel    = new Services_Paymill_Log();
                             </tr>
                             <?php endwhile; ?>
                         </table>
-                        <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+                        <form action="<?php echo xtc_href_link('paymill_logging.php'); ?>" method="POST">
                             <input value="" name="search_key"/><input type="submit" value="Search..." name="submit"/>
                         </form>
-                        <?php if( $page > 0 ) : ?>
-                           <?php $last = $page - 2; ?>
-                           <a href="<?php echo $_SERVER['PHP_SELF']; ?>?page=<?php echo $last; ?>">Last 10 Records</a> |
-                           <a href="<?php echo $_SERVER['PHP_SELF']; ?>?page=<?php echo $page; ?>">Next 10 Records</a>
-                        <?php elseif( $page == 0 ): ?>
-                           <a href="<?php echo $_SERVER['PHP_SELF']; ?>?page=<?php echo $page; ?>">Next 10 Records</a>
-                        <?php elseif( $leftRecords < $recordLimit ): ?>
-                           <?php $last = $page - 2; ?>
-                           <a href="<?php echo $_SERVER['PHP_SELF']; ?>?page=<?php echo $last; ?>">Last 10 Records</a>
-                        <?php endif; ?>
+                        <div>
+                            <b>Page: </b>
+                            <?php for ($a = 0; $a < $pageCount; $a++) : ?>
+                                <?php $b = $a + 1; ?>
+                                <?php if ($page == $b) : ?>
+                                    <b><?php echo $b; ?></b>
+                                <?php else : ?>
+                                    <a href="<?php echo xtc_href_link('paymill_logging.php'); ?>?seite=<?php echo $b; ?>"><?php echo $b; ?></a>
+                                <?php endif; ?>
+                            <?php endfor; ?>
+                        </div>
                     </td>
                 </tr>
                 <tr>
