@@ -85,10 +85,10 @@ $logModel    = new Services_Paymill_Log();
                                         <tr class="dataTableRow">
                                             <?php foreach ($logModel->toArray() as $key => $value): ?>
                                             <td class="dataTableContent">
-                                                <?php if (strlen($value) > 300): ?>
-                                                    <a href="<?php echo xtc_href_link('paymill_log.php', 'id=' . $log['id'] . '&key=' . $key, 'SSL', true, false); ?>">See more</a>
+                                                <?php if (strlen($value['debug']) > 300): ?>
+                                                    <center><a href="<?php echo xtc_href_link('paymill_log.php', 'id=' . $log['id'] . '&key=' . $key, 'SSL', true, false); ?>">See more</a></center>
                                                 <?php else: ?>
-                                                    <pre><?php echo $value; ?></pre>
+                                                    <pre><?php echo $value['message']; ?><hr/><?php echo $value['debug']; ?></pre>
                                                 <?php endif; ?>
                                             </td>
                                             <?php endforeach; ?>

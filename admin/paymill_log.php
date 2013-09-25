@@ -45,7 +45,7 @@ $logModel = new Services_Paymill_Log();
                         <?php while ($log = xtc_db_fetch_array($logs)): ?>
                             <?php $logModel->fill($log['debug']) ?>
                             <?php $data = $logModel->toArray(); ?>
-                            <pre><?php echo $data[$_GET['key']]; ?></pre>
+                            <pre><?php echo $data[$_GET['key']]['message']; ?><hr/><?php echo $data[$_GET['key']]['debug']; ?></pre>
                         <?php endwhile; ?>
                     </td>
                 </tr>

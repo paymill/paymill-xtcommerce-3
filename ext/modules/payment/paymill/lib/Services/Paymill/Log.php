@@ -9,11 +9,7 @@ class Services_Paymill_Log
      * @param mixed $value
      */
     public function __set($name, $value)
-    {
-        if (is_array($value)) {
-            throw new Exception('Use primitve datatypes.');
-        }
-        
+    {        
         $this->$name = $value;
     }
     
