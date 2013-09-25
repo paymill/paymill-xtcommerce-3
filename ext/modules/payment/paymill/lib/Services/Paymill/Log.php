@@ -34,9 +34,10 @@ class Services_Paymill_Log
     public function fill($json)
     {
         $data = json_decode($json, true);
-        
-        foreach ($data as $name => $value) {
-            $this->$name = $value;
+        if (is_array($data)) {
+            foreach ($data as $name => $value) {
+                $this->$name = $value;
+            }
         }
     }
     
