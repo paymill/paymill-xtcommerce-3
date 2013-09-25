@@ -3,6 +3,11 @@ Paymill-xtCommerce-3
 
 xtCommerce (Version 3.x) Plugin for Paymill credit card and elv payments
 
+# Update Note
+
+To update the xt:Commerce Paymill plugin you must reinstall the plugin to ensure 
+that all needed tables are created.
+
 # Installation
 
 Download the following zip file and upload the extracted files in the root directory of your xtCommerce shop.

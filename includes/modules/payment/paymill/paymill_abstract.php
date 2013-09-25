@@ -1,6 +1,5 @@
 <?php
 
-require_once(DIR_FS_CATALOG . 'ext/modules/payment/paymill/lib/Services/Paymill/Log.php');
 require_once(DIR_FS_CATALOG . 'ext/modules/payment/paymill/lib/Services/Paymill/PaymentProcessor.php');
 require_once(DIR_FS_CATALOG . 'ext/modules/payment/paymill/lib/Services/Paymill/LoggingInterface.php');
 require_once(DIR_FS_CATALOG . 'ext/modules/payment/paymill/lib/Services/Paymill/Payments.php');
@@ -156,6 +155,7 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
     {
         global $order;
         
+        $_SESSION['paymill_identifier'] = time();
         $this->paymentProcessor->setAmount((int) $_SESSION['paymill']['amount']);
         $this->paymentProcessor->setApiUrl((string) $this->apiUrl);
         $this->paymentProcessor->setCurrency((string) strtoupper($order->info['currency']));
@@ -182,8 +182,8 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
         $_SESSION['paymill']['transaction_id'] = $this->paymentProcessor->getTransactionId();
 
         if (!$result) {
+            unset($_SESSION['paymill_identifier']);
             xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'step=step2&payment_error=' . $this->code . '&error=200', 'SSL', true, false));
-            unset($_SESSION['log_id']);
         }
         
         if ($this->fastCheckoutFlag) {
@@ -192,7 +192,7 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
             $this->saveClient();
         }
         
-        unset($_SESSION['log_id']);
+        unset($_SESSION['paymill_identifier']);
     }
 
     function existingClient($data)
@@ -323,27 +323,16 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
 
     function log($messageInfo, $debugInfo)
     {
-        $log = new Services_Paymill_Log();
-        
-        $param = $this->paramName;
-        if (is_null($param)) {
-            $param = 'default';
-        }
-        
-        $log->$param = array(
-            'debug' => $debugInfo,
-            'message' => $messageInfo
-        );
-        
         if ($this->logging) {
-            if (array_key_exists('log_id', $_SESSION)) {
-                $data = xtc_db_fetch_array(xtc_db_query('SELECT debug from `pi_paymill_logging` WHERE id = ' . $_SESSION['log_id']));
-                $log->fill($data['debug']);
-                xtc_db_query("UPDATE `pi_paymill_logging` SET debug = '" . xtc_db_input($log->toJson()) . "' WHERE id = " . $_SESSION['log_id']);
-            } else {
-                xtc_db_query("INSERT INTO `pi_paymill_logging` (debug) VALUES('" . xtc_db_input($log->toJson()) . "')");
-                $data = xtc_db_fetch_array(xtc_db_query("SELECT LAST_INSERT_ID();"));
-                $_SESSION['log_id'] = $data['LAST_INSERT_ID()'];
+            if (array_key_exists('paymill_identifier', $_SESSION)) {
+                 xtc_db_query("INSERT INTO `pi_paymill_logging` "
+                            . "(debug, message, identifier) "
+                            . "VALUES('" 
+                              . xtc_db_input($debugInfo) . "', '" 
+                              . xtc_db_input($messageInfo) . "', '" 
+                              . xtc_db_input($_SESSION['paymill_identifier']) 
+                            . "')"
+                );
             }
         }
     }
@@ -362,10 +351,14 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
         
         xtc_db_query("UPDATE admin_access SET paymill_logging = '1', paymill_log = '1' WHERE customers_id= '1' OR customers_id = 'groups'");
         
+        xtc_db_query("DROP TABLE `pi_paymill_logging`");
+        
         xtc_db_query(
             "CREATE TABLE IF NOT EXISTS `pi_paymill_logging` ("
           . "`id` int(11) NOT NULL AUTO_INCREMENT,"
+          . "`identifier` text NOT NULL,"
           . "`debug` text NOT NULL,"
+          . "`message` text NOT NULL,"
           . "`date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,"
           . "PRIMARY KEY (`id`)"
         . ") AUTO_INCREMENT=1"
