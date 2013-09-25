@@ -3,7 +3,7 @@
 class Services_Paymill_Log
 {
     /**
-     * Magic setter to avoid the use of arrays
+     * Magic setter
      * 
      * @param mixed $name
      * @param mixed $value
