@@ -4,8 +4,8 @@ require_once ('includes/application_top.php');
 require_once (DIR_FS_CATALOG . 'ext/modules/payment/paymill/lib/Services/Paymill/Log.php');
 
 $recordLimit = 10;
-$page = $_GET['page'];
-if(!isset($_GET['page'])) {
+$page = $_GET['seite'];
+if(!isset($_GET['seite'])) {
    $page = 1;
 } 
 
