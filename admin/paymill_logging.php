@@ -51,7 +51,7 @@ $logModel    = new Services_Paymill_Log();
                     <td>
                         <div>
                             <b>Page: </b>
-                            <?php for ($a = 0; $a < $pageCount; $a++) : ?>
+                            <?php for ($a = 0; $a <= $pageCount; $a++) : ?>
                                 <?php $b = $a + 1; ?>
                                 <?php if ($page == $b) : ?>
                                     <b><?php echo $b; ?></b>
@@ -102,7 +102,7 @@ $logModel    = new Services_Paymill_Log();
                         </form>
                         <div>
                             <b>Page: </b>
-                            <?php for ($a = 0; $a < $pageCount; $a++) : ?>
+                            <?php for ($a = 0; $a <= $pageCount; $a++) : ?>
                                 <?php $b = $a + 1; ?>
                                 <?php if ($page == $b) : ?>
                                     <b><?php echo $b; ?></b>
