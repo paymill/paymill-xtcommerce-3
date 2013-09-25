@@ -20,7 +20,8 @@ Afterwards enable Paymill in your shop backend and insert your test or live keys
 
 # In case of errors
 
-Make sure the logfile (includes/modules/payment/paymill/log.txt) is writable. In case of any errors check this files contents and contact the Paymill support (support@paymill.de).
+In case of any errors check the paymill log entry in the plugin config and 
+contact the Paymill support (support@paymill.de).
 
 # Notes about the payment process
 
