@@ -351,7 +351,7 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
         
         xtc_db_query("UPDATE admin_access SET paymill_logging = '1', paymill_log = '1' WHERE customers_id= '1' OR customers_id = 'groups'");
         
-        xtc_db_query("DROP TABLE `pi_paymill_logging`");
+        xtc_db_query("DROP TABLE IF EXISTS `pi_paymill_logging`");
         
         xtc_db_query(
             "CREATE TABLE IF NOT EXISTS `pi_paymill_logging` ("
