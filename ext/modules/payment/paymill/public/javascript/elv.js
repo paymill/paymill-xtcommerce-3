@@ -7,7 +7,7 @@ $(document).ready(function () {
             } else {
                 return this.attr(name, value);
             }
-        };
+        }
     }
 
     $('#account-name-field').html('<input type="text" value="' + paymill_elv_holder + '" id="paymill-bank-owner" class="form-row-paymill" />');

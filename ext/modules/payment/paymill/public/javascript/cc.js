@@ -22,7 +22,6 @@ $(document).ready(function() {
 
 		$('<option/>').val(cc_month_value).text($("<div/>").html(cc_month_text).text()).appendTo($('#paymill-card-expiry-month'));
 	}
-	;
 
 	for (var cc_year_counter in paymill_cc_years) {
 		var cc_year_value = paymill_cc_years[cc_year_counter][0];
@@ -105,20 +104,31 @@ $(document).ready(function() {
 				}
 
 				if (!paymill.validateCvc($("#paymill-card-cvc").val())) {
-					$("#card-cvc-error").text(cc_cvc_number_invalid);
-					$("#card-cvc-error").css('display', 'block');
-					ccErrorFlag = false;
+					
+					if (paymill.cardType($("#paymill-card-number").val()).toLowerCase() === 'maestro') {
+						ccErrorFlag = true;
+					} else {
+						$("#card-cvc-error").text(cc_cvc_number_invalid);
+						$("#card-cvc-error").css('display', 'block');
+						ccErrorFlag = false;
+					}
 				}
 				
 				if (!ccErrorFlag) {
 					return ccErrorFlag;
+				}
+				
+				var cvc = '000';
+				
+				if ($("#paymill-card-cvc").val() !== '') {
+					cvc = $("#paymill-card-cvc").val();
 				}
 
 				paymill.createToken({
 					number: $("#paymill-card-number").val(),
 					exp_month: $("#paymill-card-expiry-month option:selected").val(),
 					exp_year: $("#paymill-card-expiry-year option:selected").val(),
-					cvc: $("#paymill-card-cvc").val(),
+					cvc: cvc,
 					amount_int: paymill_total,
 					currency: paymill_currency,
 					cardholder: $("#paymill-card-owner").val()
