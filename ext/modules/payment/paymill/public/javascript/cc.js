@@ -103,15 +103,10 @@ $(document).ready(function() {
 					ccErrorFlag = false;
 				}
 
-				if (!paymill.validateCvc($("#paymill-card-cvc").val())) {
-					
-					if (paymill.cardType($("#paymill-card-number").val()).toLowerCase() === 'maestro') {
-						ccErrorFlag = true;
-					} else {
-						$("#card-cvc-error").text(cc_cvc_number_invalid);
-						$("#card-cvc-error").css('display', 'block');
-						ccErrorFlag = false;
-					}
+				if (!paymill.validateCvc($("#paymill-card-cvc").val()) && paymill.cardType($("#paymill-card-number").val()).toLowerCase() !== 'maestro') {
+					$("#card-cvc-error").text(cc_cvc_number_invalid);
+					$("#card-cvc-error").css('display', 'block');
+					ccErrorFlag = false;
 				}
 				
 				if (!ccErrorFlag) {
