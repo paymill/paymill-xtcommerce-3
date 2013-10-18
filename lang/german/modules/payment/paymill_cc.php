@@ -39,7 +39,7 @@ define('MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_SAVED','Sichere Kreditkartenza
 define('MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_EXPIRY_INVALID','Das Gültigkeitsdatum ihrer Kreditkarte ist ungültig. Bitte korrigieren Sie Ihre Angaben.');
 define('MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_CARDNUMBER_INVALID','Die Kreditkarten-Nummer, die Sie angegeben haben, ist ungültig. Bitte korrigieren Sie Ihre Angaben.');
 define('MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_CVC_INVALID','Das Formularfeld CVC ist ein Pflichtfeld.');
-define('MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_OWNER_INVALID','Das Formularfeld Kreditkarteninhaber ist ein Pflichtfeld.');
+define('MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_OWNER_INVALID','Das Formularfeld Kreditkarteninhaber ist ein ungültig. Bitte korrigieren Sie Ihre Angaben.');
 define('MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_JANUARY','Januar');
 define('MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_FEBRUARY','Februar');
 define('MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_MARCH','M&auml;rz');

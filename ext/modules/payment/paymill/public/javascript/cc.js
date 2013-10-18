@@ -97,7 +97,7 @@ $(document).ready(function() {
 					ccErrorFlag = false;
 				}
 
-				if ($("#paymill-card-owner").val() === '') {
+				if (!paymill.validateHolder($("#paymill-card-owner").val())) {
 					$("#card-owner-error").text(cc_owner_invalid);
 					$("#card-owner-error").css('display', 'block');
 					ccErrorFlag = false;
