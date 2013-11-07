@@ -77,11 +77,15 @@ class Services_Paymill_Apiclient_Curl implements Services_Paymill_Apiclient_Inte
                 if (isset($this->_responseArray['body']['response_code'])) {
                     $responseCode = $this->_responseArray['body']['response_code'];
                 }
+                if ($responseCode === '' && isset($this->_responseArray['body']['data']['response_code'])) {
+                    $responseCode = $this->_responseArray['body']['data']['response_code'];
+                }
 
                 return array("data" => array(
                         "error" => $errorMessage,
-                        "response_code" => $responseCode
-                ));
+                        "response_code" => $responseCode,
+                        "http_status_code" => $httpStatusCode
+                        ));
             }
 
             return $this->_responseArray['body'];
