@@ -15,7 +15,10 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
     var $code, $title, $description = '', $enabled, $privateKey, $logging, $fastCheckoutFlag, $label, $order_status, $publicKey;
     var $bridgeUrl = 'https://bridge.paymill.com/';
     var $apiUrl = 'https://api.paymill.com/v2/';
-    
+    var $version = '1.3.1';
+    var $api_version = '2';
+
+
     /**
      * @var FastCheckout
      */
@@ -96,18 +99,8 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
             $error = urldecode($_GET['error']);
         }
 
-        switch ($error) {
-            case '100':
-                $error_text['error'] = utf8_decode(MODULE_PAYMENT_PAYMILL_TEXT_ERROR_100);
-                break;
-            case '200':
-                $error_text['error'] = utf8_decode(MODULE_PAYMENT_PAYMILL_TEXT_ERROR_200);
-                break;
-            case '300':
-                $error_text['error'] = utf8_decode(MODULE_PAYMENT_PAYMILL_TEXT_ERROR_300);
-                break;
-        }
-        
+        $error_text['error'] = utf8_decode(constant($error));
+
         return $error_text;
     }
 
@@ -156,6 +149,7 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
         global $order;
         
         $_SESSION['paymill_identifier'] = time();
+
         $this->paymentProcessor->setAmount((int) $_SESSION['paymill']['amount']);
         $this->paymentProcessor->setApiUrl((string) $this->apiUrl);
         $this->paymentProcessor->setCurrency((string) strtoupper($order->info['currency']));
@@ -168,22 +162,25 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
         $this->paymentProcessor->setSource($this->version . '_' . str_replace(' ', '_', PROJECT_VERSION));
 
         $this->fastCheckout->setFastCheckoutFlag($this->fastCheckoutFlag);
-        
+
         if ($_POST['paymill_token'] === 'dummyToken') {
             $this->fastCheckout();
         }
-        
+
         $data = $this->fastCheckout->loadFastCheckoutData($_SESSION['customer_id']);
         if (!empty($data['clientID'])) {
             $this->existingClient($data);
         }
-        
+
         $result = $this->paymentProcessor->processPayment();
         $_SESSION['paymill']['transaction_id'] = $this->paymentProcessor->getTransactionId();
 
         if (!$result) {
             unset($_SESSION['paymill_identifier']);
-            xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'step=step2&payment_error=' . $this->code . '&error=200', 'SSL', true, false));
+            if(true){
+                $errorCode = 'PAYMILL_'.$this->paymentProcessor->getErrorCode();
+            }
+            xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'step=step2&payment_error=' . $this->code . '&error='.$errorCode, 'SSL', true, false));
         }
         
         if ($this->fastCheckoutFlag) {
