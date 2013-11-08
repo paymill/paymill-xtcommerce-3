@@ -177,9 +177,7 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
 
         if (!$result) {
             unset($_SESSION['paymill_identifier']);
-            if(true){
-                $errorCode = 'PAYMILL_'.$this->paymentProcessor->getErrorCode();
-            }
+            $errorCode = 'PAYMILL_'.$this->paymentProcessor->getErrorCode();
             xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'step=step2&payment_error=' . $this->code . '&error='.$errorCode, 'SSL', true, false));
         }
         
