@@ -68,10 +68,24 @@ define('PAYMILL_50104', 'Die Transaktion wurde vom Authorisierungs-System abgele
 define('PAYMILL_50105', 'Die Konfiguration ist ungültig.');
 define('PAYMILL_50200', 'Technischer Fehler mit dem Bankkonto.');
 define('PAYMILL_50201', 'Dieser Kundenaccount ist auf einer Schwarzen Liste.');
-define('PAYMILL_50300', 'Es gibt einen teschnischen Fehler mit 3-D Secure.');
+define('PAYMILL_50300', 'Es gibt einen technischen Fehler mit 3-D Secure.');
 define('PAYMILL_50400', 'Ablehnung aufgrund von Risiko Problemen.');
 define('PAYMILL_50500', 'Generelle Zeitüberschreitung.');
 define('PAYMILL_50501', 'Die Schnittstelle zum Acquirer reagiert nicht); daher bekommen wir keine Antwort ob die Transaktion erfolgreich durchgelaufen ist.');
 define('PAYMILL_50502', 'Es gibt eine Zeitüberschreitung bei der Risiko-Management Transaktion.');
 define('PAYMILL_50600', 'Doppelte Transaktion.');
+define('PAYMILL_internal_server_error', 'Kommunikation mit dem PSP fehlgeschlagen');
+define('PAYMILL_invalid_public_key', ' Public Key ungültig');
+define('PAYMILL_invalid_payment_data', 'Für diesen Zahlungsmodus, Kreditkartentyp, Währung oder Land nicht zugelassen');
+define('PAYMILL_unknown_error', 'Unbekannter Fehler');
+define('PAYMILL_field_invalid_amount_int', 'Fehlender oder ungültiger Betrag für 3-D Secure');
+define('PAYMILL_field_invalid_amount', 'Fehlender oder ungültiger Betrag für 3-D Secure');
+define('PAYMILL_field_invalid_currency', 'Fehlende oder ungültige Währung für 3-D Secure');
+define('PAYMILL_field_invalid_account_number', 'Fehlende oder ungültige Kontonummer');
+define('PAYMILL_field_invalid_account_holder', 'Fehlender oder ungültiger Karteninhaber');
+define('PAYMILL_field_invalid_bank_code', 'Fehlende oder ungültige Bankleitzahl');
+define('PAYMILL_field_invalid_iban', 'Fehlende oder ungültige IBAN');
+define('PAYMILL_field_invalid_bic', 'Fehlende oder ungültiger BIC');
+define('PAYMILL_field_invalid_country', 'Fehlendes oder nicht unterstütztes Land');
+define('PAYMILL_field_invalid_bank_data', 'Fehlende oder ungültige Bankdatenkombination');
 ?>

@@ -74,4 +74,18 @@ define('PAYMILL_50500', 'General timeout.');
 define('PAYMILL_50501', 'Timeout on side of the acquirer.');
 define('PAYMILL_50502', 'Risk management transaction timeout.');
 define('PAYMILL_50600', 'Duplicate transaction.');
+define('PAYMILL_internal_server_error', 'Communication with PSP failed');
+define('PAYMILL_invalid_public_key', 'Public Key is invalid');
+define('PAYMILL_invalid_payment_data', 'Payment mode, card type, currency or country not accepted.');
+define('PAYMILL_unknown_error', 'Unknown Error');
+define('PAYMILL_field_invalid_amount_int', 'Invalid or missing amount for 3-D Secure');
+define('PAYMILL_field_invalid_amount', 'Invalid or missing amount for 3-D Secure');
+define('PAYMILL_field_invalid_currency', 'Invalid or missing currency for 3-D Secure');
+define('PAYMILL_field_invalid_account_number', 'Invalid or missing account number');
+define('PAYMILL_field_invalid_account_holder', 'Invalid or missing account holder');
+define('PAYMILL_field_invalid_bank_code', 'Invalid or missing bank code');
+define('PAYMILL_field_invalid_iban', 'Invalid or missing IBAN');
+define('PAYMILL_field_invalid_bic', 'Invalid or missing BIC');
+define('PAYMILL_field_invalid_country', 'Missing or not supported country');
+define('PAYMILL_field_invalid_bank_data', 'Bank data does not match');
 ?>

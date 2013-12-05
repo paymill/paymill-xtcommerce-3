@@ -99,7 +99,7 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
             $error = urldecode($_GET['error']);
         }
 
-        $error_text['error'] = utf8_decode(constant($error));
+        $error_text['error'] = utf8_decode(constant('PAYMILL_'.$error));
 
         return $error_text;
     }
@@ -177,7 +177,7 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
 
         if (!$result) {
             unset($_SESSION['paymill_identifier']);
-            $errorCode = 'PAYMILL_'.$this->paymentProcessor->getErrorCode();
+            $errorCode = $this->paymentProcessor->getErrorCode();
             xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'step=step2&payment_error=' . $this->code . '&error='.$errorCode, 'SSL', true, false));
         }
         

@@ -90,4 +90,18 @@ define('PAYMILL_50500', 'General timeout.');
 define('PAYMILL_50501', 'Timeout on side of the acquirer.');
 define('PAYMILL_50502', 'Risk management transaction timeout.');
 define('PAYMILL_50600', 'Duplicate transaction.');
+define('PAYMILL_internal_server_error', 'Communication with PSP failed');
+define('PAYMILL_invalid_public_key', 'Public Key is invalid');
+define('PAYMILL_invalid_payment_data', 'Payment mode, card type, currency or country not accepted.');
+define('PAYMILL_unknown_error', 'Unknown Error');
+define('PAYMILL_3ds_cancelled', '3-D Secure process has been aborted');
+define('PAYMILL_field_invalid_card_number', 'Invalid or missing card number');
+define('PAYMILL_field_invalid_card_exp_year', 'Invalid or missing expiry year');
+define('PAYMILL_field_invalid_card_exp_month', 'Invalid or missing expiry month');
+define('PAYMILL_field_invalid_card_exp', 'Card no longer (or not yet) valid');
+define('PAYMILL_field_invalid_card_cvc', 'Invalid CVC');
+define('PAYMILL_field_invalid_card_holder', 'Invalid card holder');
+define('PAYMILL_field_invalid_amount_int', 'Invalid or missing amount for 3-D Secure');
+define('PAYMILL_field_invalid_amount', 'Invalid or missing amount for 3-D Secure');
+define('PAYMILL_field_invalid_currency', 'Invalid or missing currency for 3-D Secure');
 ?>
