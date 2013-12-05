@@ -8,8 +8,6 @@ define('MODULE_PAYMENT_PAYMILL_ELV_TRANSACTION_ORDER_STATUS_ID_TITLE', 'Transact
 define('MODULE_PAYMENT_PAYMILL_ELV_TRANSACTION_ORDER_STATUS_ID_DESC', '');
 define('MODULE_PAYMENT_PAYMILL_ELV_FASTCHECKOUT_TITLE', 'Fast Checkout');
 define('MODULE_PAYMENT_PAYMILL_ELV_FASTCHECKOUT_DESC', '');
-define('MODULE_PAYMENT_PAYMILL_ELV_LABEL_TITLE', 'Zeige Paymill Label');
-define('MODULE_PAYMENT_PAYMILL_ELV_LABEL_DESC', '');
 define('MODULE_PAYMENT_PAYMILL_ELV_SORT_ORDER_TITLE', 'Anzeigereihenfolge');
 define('MODULE_PAYMENT_PAYMILL_ELV_SORT_ORDER_DESC', 'Reihenfolge der Anzeige. Kleinste Ziffer wird zuerst angezeigt.');
 define('MODULE_PAYMENT_PAYMILL_ELV_PRIVATEKEY_TITLE', 'Geheimer API Key');
@@ -33,7 +31,6 @@ define('MODULE_PAYMENT_PAYMILL_ELV_TEXT_PUBLIC_TITLE', 'ELV');
 define('MODULE_PAYMENT_PAYMILL_ELV_TEXT_ACCOUNT', 'Kontonummer');
 define('MODULE_PAYMENT_PAYMILL_ELV_TEXT_BANKCODE', 'Bankleitzahl');
 define('MODULE_PAYMENT_PAYMILL_ELV_TEXT_ACCOUNT_HOLDER', 'Kontoinhaber');
-define('MODULE_PAYMENT_PAYMILL_ELV_TEXT_SAVED', 'ELV powered by');
 define('MODULE_PAYMENT_PAYMILL_ELV_TEXT_ACCOUNT_INVALID', 'Die Kontonummer, die Sie angegeben haben, ist ungültig. Bitte korrigieren Sie Ihre Angaben.');
 define('MODULE_PAYMENT_PAYMILL_ELV_TEXT_BANKCODE_INVALID', 'Die Bankleitzahl, die Sie angegeben haben, ist ungültig. Bitte korrigieren Sie Ihre Angaben.');
 define('MODULE_PAYMENT_PAYMILL_ELV_TEXT_ACCOUNT_HOLDER_INVALID', 'Der Kontoinhaber, die Sie angegeben haben, ist ungültig. Bitte korrigieren Sie Ihre Angaben.');
