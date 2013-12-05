@@ -28,7 +28,7 @@ class paymill_elv extends paymill_abstract
             }
             
             if ($this->logging) {
-                $this->description = '<a href="' . xtc_href_link('paymill_logging.php') . '">' . MODULE_PAYMENT_PAYMILL_ELV_DESCRIPTION . '</a>';
+                $this->description .= '<p><a href="' . xtc_href_link('paymill_logging.php') . '">' . MODULE_PAYMENT_PAYMILL_ELV_DESCRIPTION . '</a></p>';
             }
         }
 
