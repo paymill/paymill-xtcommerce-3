@@ -6,6 +6,10 @@ class FastCheckout
     
     public function canCustomerFastCheckoutCcTemplate($userId)
     {
+        if(!isset($userId) || $userId == ''){
+            return;
+        }
+
         $flag = 'false';
         if ($this->canCustomerFastCheckoutCc($userId)) {
             $flag = 'true';
@@ -16,6 +20,10 @@ class FastCheckout
     
     public function canCustomerFastCheckoutElvTemplate($userId)
     {
+        if(!isset($userId) || $userId == ''){
+            return;
+        }
+
         $flag = 'false';
         if ($this->canCustomerFastCheckoutElv($userId)) {
             $flag = 'true';
@@ -36,6 +44,10 @@ class FastCheckout
     
     public function saveCcIds($userId, $newClientId, $newPaymentId)
     {
+        if(!isset($userId) || $userId == ''){
+            return;
+        }
+
         if ($this->_canUpdate($userId)) {
             $sql = "UPDATE `pi_paymill_fastcheckout`SET `paymentID_CC` = '$newPaymentId' WHERE `userID` = '$userId'";
         } else {
@@ -47,6 +59,10 @@ class FastCheckout
     
     public function saveElvIds($userId, $newClientId, $newPaymentId)
     {   
+        if(!isset($userId) || $userId == ''){
+            return;
+        }
+
         if ($this->_canUpdate($userId)) {
             $sql = "UPDATE `pi_paymill_fastcheckout`SET `paymentID_ELV` = '$newPaymentId' WHERE `userID` = '$userId'";
         } else {
@@ -71,12 +87,20 @@ class FastCheckout
     
     public function hasElvPaymentId($userId)
     {
+        if(!isset($userId) || $userId == ''){
+            return;
+        }
+
         $data = $this->loadFastCheckoutData($userId);
         return $data && array_key_exists('paymentID_ELV', $data) && !empty($data['paymentID_ELV']);
     }
     
     public function hasCcPaymentId($userId)
     {
+        if(!isset($userId) || $userId == ''){
+            return;
+        }
+
         $data = $this->loadFastCheckoutData($userId);
         
         return $data && array_key_exists('paymentID_CC', $data) && !empty($data['paymentID_CC']);
