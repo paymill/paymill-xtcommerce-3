@@ -1,3 +1,6 @@
+##1.3.2
+* Update fast checkout
+
 ##1.3.1
 * Added improved error feedback
 * Updated Lib

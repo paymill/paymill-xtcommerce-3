@@ -7,7 +7,7 @@ class FastCheckout
     public function canCustomerFastCheckoutCcTemplate($userId)
     {
         if(!isset($userId) || $userId == ''){
-            return;
+            return 'false';
         }
 
         $flag = 'false';
@@ -21,7 +21,7 @@ class FastCheckout
     public function canCustomerFastCheckoutElvTemplate($userId)
     {
         if(!isset($userId) || $userId == ''){
-            return;
+            return 'false';
         }
 
         $flag = 'false';
@@ -45,7 +45,7 @@ class FastCheckout
     public function saveCcIds($userId, $newClientId, $newPaymentId)
     {
         if(!isset($userId) || $userId == ''){
-            return;
+            return false;
         }
 
         if ($this->_canUpdate($userId)) {
@@ -60,7 +60,7 @@ class FastCheckout
     public function saveElvIds($userId, $newClientId, $newPaymentId)
     {   
         if(!isset($userId) || $userId == ''){
-            return;
+            return false;
         }
 
         if ($this->_canUpdate($userId)) {
@@ -88,7 +88,7 @@ class FastCheckout
     public function hasElvPaymentId($userId)
     {
         if(!isset($userId) || $userId == ''){
-            return;
+            return false;
         }
 
         $data = $this->loadFastCheckoutData($userId);
@@ -98,7 +98,7 @@ class FastCheckout
     public function hasCcPaymentId($userId)
     {
         if(!isset($userId) || $userId == ''){
-            return;
+            return false;
         }
 
         $data = $this->loadFastCheckoutData($userId);
