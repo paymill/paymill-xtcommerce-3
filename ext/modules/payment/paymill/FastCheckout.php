@@ -1,114 +1,268 @@
 <?php
+require_once(DIR_FS_CATALOG . 'ext/modules/payment/paymill/lib/Services/Paymill/Clients.php');
+require_once(DIR_FS_CATALOG . 'ext/modules/payment/paymill/lib/Services/Paymill/Payments.php');
 
 class FastCheckout
 {
-    private $_fastCheckoutFlag = false;
-    
-    public function canCustomerFastCheckoutCcTemplate($userId)
-    {
-        if(!isset($userId) || $userId == ''){
-            return 'false';
-        }
+    var $_fastCheckoutFlag = false;
+    var $_unique_functions; //Helper class to wrap the methods unique per shop
+    var $_apiUrl = 'https://api.paymill.com/v2/';
+    var $_privateKey;
+    var $_clients;
+    var $_payments;
 
-        $flag = 'false';
-        if ($this->canCustomerFastCheckoutCc($userId)) {
-            $flag = 'true';
-        }
-        
-        return $flag;
-    }    
-    
-    public function canCustomerFastCheckoutElvTemplate($userId)
+    function __construct($uniqueFunctions)
     {
-        if(!isset($userId) || $userId == ''){
-            return 'false';
-        }
+        $this->_unique_functions = $uniqueFunctions;
+        $this->_privateKey = trim(MODULE_PAYMENT_PAYMILL_ELV_PRIVATEKEY);
+        $this->_clients = new Services_Paymill_Clients($this->_privateKey, $this->_apiUrl);
+        $this->_payments = new Services_Paymill_Payments($this->_privateKey, $this->_apiUrl);
+    }
 
-        $flag = 'false';
-        if ($this->canCustomerFastCheckoutElv($userId)) {
-            $flag = 'true';
-        }
-        
-        return $flag;
-    }    
-    
-    public function canCustomerFastCheckoutCc($userId)
-    {   
-        return $this->hasCcPaymentId($userId) && $this->_fastCheckoutFlag;
-    }
-    
-    public function canCustomerFastCheckoutElv($userId)
-    {   
-        return $this->hasElvPaymentId($userId) && $this->_fastCheckoutFlag;
-    }
-    
-    public function saveCcIds($userId, $newClientId, $newPaymentId)
+    /**
+     * Determines whether a credit card payment is applicable for fast checkout or not
+     * The result is casted to sting to allow print in javascript.
+     * @param $userId
+     *
+     * @return string
+     */
+    function canCustomerFastCheckoutCc($userId)
     {
-        if(!isset($userId) || $userId == ''){
+        return $this->hasCcPaymentId($userId) && $this->_fastCheckoutFlag && $this->hasClient($userId) ? 'true' : 'false';
+    }
+
+    /**
+     * Determines whether a direct debit payment is applicable for fast checkout or not
+     * The result is casted to sting to allow print in javascript.
+     * @param $userId
+     *
+     * @return string
+     */
+    function canCustomerFastCheckoutElv($userId)
+    {
+        return $this->hasElvPaymentId($userId) && $this->_fastCheckoutFlag && $this->hasClient($userId) ? 'true' : 'false';
+    }
+
+    /**
+     * Saves the new Payment and Client id for credit card payment
+     *
+     * @param $userId
+     * @param $newClientId
+     * @param $newPaymentId
+     *
+     * @return bool
+     */
+    function saveCcIds($userId, $newClientId, $newPaymentId = 'NULL')
+    {
+        if(!$newClientId || $newClientId === null || $newClientId === ''){
             return false;
         }
-
-        if ($this->_canUpdate($userId)) {
-            $sql = "UPDATE `pi_paymill_fastcheckout`SET `paymentID_CC` = '$newPaymentId' WHERE `userID` = '$userId'";
-        } else {
-            $sql = "INSERT INTO `pi_paymill_fastcheckout` (`userID`, `clientID`, `paymentID_CC`) VALUES ('$userId', '$newClientId', '$newPaymentId')";
-        }
-
-        xtc_db_query($sql);
+        return $this->_saveIds('CC', $userId, $newClientId, $newPaymentId);
     }
-    
-    public function saveElvIds($userId, $newClientId, $newPaymentId)
-    {   
-        if(!isset($userId) || $userId == ''){
+
+    /**
+     * Saves the new Payment and Client id for direct debit payment
+     *
+     * @param $userId
+     * @param $newClientId
+     * @param $newPaymentId
+     *
+     * @return bool
+     */
+    function saveElvIds($userId, $newClientId, $newPaymentId = 'NULL')
+    {
+        if(!$newClientId || $newClientId === null || $newClientId === ''){
             return false;
         }
-
-        if ($this->_canUpdate($userId)) {
-            $sql = "UPDATE `pi_paymill_fastcheckout`SET `paymentID_ELV` = '$newPaymentId' WHERE `userID` = '$userId'";
-        } else {
-            $sql = "INSERT INTO `pi_paymill_fastcheckout` (`userID`, `clientID`, `paymentID_ELV`) VALUES ('$userId', '$newClientId', '$newPaymentId')";
-        }
-        
-       xtc_db_query($sql);
+        return $this->_saveIds('ELV', $userId, $newClientId, $newPaymentId);
     }
-    
-    private function _canUpdate($userId)
+
+    /**
+     * Validates the given data before saving it for the given user and payment
+     *
+     * @param string $paymentType may be either CC or ELV
+     * @param string $userId
+     * @param string $newClientId
+     * @param string $newPaymentId
+     *
+     * @throws Exception
+     * @return bool
+     */
+    function _saveIds($paymentType, $userId, $newClientId, $newPaymentId)
     {
+        if($paymentType !== 'CC' && $paymentType !== 'ELV'){
+            throw new Exception('Invalid Type in _saveIds: '.$paymentType);
+        }
+
+        if( !$userId || $userId === '' || $userId === null){
+            throw new Exception('Invalid userId: '.var_export($userId, true));
+        }
+
+        //Gather Data needed
         $data = $this->loadFastCheckoutData($userId);
-        return $data;
-    }
-    
-    public function loadFastCheckoutData($userId)
-    {
-        $sql = "SELECT * FROM `pi_paymill_fastcheckout` WHERE `userID` = '$userId'";
-        
-        return xtc_db_fetch_array(xtc_db_query($sql));
-    }
-    
-    public function hasElvPaymentId($userId)
-    {
-        if(!isset($userId) || $userId == ''){
-            return false;
+        $success = false;
+
+        //Validate Client
+        $client = $this->_clients->getOne($newClientId);
+
+        if($client && array_key_exists('id', $client) && !empty($client['id'])){
+
+            //Validate Payment
+            $payment = $this->_payments->getOne($newPaymentId);
+
+            if($payment && array_key_exists('id', $payment) && !empty($payment['id'])){
+
+                //Check if valid data is present
+                $client = $this->_clients->getOne($data['clientID']);
+                if ($client && array_key_exists('id', $client) && !empty($client['id'])) {
+                    $success = $this->_updateIds($paymentType, $userId, $newPaymentId);
+                } else {
+                    $success = $this->_insertIds($paymentType, $userId, $newClientId, $newPaymentId);
+                }
+            }
         }
 
-        $data = $this->loadFastCheckoutData($userId);
-        return $data && array_key_exists('paymentID_ELV', $data) && !empty($data['paymentID_ELV']);
+        return $success;
     }
-    
-    public function hasCcPaymentId($userId)
+
+    /**
+     * Updates the database entry for the given user in the id table
+     * @param $paymentType
+     * @param $userId
+     * @param $newPaymentId
+     *
+     * @return bool
+     */
+    function _updateIds($paymentType, $userId, $newPaymentId)
     {
-        if(!isset($userId) || $userId == ''){
-            return false;
+        $sql = "UPDATE `". $this->_unique_functions->getFastCheckoutTableName() . "` SET `paymentID_". $paymentType ."` = '$newPaymentId' WHERE `userID` = '$userId'";
+        $success = $this->_unique_functions->dbQuery($sql);
+        $success = $success === true;
+        return $success;
+    }
+
+    /**
+     * Inserts the new data for the given user into the id table.
+     * If data is already present, it will be replaced
+     * @param $paymentType
+     * @param $userId
+     * @param $newClientId
+     * @param $newPaymentId
+     *
+     * @return bool
+     */
+    function _insertIds($paymentType, $userId, $newClientId, $newPaymentId)
+    {
+        $sql = "REPLACE INTO `". $this->_unique_functions->getFastCheckoutTableName() . "` (`userID`, `clientID`, `paymentID_". $paymentType ."`) VALUES ('$userId', '$newClientId', '$newPaymentId')";
+        $success = $this->_unique_functions->dbQuery($sql);
+        $success = $success === true;
+        return $success;
+    }
+
+    /**
+     * Returns the saved fast checkout data for the given user
+     * @param $userId
+     *
+     * @return mixed
+     */
+    function loadFastCheckoutData($userId)
+    {
+        $sql = "SELECT * FROM `". $this->_unique_functions->getFastCheckoutTableName() . "` WHERE `userID` = '$userId'";
+        $fastCheckout = $this->_unique_functions->dbFetchArray($sql);
+        return $fastCheckout;
+    }
+
+    /**
+     * Returns if there is a elv payment id for the given user
+     * @param $userId
+     *
+     * @return bool
+     */
+    function hasElvPaymentId($userId)
+    {
+        return $this->_hasPaymentId('ELV',$userId);
+    }
+
+    /**
+     * Returns if there is a cc payment id for the given user
+     * @param $userId
+     *
+     * @return bool
+     */
+    function hasCcPaymentId($userId)
+    {
+        return $this->_hasPaymentId('CC',$userId);
+    }
+
+    /**
+     * Determines if there is a payment id for the given user and payment
+     * @param string $paymentType Can be either CC or ELV
+     * @param string $userId
+     *
+     * @return bool
+     */
+    function _hasPaymentId($paymentType, $userId)
+    {
+        $hasPaymentId = false;
+        if (isset($userId) && $userId != '') {
+            $data = $this->loadFastCheckoutData($userId);
+            $arrayKey = 'paymentID_'.$paymentType;
+
+            if($data && array_key_exists($arrayKey, $data) && !empty($data[$arrayKey])){
+                $payment = $this->_payments->getOne($data[$arrayKey]);
+                $hasPaymentId = (isset($payment['id']) && $this->hasClient($userId));
+            }
         }
 
-        $data = $this->loadFastCheckoutData($userId);
-        
-        return $data && array_key_exists('paymentID_CC', $data) && !empty($data['paymentID_CC']);
+        return $hasPaymentId;
     }
 
-    public function setFastCheckoutFlag($fastCheckoutFlag)
+    /**
+     * Determines if there is a client for the given user.
+     * If the client present is invalid, the client and both payments will be cleared to avoid any further errors
+     * @param $userId
+     *
+     * @return bool
+     */
+    function hasClient($userId)
+    {
+        $hasClient = false;
+        if (isset($userId) && $userId != '') {
+            $data = $this->loadFastCheckoutData($userId);
+            if($data && array_key_exists('clientID', $data) && !empty($data['clientID'])){
+                $client = $this->_clients->getOne($data['clientID']);
+                $hasClient = ($client && array_key_exists('id', $client) && !empty($client['id']));
+            }
+
+            if(!$hasClient){
+                $this->_removeIds($userId);
+            }
+        }
+
+        return $hasClient;
+    }
+
+    /**
+     * Removes all saved ids for a given user
+     * @param $userId
+     *
+     * @return bool
+     */
+    function _removeIds($userId)
+    {
+        $sql = "REPLACE INTO `". $this->_unique_functions->getFastCheckoutTableName() . "` (`userID`, `clientID`, `paymentID_CC`, `paymentID_ELV`) VALUES ('$userId', NULL, NULL, NULL)";
+        $success = $this->_unique_functions->dbQuery($sql);
+        $success = $success === true;
+        return $success;
+    }
+
+    /**
+     * Sets the fast checkout flag
+     * @param $fastCheckoutFlag
+     */
+    function setFastCheckoutFlag($fastCheckoutFlag)
     {
         $this->_fastCheckoutFlag = $fastCheckoutFlag;
     }
-    
+
 }

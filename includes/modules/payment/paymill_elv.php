@@ -76,7 +76,7 @@ class paymill_elv extends paymill_abstract
                 . 'var paymill_elv_code = "' . $payment['code'] . '";'
                 . 'var paymill_elv_holder = "' . utf8_decode($payment['holder']) . '";'
                 . 'var paymill_elv_account = "' . $payment['account'] . '";'
-                . 'var paymill_elv_fastcheckout = ' . $this->fastCheckout->canCustomerFastCheckoutElvTemplate($_SESSION['customer_id']) . ';'
+                . 'var paymill_elv_fastcheckout = ' . $this->fastCheckout->canCustomerFastCheckoutElv($_SESSION['customer_id']) . ';'
                 . 'var checkout_payment_link = "' . xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'step=step2&payment_error=' . $this->code . '&error=300', 'SSL', true, false) . '";'
                 . '</script>'
                 . '<script type="text/javascript" src="ext/modules/payment/paymill/public/javascript/elv.js"></script>';

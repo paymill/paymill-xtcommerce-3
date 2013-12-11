@@ -5,6 +5,7 @@ require_once(DIR_FS_CATALOG . 'ext/modules/payment/paymill/lib/Services/Paymill/
 require_once(DIR_FS_CATALOG . 'ext/modules/payment/paymill/lib/Services/Paymill/Payments.php');
 require_once(DIR_FS_CATALOG . 'ext/modules/payment/paymill/lib/Services/Paymill/Clients.php');
 require_once(DIR_FS_CATALOG . 'ext/modules/payment/paymill/FastCheckout.php');
+require_once(DIR_FS_CATALOG . 'xtc_unique_functions.php');
 
 /**
  * Paymill payment plugin
@@ -39,7 +40,8 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
     {
         $this->description = '';
         $this->description .= '<p style="font-weight: bold;">'.$this->version.'</p>';
-        $this->fastCheckout = new FastCheckout();
+        $uniqueFunctions = new unique_functions();
+        $this->fastCheckout = new FastCheckout($uniqueFunctions);
         $this->paymentProcessor = new Services_Paymill_PaymentProcessor();
     }
     
@@ -195,30 +197,31 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
     function existingClient($data)
     {
         global $order;
-        
-        $client = $this->clients->getOne($data['clientID']);
-        if ($client['email'] !== $order->customer['email_address']) {
-            $this->clients->update(
-                array(
-                    'id' => $data['clientID'],
-                    'email' => $order->customer['email_address']
-                )
-            );
-        }
+        if($this->fastCheckout->hasClient($_SESSION['customer_id'])){
+            $client = $this->clients->getOne($data['clientID']);
+            if ($client['email'] !== $order->customer['email_address']) {
+                $this->clients->update(
+                    array(
+                        'id' => $data['clientID'],
+                        'email' => $order->customer['email_address']
+                    )
+                );
+            }
 
-        $this->paymentProcessor->setClientId($client['id']);
+            $this->paymentProcessor->setClientId($client['id']);
+        }
     }
     
     function fastCheckout()
     {
-        if ($this->fastCheckout->canCustomerFastCheckoutCc($_SESSION['customer_id']) && $this->code === 'paymill_cc') {
+        if ($this->fastCheckout->canCustomerFastCheckoutCc($_SESSION['customer_id']) == 'true' && $this->code === 'paymill_cc') {
             $data = $this->fastCheckout->loadFastCheckoutData($_SESSION['customer_id']);
             if (!empty($data['paymentID_CC'])) {
                 $this->paymentProcessor->setPaymentId($data['paymentID_CC']);
             }
         }
         
-        if ($this->fastCheckout->canCustomerFastCheckoutElv($_SESSION['customer_id']) && $this->code === 'paymill_elv') {
+        if ($this->fastCheckout->canCustomerFastCheckoutElv($_SESSION['customer_id']) == 'true'  && $this->code === 'paymill_elv') {
             $data = $this->fastCheckout->loadFastCheckoutData($_SESSION['customer_id']);
             
             if (!empty($data['paymentID_ELV'])) {
@@ -230,31 +233,45 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
     function savePayment()
     {
         if ($this->code === 'paymill_cc') {
-            $this->fastCheckout->saveCcIds(
+            $result = $this->fastCheckout->saveCcIds(
                 $_SESSION['customer_id'], $this->paymentProcessor->getClientId(), $this->paymentProcessor->getPaymentId()
             );
         }
 
         if ($this->code === 'paymill_elv') {
-            $this->fastCheckout->saveElvIds(
+            $result = $this->fastCheckout->saveElvIds(
                 $_SESSION['customer_id'], $this->paymentProcessor->getClientId(), $this->paymentProcessor->getPaymentId()
             );
         }
+
+        $this->log(
+             $result ? "Payment saved.": "Payment not saved.",
+                 var_export(array(
+                                 'userId' => $_SESSION['customer_id'],
+                                 'clientId' => $this->paymentProcessor->getClientId(),
+                                 'paymentId' => $this->paymentProcessor->getPaymentId()
+                            ), true));
+
     }
     
     function saveClient()
     {
         if ($this->code === 'paymill_cc') {
-            $this->fastCheckout->saveCcIds(
-                $_SESSION['customer_id'], $this->paymentProcessor->getClientId(), ''
-            );
+            $result = $this->fastCheckout->saveCcIds( $_SESSION['customer_id'], $this->paymentProcessor->getClientId() );
+
         }
 
         if ($this->code === 'paymill_elv') {
-            $this->fastCheckout->saveElvIds(
-                $_SESSION['customer_id'], $this->paymentProcessor->getClientId(), ''
-            );
+            $result = $this->fastCheckout->saveElvIds( $_SESSION['customer_id'], $this->paymentProcessor->getClientId() );
         }
+
+        $this->log(
+             $result ? "Client has been saved.": "Client has not been saved.",
+                 var_export(array(
+                                 'userId' => $_SESSION['customer_id'],
+                                 'clientId' => $this->paymentProcessor->getClientId(),
+                            ), true));
+
     }
     
     function after_process()
@@ -318,6 +335,10 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
         return $status_id;
     }
 
+    /**
+     * @param String $messageInfo
+     * @param String $debugInfo
+     */
     function log($messageInfo, $debugInfo)
     {
         if ($this->logging) {

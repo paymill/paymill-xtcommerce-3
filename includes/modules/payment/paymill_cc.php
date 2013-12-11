@@ -111,7 +111,7 @@ class paymill_cc extends paymill_abstract
                     . 'var paymill_cc_holder_val = "' . utf8_decode($payment['card_holder']) . '";'
                     . 'var paymill_cc_expiry_month_val = "' . $payment['expire_month'] . '";'
                     . 'var paymill_cc_expiry_year_val = "' . $payment['expire_year'] . '";'
-                    . 'var paymill_cc_fastcheckout = ' . $this->fastCheckout->canCustomerFastCheckoutCcTemplate($_SESSION['customer_id']) . ';'
+                    . 'var paymill_cc_fastcheckout = ' . $this->fastCheckout->canCustomerFastCheckoutCc($_SESSION['customer_id']) . ';'
                     . 'var checkout_payment_link = "' . xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'step=step2&payment_error=' . $this->code . '&error=', 'SSL', true, false) . '";'
                 . '</script>'
                 . '<script type="text/javascript" src="ext/modules/payment/paymill/public/javascript/cc.js"></script>';
