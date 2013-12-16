@@ -1,8 +1,8 @@
 <?php
-require_once('lib/Services/Paymill/Webhooks.php');
 abstract class WebHooksAbstract
 {
     var $_apiUrl = 'https://api.paymill.com/v2/';
+
     var $_request = null;
 
     /** @var  String */
@@ -11,9 +11,26 @@ abstract class WebHooksAbstract
     public function __construct($privateKey)
     {
         $this->_privateKey = $privateKey;
-        if(!$this->_validatePrivateKey()){
+        if (!$this->_validatePrivateKey()) {
             throw new Exception("Invalid Private Key.");
         }
+    }
+
+    /**
+     * Validates the required parameters
+     *
+     * @return bool
+     */
+    private function _validatePrivateKey()
+    {
+        $privateKeyValid = false;
+        $privateKey = $this->_privateKey;
+
+        if (isset($privateKey) && $privateKey != '' && $privateKey != '0') {
+            $privateKeyValid = true;
+        }
+
+        return $privateKeyValid;
     }
 
     /**
@@ -36,7 +53,7 @@ abstract class WebHooksAbstract
         if (method_exists($this, $action)) {
             $this->$action();
         } else {
-            throw new Exception($action.' not defined!');
+            throw new Exception($action . ' not defined!');
         }
     }
 
@@ -45,105 +62,125 @@ abstract class WebHooksAbstract
      */
     public function registerAction()
     {
+        $this->requireWebhooks();
         $webHooks = new Services_Paymill_Webhooks($this->_privateKey, $this->_apiUrl);
         $eventList = $this->getEventList();
-        foreach($eventList as $url => $eventName){
+        $data = array();
+        foreach ($eventList as $url => $eventName) {
             $parameters = array(
-                'url' => $url,
+                'url'         => $url,
                 'event_types' => array($eventName)
             );
-            $webHooks->create($parameters);
+            $hook = $webHooks->create($parameters);
+            $this->saveWebhook($hook['id'],$hook['url'], $hook['livemode']? 'live' : 'test', $hook['created_at']);
+            $data[] = $hook;
         }
+        $this->log("Webhooks created.", var_export($data, true));
+    }
+
+    /**
+     * Removes all registered web-hooks
+     */
+    public function removeAction()
+    {
+        $this->requireWebhooks();
+        $webHooks = new Services_Paymill_Webhooks($this->_privateKey, $this->_apiUrl);
+        $hooks = $this->loadAllWebHooks();
+
+        foreach ($hooks as $hook) {
+            $webHooks->delete($hook);
+            $this->removeWebhook($hook);
+        }
+
+        $this->log("Webhooks deleted.", var_export($hooks, true));
 
     }
 
     /**
-     * Validates the required parameters
-     * @return bool
+     * Saves the web-hook into the web-hook table
+     *
+     * @param String $id
+     * @param String $url
+     * @param String $mode
+     * @param String $created_at
+     * @throws Exception
+     * @return void
      */
-    private function _validatePrivateKey()
-    {
-        $privateKeyValid = false;
-        $privateKey = $this->_privateKey;
+    abstract function saveWebhook($id, $url, $mode, $created_at);
 
-        if(isset($privateKey) && $privateKey != '' && $privateKey != '0'){
-            $privateKeyValid = true;
-        }
+    /**
+     * Removes the web-hook from the web-hook table
+     * @param String $id
+     * @throws Exception
+     * @return array
+     */
+    abstract function removeWebhook($id);
 
-       return $privateKeyValid;
-    }
+    /**
+     * Returns the ids of all web-hooks from the web-hook table
+     * @throws Exception
+     * @return array
+     */
+    abstract function loadAllWebHooks();
+
+    /**
+     * Required the Libs WebHooks class
+     * @return void
+     */
+    abstract function requireWebhooks();
+
+    /**
+     * Returns the list of events to be created
+     *
+     * @return array
+     */
+    abstract function getEventList();
 
     /**
      * Returns the status indicating a successful update
      */
-    public function successAction(){
-        header("HTTP/1.1 200 OK");
-    }
-
-    /**
-     * Eventhandler vor refund actions
-     */
-    public function refundAction(){
-        $this->_updateOrder('Refund');
-    }
-
-    /**
-     * Handles the refund and chargeback events
-     * @param $eventType
-     */
-    private function _updateOrder($eventType){
-        $this->log("Updating Order.", var_export($this->_request, true));
-//        $data = json_decode();
-//        if (!is_null($data) && isset($data->event) && isset($data->event->event_resource)) {
-//            if (isset($data->event->event_resource->transaction)) {
-//                $description = array();
-//                if (preg_match("/OrderID: (\S*)/", $data->event->event_resource->transaction->description, $description)) {
-//                    $order = oxNew("oxorder");
-//                    $order->load($description[1]);
-//                    $status = '';
-//                    if ($data->event->event_resource->amount == $order->getTotalOrderSum()) {
-//                        $order->oxorder__oxstorno = oxNew('oxField', 1, oxField::T_RAW);
-//                        $status = strtoupper($data->event->event_resource->status);
-//                    } else {
-//                        $status = 'PARTIAL - ' . strtoupper($data->event->event_resource->status);
-//                    }
-//
-//                    $order->oxorder__oxtransstatus = oxNew('oxField', $status, oxField::T_RAW);
-//
-//                    $order->save();
-//                }
-//            }
-//        }
-    }
-
-    public function chargebackAction(){
-        //@todo handle chargeback status updates here
-    }
-
-    /**
-     * @todo Remove this method since it is restricted to xtc
-     * @param String $messageInfo
-     * @param String $debugInfo
-     */
-    function log($messageInfo, $debugInfo)
+    public function successAction()
     {
-        if ($this->logging) {
-            if (array_key_exists('paymill_identifier', $_SESSION)) {
-                xtc_db_query("INSERT INTO `pi_paymill_logging` "
-                             . "(debug, message, identifier) "
-                             . "VALUES('"
-                             . xtc_db_input($debugInfo) . "', '"
-                             . xtc_db_input($messageInfo) . "', '"
-                             . xtc_db_input($_SESSION['paymill_identifier'])
-                             . "')"
-                );
-            }
+        exit(header("HTTP/1.1 200 OK"));
+    }
+
+    /**
+     * Eventhandler for refund actions
+     */
+    public function refundAction()
+    {
+        if($this->getWebhookState()){
+            $this->_request['action'] = 'Refunded';
+            $this->updateOrderStatus();
+        } else {
+            $this->successAction();
         }
     }
 
     /**
-     * Returns the list of events to be created
-     * @return array
+     * Eventhandler for chargeback actions
      */
-    abstract function getEventList();
+    public function chargebackAction()
+    {
+        if($this->getWebhookState()){
+            $this->_request['action'] = 'Charged back';
+            $this->updateOrderStatus();
+        } else {
+            $this->successAction();
+        }
+    }
+
+    public function getOrderIdFromDescription($description)
+    {
+        if (preg_match("/OrderID: (\S*)/", $description, $description)) {
+            return $description[1];
+        }
+        return null;
+    }
+
+    /**
+     * Returns the state of the webhook option
+     * @return boolean
+     */
+    abstract function getWebhookState();
 }

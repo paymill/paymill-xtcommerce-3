@@ -2,9 +2,11 @@
 
 require_once(DIR_FS_CATALOG . 'ext/modules/payment/paymill/lib/Services/Paymill/PaymentProcessor.php');
 require_once(DIR_FS_CATALOG . 'ext/modules/payment/paymill/lib/Services/Paymill/LoggingInterface.php');
+require_once(DIR_FS_CATALOG . 'ext/modules/payment/paymill/lib/Services/Paymill/Transactions.php');
 require_once(DIR_FS_CATALOG . 'ext/modules/payment/paymill/lib/Services/Paymill/Payments.php');
 require_once(DIR_FS_CATALOG . 'ext/modules/payment/paymill/lib/Services/Paymill/Clients.php');
 require_once(DIR_FS_CATALOG . 'ext/modules/payment/paymill/FastCheckout.php');
+require_once(DIR_FS_CATALOG . 'ext/modules/payment/paymill/WebHooks.php');
 
 /**
  * Paymill payment plugin
@@ -39,7 +41,6 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
     {
         $this->description = '';
         $this->description .= '<p style="font-weight: bold;">'.$this->version.'</p>';
-        $this->fastCheckout = new FastCheckout();
         $this->paymentProcessor = new Services_Paymill_PaymentProcessor();
     }
     
@@ -289,6 +290,7 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
             'date_added' => 'now()',
             'customer_notified' => '0',
             'comments' => 'Payment approved, Transaction ID: ' . $_SESSION['paymill']['transaction_id']);
+        $this->updateTransaction($_SESSION['paymill']['transaction_id'], $insert_id);
 
         xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
 
@@ -364,8 +366,12 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
             xtc_db_query("ALTER TABLE admin_access ADD paymill_logging INT(1) NOT NULL DEFAULT '0'");
             xtc_db_query("ALTER TABLE admin_access ADD paymill_log INT(1) NOT NULL DEFAULT '0'");
         }
-        
-        xtc_db_query("UPDATE admin_access SET paymill_logging = '1', paymill_log = '1' WHERE customers_id= '1' OR customers_id = 'groups'");
+
+        if (xtc_db_num_rows(xtc_db_query("show columns from admin_access like 'paymill_webhook_%'")) == 0) {
+            xtc_db_query("ALTER TABLE admin_access ADD paymill_webhook_listener INT(1) NOT NULL DEFAULT '0'");
+        }
+
+        xtc_db_query("UPDATE admin_access SET paymill_logging = '1', paymill_log = '1', paymill_webhook_listener = '1' WHERE customers_id= '1' OR customers_id = 'groups'");
         
         xtc_db_query("DROP TABLE IF EXISTS `pi_paymill_logging`");
         
@@ -389,8 +395,45 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
            . "PRIMARY KEY (`userID`)"
          . ")"
         );
+
+        xtc_db_query(
+            "CREATE TABLE IF NOT EXISTS `pi_paymill_webhooks` ("
+            . "`id` varchar(100),"
+            . "`url` varchar(150),"
+            . "`mode` varchar(100),"
+            . "`created_at` varchar(100),"
+            . "PRIMARY KEY (`id`)"
+            . ")"
+        );
     }
-    
+
+    function displayWebhookButton($type){
+        $webhooks = new WebHooks($this->privateKey);
+        $hooks = $webhooks->loadAllWebHooks();
+        $action = empty($hooks) ? 'register' : 'remove';
+        $buttonAction = 'CREATE';
+        if($action === 'remove'){
+            $buttonAction = 'REMOVE';
+        }
+        $buttonText = constant('MODULE_PAYMENT_PAYMILL_'.$type.'_WEBHOOKS_LINK_'.$buttonAction);
+
+        $this->description .= '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>';
+        $this->description .= '<script type="text/javascript" src="javascript/paymill_button_webhook.js"></script>';
+        $this->description .= '<p><form id="register_webhooks" method="POST">';
+        $this->description .= '<input id="listener" type="hidden" value="'.xtc_href_link('../admin/paymill_webhook_listener.php','action='.$action.'&type='.$type).'"> ';
+        $this->description .= '<button type="submit">'.$buttonText.'</button></form></p>';
+    }
+
+    function updateTransaction($id, $orderId)
+    {
+        $transactions = new Services_Paymill_Transactions($this->privateKey, $this->apiUrl);
+        $transaction = $transactions->getOne($id);
+        $description = 'OrderID:' . $orderId . ' ' . $transaction['description'];
+        $transactions->update(array(
+                                   'id'          => $id,
+                                   'description' => $description
+                              ));
+    }
 }
 
 ?>

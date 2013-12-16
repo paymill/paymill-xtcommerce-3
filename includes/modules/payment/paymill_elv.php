@@ -33,9 +33,8 @@ class paymill_elv extends paymill_abstract
 
 
             if ($this->webHooksEnabled) {
-                $this->description .= '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>';
-                $this->description .= '<script type="text/javascript" src="javascript/button_webhook.js"></script>';
-                $this->description .= '<p><form id="register_webhooks" method="POST"><button type="submit">'.MODULE_PAYMENT_PAYMILL_CC_WEBHOOKS_LINK.'</button></form></p>';
+                $type = 'ELV';
+                $this->displayWebhookButton($type);
             }
         }
 

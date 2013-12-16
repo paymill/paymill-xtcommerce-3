@@ -11,6 +11,8 @@ define('MODULE_PAYMENT_PAYMILL_ELV_FASTCHECKOUT_DESC', '');
 define('MODULE_PAYMENT_PAYMILL_ELV_WEBHOOKS_TITLE', 'Webhooks aktivieren');
 define('MODULE_PAYMENT_PAYMILL_ELV_WEBHOOKS_DESC', '');
 define('MODULE_PAYMENT_PAYMILL_ELV_WEBHOOKS_LINK', 'Webhooks anlegen');
+define('MODULE_PAYMENT_PAYMILL_ELV_WEBHOOKS_LINK_CREATE', 'Webhooks anlegen');
+define('MODULE_PAYMENT_PAYMILL_ELV_WEBHOOKS_LINK_REMOVE', 'Webhooks entfernen');
 define('MODULE_PAYMENT_PAYMILL_ELV_SORT_ORDER_TITLE', 'Anzeigereihenfolge');
 define('MODULE_PAYMENT_PAYMILL_ELV_SORT_ORDER_DESC', 'Reihenfolge der Anzeige. Kleinste Ziffer wird zuerst angezeigt.');
 define('MODULE_PAYMENT_PAYMILL_ELV_PRIVATEKEY_TITLE', 'Geheimer API Key');
