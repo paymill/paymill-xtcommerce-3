@@ -10,35 +10,33 @@ abstract class FastCheckoutAbstract
     var $_clients;
     var $_payments;
 
-    function __construct()
+    function __construct($privateKey)
     {
-        $this->_privateKey = trim(MODULE_PAYMENT_PAYMILL_ELV_PRIVATEKEY);
+        $this->_privateKey = $privateKey;
         $this->_clients = new Services_Paymill_Clients($this->_privateKey, $this->_apiUrl);
         $this->_payments = new Services_Paymill_Payments($this->_privateKey, $this->_apiUrl);
     }
 
     /**
      * Determines whether a credit card payment is applicable for fast checkout or not
-     * The result is casted to sting to allow print in javascript.
      * @param $userId
      *
      * @return string
      */
     function canCustomerFastCheckoutCc($userId)
     {
-        return $this->hasCcPaymentId($userId) && $this->_fastCheckoutFlag && $this->hasClient($userId) ? 'true' : 'false';
+        return ($this->hasCcPaymentId($userId) && $this->_fastCheckoutFlag && $this->hasClient($userId));
     }
 
     /**
      * Determines whether a direct debit payment is applicable for fast checkout or not
-     * The result is casted to sting to allow print in javascript.
      * @param $userId
      *
      * @return string
      */
     function canCustomerFastCheckoutElv($userId)
     {
-        return $this->hasElvPaymentId($userId) && $this->_fastCheckoutFlag && $this->hasClient($userId) ? 'true' : 'false';
+        return ($this->hasElvPaymentId($userId) && $this->_fastCheckoutFlag && $this->hasClient($userId));
     }
 
     /**

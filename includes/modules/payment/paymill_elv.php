@@ -7,6 +7,7 @@ class paymill_elv extends paymill_abstract
     function paymill_elv()
     {
         parent::paymill_abstract();
+        $this->fastCheckout = new FastCheckout(trim(MODULE_PAYMENT_PAYMILL_ELV_PRIVATEKEY));
         global $order;
 
         $this->code = 'paymill_elv';
@@ -68,10 +69,10 @@ class paymill_elv extends paymill_abstract
         global $order;
         
         $confirmation = parent::confirmation();
-        
-        $payment = $this->getPayment($_SESSION['customer_id']);
-        
+
         $this->fastCheckout->setFastCheckoutFlag($this->fastCheckoutFlag);
+        $payment = $this->getPayment($_SESSION['customer_id']);
+
         
         $script = '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>'
                 . '<script type="text/javascript">'
@@ -83,7 +84,7 @@ class paymill_elv extends paymill_abstract
                 . 'var paymill_elv_code = "' . $payment['code'] . '";'
                 . 'var paymill_elv_holder = "' . utf8_decode($payment['holder']) . '";'
                 . 'var paymill_elv_account = "' . $payment['account'] . '";'
-                . 'var paymill_elv_fastcheckout = ' . $this->fastCheckout->canCustomerFastCheckoutElv($_SESSION['customer_id']) . ';'
+                . 'var paymill_elv_fastcheckout = ' . ($this->fastCheckout->canCustomerFastCheckoutElv($_SESSION['customer_id']) ? 'true': 'false') . ';'
                 . 'var checkout_payment_link = "' . xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'step=step2&payment_error=' . $this->code . '&error=300', 'SSL', true, false) . '";'
                 . '</script>'
                 . '<script type="text/javascript" src="ext/modules/payment/paymill/public/javascript/elv.js"></script>';

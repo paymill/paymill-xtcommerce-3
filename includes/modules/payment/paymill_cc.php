@@ -7,6 +7,7 @@ class paymill_cc extends paymill_abstract
     function paymill_cc()
     {
         parent::paymill_abstract();
+        $this->fastCheckout = new FastCheckout(trim(MODULE_PAYMENT_PAYMILL_CC_PRIVATEKEY));
         global $order;
 
         $this->code = 'paymill_cc';
@@ -58,7 +59,7 @@ class paymill_cc extends paymill_abstract
             'card_type' => '',
         );
         
-        if ($this->fastCheckout->hasCcPaymentId($userId)) {
+        if ($this->fastCheckout->canCustomerFastCheckoutCc($userId)) {
             $data = $this->fastCheckout->loadFastCheckoutData($userId);
             $payment = $this->payments->getOne($data['paymentID_CC']);
             $payment['last4'] = '************' . $payment['last4'];
@@ -94,11 +95,11 @@ class paymill_cc extends paymill_abstract
 
         for ($i=$today['year']; $i < $today['year']+10; $i++) {
             $years_array[$i] = array(strftime('%Y', mktime(0, 0, 0, 1 , 1, $i)), strftime('%Y',mktime(0, 0, 0, 1, 1, $i)));
-        } 
-        
-        $payment = $this->getPayment($_SESSION['customer_id']);
-        
+        }
+
         $this->fastCheckout->setFastCheckoutFlag($this->fastCheckoutFlag);
+        $payment = $this->getPayment($_SESSION['customer_id']);
+
         
         $script = '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>'
                 . '<script type="text/javascript">'
@@ -117,7 +118,7 @@ class paymill_cc extends paymill_abstract
                     . 'var paymill_cc_holder_val = "' . utf8_decode($payment['card_holder']) . '";'
                     . 'var paymill_cc_expiry_month_val = "' . $payment['expire_month'] . '";'
                     . 'var paymill_cc_expiry_year_val = "' . $payment['expire_year'] . '";'
-                    . 'var paymill_cc_fastcheckout = ' . $this->fastCheckout->canCustomerFastCheckoutCc($_SESSION['customer_id']) . ';'
+                    . 'var paymill_cc_fastcheckout = ' . ($this->fastCheckout->canCustomerFastCheckoutCc($_SESSION['customer_id']) ? 'true' : 'false') . ';'
                     . 'var checkout_payment_link = "' . xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'step=step2&payment_error=' . $this->code . '&error=', 'SSL', true, false) . '";'
                 . '</script>'
                 . '<script type="text/javascript" src="ext/modules/payment/paymill/public/javascript/cc.js"></script>';

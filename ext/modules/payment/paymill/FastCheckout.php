@@ -1,5 +1,5 @@
 <?php
-require_once(DIR_FS_CATALOG . 'ext/modules/payment/paymill/abstract/FastCheckoutAbstract.php');
+require_once('abstract/FastCheckoutAbstract.php');
 
 class FastCheckout extends FastCheckoutAbstract
 {
