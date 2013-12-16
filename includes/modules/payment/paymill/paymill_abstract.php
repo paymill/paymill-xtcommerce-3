@@ -5,7 +5,7 @@ require_once(DIR_FS_CATALOG . 'ext/modules/payment/paymill/lib/Services/Paymill/
 require_once(DIR_FS_CATALOG . 'ext/modules/payment/paymill/lib/Services/Paymill/Payments.php');
 require_once(DIR_FS_CATALOG . 'ext/modules/payment/paymill/lib/Services/Paymill/Clients.php');
 require_once(DIR_FS_CATALOG . 'ext/modules/payment/paymill/FastCheckout.php');
-require_once(DIR_FS_CATALOG . 'xtc_unique_functions.php');
+require_once(DIR_FS_CATALOG . 'xtc_toolbox.php');
 
 /**
  * Paymill payment plugin
@@ -18,6 +18,7 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
     var $apiUrl = 'https://api.paymill.com/v2/';
     var $version = '1.3.2';
     var $api_version = '2';
+    var $_toolbox = null;
 
 
     /**
@@ -40,8 +41,8 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
     {
         $this->description = '';
         $this->description .= '<p style="font-weight: bold;">'.$this->version.'</p>';
-        $uniqueFunctions = new unique_functions();
-        $this->fastCheckout = new FastCheckout($uniqueFunctions);
+        $this->_toolbox = new xtc_toolbox();
+        $this->fastCheckout = new FastCheckout($this->_toolbox);
         $this->paymentProcessor = new Services_Paymill_PaymentProcessor();
     }
     
@@ -368,7 +369,7 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
         }
         
         xtc_db_query("UPDATE admin_access SET paymill_logging = '1', paymill_log = '1' WHERE customers_id= '1' OR customers_id = 'groups'");
-        
+
         xtc_db_query("DROP TABLE IF EXISTS `pi_paymill_logging`");
         
         xtc_db_query(

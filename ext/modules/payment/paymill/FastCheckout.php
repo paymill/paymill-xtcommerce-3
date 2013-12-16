@@ -5,15 +5,15 @@ require_once(DIR_FS_CATALOG . 'ext/modules/payment/paymill/lib/Services/Paymill/
 class FastCheckout
 {
     var $_fastCheckoutFlag = false;
-    var $_unique_functions; //Helper class to wrap the methods unique per shop
+    var $_toolbox; //Helper class to wrap the methods unique per shop
     var $_apiUrl = 'https://api.paymill.com/v2/';
     var $_privateKey;
     var $_clients;
     var $_payments;
 
-    function __construct($uniqueFunctions)
+    function __construct($toolbox)
     {
-        $this->_unique_functions = $uniqueFunctions;
+        $this->_toolbox = $toolbox;
         $this->_privateKey = trim(MODULE_PAYMENT_PAYMILL_ELV_PRIVATEKEY);
         $this->_clients = new Services_Paymill_Clients($this->_privateKey, $this->_apiUrl);
         $this->_payments = new Services_Paymill_Payments($this->_privateKey, $this->_apiUrl);
@@ -135,8 +135,8 @@ class FastCheckout
      */
     function _updateIds($paymentType, $userId, $newPaymentId)
     {
-        $sql = "UPDATE `". $this->_unique_functions->getFastCheckoutTableName() . "` SET `paymentID_". $paymentType ."` = '$newPaymentId' WHERE `userID` = '$userId'";
-        $success = $this->_unique_functions->dbQuery($sql);
+        $sql = "UPDATE `". $this->_toolbox->getFastCheckoutTableName() . "` SET `paymentID_". $paymentType ."` = '$newPaymentId' WHERE `userID` = '$userId'";
+        $success = $this->_toolbox->dbQuery($sql);
         $success = $success === true;
         return $success;
     }
@@ -153,8 +153,8 @@ class FastCheckout
      */
     function _insertIds($paymentType, $userId, $newClientId, $newPaymentId)
     {
-        $sql = "REPLACE INTO `". $this->_unique_functions->getFastCheckoutTableName() . "` (`userID`, `clientID`, `paymentID_". $paymentType ."`) VALUES ('$userId', '$newClientId', '$newPaymentId')";
-        $success = $this->_unique_functions->dbQuery($sql);
+        $sql = "REPLACE INTO `". $this->_toolbox->getFastCheckoutTableName() . "` (`userID`, `clientID`, `paymentID_". $paymentType ."`) VALUES ('$userId', '$newClientId', '$newPaymentId')";
+        $success = $this->_toolbox->dbQuery($sql);
         $success = $success === true;
         return $success;
     }
@@ -167,8 +167,8 @@ class FastCheckout
      */
     function loadFastCheckoutData($userId)
     {
-        $sql = "SELECT * FROM `". $this->_unique_functions->getFastCheckoutTableName() . "` WHERE `userID` = '$userId'";
-        $fastCheckout = $this->_unique_functions->dbFetchArray($sql);
+        $sql = "SELECT * FROM `". $this->_toolbox->getFastCheckoutTableName() . "` WHERE `userID` = '$userId'";
+        $fastCheckout = $this->_toolbox->dbFetchArray($sql);
         return $fastCheckout;
     }
 
@@ -250,8 +250,8 @@ class FastCheckout
      */
     function _removeIds($userId)
     {
-        $sql = "REPLACE INTO `". $this->_unique_functions->getFastCheckoutTableName() . "` (`userID`, `clientID`, `paymentID_CC`, `paymentID_ELV`) VALUES ('$userId', NULL, NULL, NULL)";
-        $success = $this->_unique_functions->dbQuery($sql);
+        $sql = "REPLACE INTO `". $this->_toolbox->getFastCheckoutTableName() . "` (`userID`, `clientID`, `paymentID_CC`, `paymentID_ELV`) VALUES ('$userId', NULL, NULL, NULL)";
+        $success = $this->_toolbox->dbQuery($sql);
         $success = $success === true;
         return $success;
     }
