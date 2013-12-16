@@ -183,4 +183,10 @@ abstract class WebHooksAbstract
      * @return boolean
      */
     abstract function getWebhookState();
+
+    /**
+     * Changes the Status of the current order (based on the notification)
+     * @return void
+     */
+    abstract function updateOrderStatus();
 }

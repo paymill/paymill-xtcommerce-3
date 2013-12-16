@@ -2,9 +2,17 @@
 require_once('ext/modules/payment/paymill/WebHooks.php');
 require_once('includes/application_top.php');
 
-$privateKey = trim(MODULE_PAYMENT_PAYMILL_ELV_PRIVATEKEY);
-$controller = new WebHooks($privateKey);
 try{
+    if($_GET['type'] == 'CC'){
+        $privateKey = trim(MODULE_PAYMENT_PAYMILL_CC_PRIVATEKEY);
+    } elseif($_GET['type'] == 'ELV') {
+        $privateKey = trim(MODULE_PAYMENT_PAYMILL_ELV_PRIVATEKEY);
+    } else {
+        throw new Exception('Invalid Type');
+    }
+
+    $controller = new WebHooks($privateKey);
+
     $body = @file_get_contents('php://input');
     $event_json = json_decode($body, true);
     if(isset($event_json['event_type']) && $event_json['event_type'] != ''){

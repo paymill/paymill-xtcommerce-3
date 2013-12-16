@@ -420,7 +420,8 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
         $this->description .= '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>';
         $this->description .= '<script type="text/javascript" src="javascript/paymill_button_webhook.js"></script>';
         $this->description .= '<p><form id="register_webhooks" method="POST">';
-        $this->description .= '<input id="listener" type="hidden" value="'.xtc_href_link('../admin/paymill_webhook_listener.php','action='.$action.'&type='.$type).'"> ';
+        $parameters         = 'action='.$action.'&type='.$type;
+        $this->description .= '<input id="listener" type="hidden" value="'.xtc_href_link('../admin/paymill_webhook_listener.php',$parameters, 'SSL', false, false).'"> ';
         $this->description .= '<button type="submit">'.$buttonText.'</button></form></p>';
     }
 
@@ -433,7 +434,9 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
                                    'id'          => $id,
                                    'description' => $description
                               ));
+
     }
+
 }
 
 ?>
