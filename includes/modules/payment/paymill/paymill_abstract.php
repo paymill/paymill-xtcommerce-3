@@ -5,7 +5,6 @@ require_once(DIR_FS_CATALOG . 'ext/modules/payment/paymill/lib/Services/Paymill/
 require_once(DIR_FS_CATALOG . 'ext/modules/payment/paymill/lib/Services/Paymill/Payments.php');
 require_once(DIR_FS_CATALOG . 'ext/modules/payment/paymill/lib/Services/Paymill/Clients.php');
 require_once(DIR_FS_CATALOG . 'ext/modules/payment/paymill/FastCheckout.php');
-require_once(DIR_FS_CATALOG . 'xtc_unique_functions.php');
 
 /**
  * Paymill payment plugin
@@ -40,8 +39,7 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
     {
         $this->description = '';
         $this->description .= '<p style="font-weight: bold;">'.$this->version.'</p>';
-        $uniqueFunctions = new unique_functions();
-        $this->fastCheckout = new FastCheckout($uniqueFunctions);
+        $this->fastCheckout = new FastCheckout();
         $this->paymentProcessor = new Services_Paymill_PaymentProcessor();
     }
     
