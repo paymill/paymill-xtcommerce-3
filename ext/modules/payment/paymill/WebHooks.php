@@ -8,8 +8,8 @@ class WebHooks extends WebHooksAbstract
      */
     function getEventList(){
         $eventList = array(
-            xtc_href_link('../WebhookListener.php', '&action=chargeback', 'SSL', false, false) => 'chargeback.executed',
-            xtc_href_link('../WebhookListener.php', '&action=refund', 'SSL', false, false) => 'refund.succeeded'
+            xtc_href_link('../WebhookListener.php', '&action=chargeback&type='.$this->_request['type'], 'SSL', false, false) => 'chargeback.executed',
+            xtc_href_link('../WebhookListener.php', '&action=refund&type='.$this->_request['type'], 'SSL', false, false) => 'refund.succeeded'
         );
 
         return $eventList;
@@ -83,7 +83,7 @@ class WebHooks extends WebHooksAbstract
      * @param String $messageInfo
      * @param String $debugInfo
      */
-    function log($messageInfo, $debugInfo)
+    static function log($messageInfo, $debugInfo)
     {
         xtc_db_query("INSERT INTO `pi_paymill_logging` "
                      . "(debug, message, identifier) "
@@ -100,15 +100,19 @@ class WebHooks extends WebHooksAbstract
      */
     function updateOrderStatus()
     {
-        $description = $this->_request['event']['event_resource']['description'];
+        $description = $this->_request['event_resource']['transaction']['description'];
         $eventType = $this->_request['action'];
-        $orderId = $this->getOrderIdFromDescription($description);
-        $orderStatus = $this->getOrderStatusId($eventType);
-        if ($orderStatus) {
-            xtc_db_query("UPDATE " . TABLE_ORDERS . " SET orders_status='" . $orderStatus . "' WHERE orders_id='" . $orderId . "'");
-        }
+        try{
+            $orderId = $this->getOrderIdFromDescription($description);
+            $orderStatus = $this->getOrderStatusId($eventType);
+            if (isset($orderStatus) && isset($orderId)) {
+                xtc_db_query("UPDATE " . TABLE_ORDERS . " SET orders_status='" . $orderStatus . "' WHERE orders_id='" . $orderId . "'");
+            }
 
-        $this->successAction();
+            $this->successAction();
+        } catch (Exception $exception){
+            $this->log("An error occurred during Order Update", $this->_request);
+        }
     }
 
     /**
@@ -118,31 +122,18 @@ class WebHooks extends WebHooksAbstract
      */
     function getOrderStatusId($statusName)
     {
-        $check_query = xtc_db_query("select orders_status_id from " . TABLE_ORDERS_STATUS . " where orders_status_name = 'Paymill ['.$statusName.']' limit 1");
+        try{
+            $statusArray = xtc_db_fetch_array(xtc_db_query("select orders_status_id from " . TABLE_ORDERS_STATUS . " where orders_status_name = 'Paymill [$statusName]' limit 1"));
+            $status_id = $statusArray['orders_status_id'];
 
-        if (xtc_db_num_rows($check_query) < 1) {
-            $status_query = xtc_db_query("select max(orders_status_id) as status_id from " . TABLE_ORDERS_STATUS);
-            $status = xtc_db_fetch_array($status_query);
-
-            $status_id = $status['status_id'] + 1;
-
-            $languages = xtc_get_languages();
-
-            foreach ($languages as $lang) {
-                xtc_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . $status_id . "', '" . $lang['id'] . "', 'Paymill ['.$statusName.']')");
+            if(empty($status_id) || $status_id == ''){
+                $status_id = 1;
             }
 
-            $flags_query = xtc_db_query("describe " . TABLE_ORDERS_STATUS . " public_flag");
-            if (xtc_db_num_rows($flags_query) == 1) {
-                xtc_db_query("update " . TABLE_ORDERS_STATUS . " set public_flag = 0 and downloads_flag = 0 where orders_status_id = '" . $status_id . "'");
-            }
-        } else {
-            $check = xtc_db_fetch_array($check_query);
-
-            $status_id = $check['orders_status_id'];
+            return $status_id;
+        } catch (Exception $exception) {
+            $this->log("Exception in getting Paymill status $statusName", var_export($exception, true));
         }
-
-        return $status_id;
     }
 
     /**
@@ -152,6 +143,6 @@ class WebHooks extends WebHooksAbstract
      */
     function getWebhookState()
     {
-       return ((MODULE_PAYMENT_PAYMILL_CC_WEBHOOKS == 'True') ? true : false);
+        return ((MODULE_PAYMENT_PAYMILL_CC_WEBHOOKS == 'True') ? true : false);
     }
 }

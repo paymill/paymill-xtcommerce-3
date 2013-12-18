@@ -367,10 +367,6 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
             xtc_db_query("ALTER TABLE admin_access ADD paymill_log INT(1) NOT NULL DEFAULT '0'");
         }
 
-        if (xtc_db_num_rows(xtc_db_query("show columns from admin_access like 'paymill_webhook_%'")) == 0) {
-            xtc_db_query("ALTER TABLE admin_access ADD paymill_webhook_listener INT(1) NOT NULL DEFAULT '0'");
-        }
-
         xtc_db_query("UPDATE admin_access SET paymill_logging = '1', paymill_log = '1', paymill_webhook_listener = '1' WHERE customers_id= '1' OR customers_id = 'groups'");
         
         xtc_db_query("DROP TABLE IF EXISTS `pi_paymill_logging`");
@@ -405,9 +401,24 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
             . "PRIMARY KEY (`id`)"
             . ")"
         );
+
+        if (xtc_db_num_rows(xtc_db_query("show columns from admin_access like 'paymill_webhook_%'")) == 0) {
+            xtc_db_query("ALTER TABLE admin_access ADD paymill_webhook_listener INT(1) NOT NULL DEFAULT '0'");
+        }
+
+        $this->addOrderState('Paymill [Refund]');
+        $this->addOrderState('Paymill [Chargeback]');
     }
 
+    /**
+     * Displays the register/remove Webhook button in the payment config.
+     * @param String $type Can be either CC or ELV
+     */
     function displayWebhookButton($type){
+        if(empty($this->privateKey) || $this->privateKey == 0){
+            return;
+        }
+
         $webhooks = new WebHooks($this->privateKey);
         $hooks = $webhooks->loadAllWebHooks();
         $action = empty($hooks) ? 'register' : 'remove';
@@ -425,16 +436,44 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
         $this->description .= '<button type="submit">'.$buttonText.'</button></form></p>';
     }
 
+    /**
+     * Updates the description of target transaction by adding the prefix 'OrderID: ' followed by the order id
+     * @param String $id
+     * @param String $orderId
+     */
     function updateTransaction($id, $orderId)
     {
         $transactions = new Services_Paymill_Transactions($this->privateKey, $this->apiUrl);
         $transaction = $transactions->getOne($id);
-        $description = 'OrderID:' . $orderId . ' ' . $transaction['description'];
+        $description = 'OrderID: ' . $orderId . ' ' . $transaction['description'];
         $transactions->update(array(
                                    'id'          => $id,
                                    'description' => $description
                               ));
 
+    }
+
+    /**
+     * Adds a new order state with the given name for both german and english language sets
+     * Therefore the state name should be english
+     * @param String $stateName
+     */
+    function addOrderState($stateName)
+    {
+        $check_query = xtc_db_query("select orders_status_id from " . TABLE_ORDERS_STATUS . " where orders_status_name = '$stateName' limit 1");
+
+        if (xtc_db_num_rows($check_query) < 1) {
+            $status_query = xtc_db_query("select max(orders_status_id) as status_id from " . TABLE_ORDERS_STATUS);
+            $status = xtc_db_fetch_array($status_query);
+            $status_id = $status['status_id'] + 1;
+        } else {
+            $check = xtc_db_fetch_array($check_query);
+            $status_id = $check['orders_status_id'];
+        }
+
+
+        xtc_db_query("REPLACE INTO orders_status (orders_status_id, language_id, orders_status_name) VALUES($status_id, 1, '".$stateName."')");
+        xtc_db_query("REPLACE INTO orders_status (orders_status_id, language_id, orders_status_name) VALUES($status_id, 2, '".$stateName."')");
     }
 
 }

@@ -75,7 +75,6 @@ abstract class WebHooksAbstract
             $this->saveWebhook($hook['id'],$hook['url'], $hook['livemode']? 'live' : 'test', $hook['created_at']);
             $data[] = $hook;
         }
-        $this->log("Webhooks created.", var_export($data, true));
     }
 
     /**
@@ -91,9 +90,6 @@ abstract class WebHooksAbstract
             $webHooks->delete($hook);
             $this->removeWebhook($hook);
         }
-
-        $this->log("Webhooks deleted.", var_export($hooks, true));
-
     }
 
     /**
@@ -150,7 +146,7 @@ abstract class WebHooksAbstract
     public function refundAction()
     {
         if($this->getWebhookState()){
-            $this->_request['action'] = 'Refunded';
+            $this->_request['action'] = 'Refund';
             $this->updateOrderStatus();
         } else {
             $this->successAction();
@@ -163,7 +159,7 @@ abstract class WebHooksAbstract
     public function chargebackAction()
     {
         if($this->getWebhookState()){
-            $this->_request['action'] = 'Charged back';
+            $this->_request['action'] = 'Chargeback';
             $this->updateOrderStatus();
         } else {
             $this->successAction();
@@ -173,7 +169,10 @@ abstract class WebHooksAbstract
     public function getOrderIdFromDescription($description)
     {
         if (preg_match("/OrderID: (\S*)/", $description, $description)) {
-            return $description[1];
+            $orderId = $description[1];
+            if(isset($orderId) && $orderId != ''){
+                return $orderId;
+            }
         }
         return null;
     }

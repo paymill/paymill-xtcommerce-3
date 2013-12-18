@@ -13,11 +13,13 @@ try{
 
     $controller = new WebHooks($privateKey);
 
-    $body = @file_get_contents('php://input');
+    $body = file_get_contents('php://input');
+
     $event_json = json_decode($body, true);
-    if(isset($event_json['event_type']) && $event_json['event_type'] != ''){
-        $controller->setEventParameters(array_merge($_GET, $_POST, $event_json));
+    if(isset($event_json['event']['event_type']) && $event_json['event']['event_type'] != ''){
+        $controller->setEventParameters(array_merge($_GET, $_POST, $event_json['event']));
     } else {
+        WebHooks::log("Invalid Notification", var_export($body, true));
         throw new Exception("Invalid Notification");
     }
 
