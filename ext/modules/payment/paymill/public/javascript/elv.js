@@ -89,27 +89,33 @@ function PaymillAddElvFormFokusActions(SEPA)
 {
     $('#paymill-bank-owner').focus(function() {
         paymill_elv_fastcheckout = false;
-        $('#paymill-bank-owner').val('');
     });
 
     if(SEPA){
+        $('#paymill-iban').keyup(function() {
+            var iban = $('#paymill-iban').val();
+            if (!iban.match(/^DE/)) {
+                var newVal = "DE";
+                if (iban.match(/^.{2}(.*)/)) {
+                    newVal += iban.match(/^.{2}(.*)/)[1];
+                }
+                $('#paymill-iban').val(newVal);
+            }
+        });
+
         $('#paymill-iban').focus(function() {
-            $('#paymill-iban').val('');
             paymill_elv_fastcheckout = false;
         });
 
         $('#paymill-bic').focus(function() {
-            $('#paymill-bic').val('DE');
             paymill_elv_fastcheckout = false;
         });
     } else {
         $('#paymill-account-number').focus(function() {
-            $('#paymill-account-number').val('');
             paymill_elv_fastcheckout = false;
         });
 
         $('#paymill-bank-code').focus(function() {
-            $('#paymill-bank-code').val('');
             paymill_elv_fastcheckout = false;
         });
     }
