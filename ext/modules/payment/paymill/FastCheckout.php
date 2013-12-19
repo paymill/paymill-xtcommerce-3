@@ -1,6 +1,7 @@
 <?php
 require_once('abstract/FastCheckoutAbstract.php');
-
+require_once(DIR_FS_CATALOG . 'ext/modules/payment/paymill/lib/Services/Paymill/Clients.php');
+require_once(DIR_FS_CATALOG . 'ext/modules/payment/paymill/lib/Services/Paymill/Payments.php');
 class FastCheckout extends FastCheckoutAbstract
 {
     /**

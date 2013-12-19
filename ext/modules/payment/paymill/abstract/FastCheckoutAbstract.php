@@ -1,7 +1,4 @@
 <?php
-require_once(DIR_FS_CATALOG . 'ext/modules/payment/paymill/lib/Services/Paymill/Clients.php');
-require_once(DIR_FS_CATALOG . 'ext/modules/payment/paymill/lib/Services/Paymill/Payments.php');
-
 abstract class FastCheckoutAbstract
 {
     var $_fastCheckoutFlag = false;
@@ -121,7 +118,7 @@ abstract class FastCheckoutAbstract
         return $success;
     }
 
-   /**
+    /**
      * Updates the database entry for the given user in the id table
      * @param $paymentType
      * @param $userId
