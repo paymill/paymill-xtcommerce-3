@@ -76,6 +76,12 @@ define('PAYMILL_50500', 'Generelle Zeitüberschreitung.');
 define('PAYMILL_50501', 'Die Schnittstelle zum Acquirer reagiert nicht); daher bekommen wir keine Antwort ob die Transaktion erfolgreich durchgelaufen ist.');
 define('PAYMILL_50502', 'Es gibt eine Zeitüberschreitung bei der Risiko-Management Transaktion.');
 define('PAYMILL_50600', 'Doppelte Transaktion.');
+define('MODULE_PAYMENT_PAYMILL_ELV_SEPA_TITLE','Zahlungsformular auf IBAN/BIC umstellen.');
+define('MODULE_PAYMENT_PAYMILL_ELV_SEPA_DESC','Momentan nur aus Deutschland verfügbar');
+define('MODULE_PAYMENT_PAYMILL_ELV_TEXT_BIC','BIC');
+define('MODULE_PAYMENT_PAYMILL_ELV_TEXT_IBAN','IBAN');
+define('MODULE_PAYMENT_PAYMILL_ELV_TEXT_IBAN_INVALID','IBAN ungültig');
+define('MODULE_PAYMENT_PAYMILL_ELV_TEXT_BIC_INVALID','BIC ungültig');
 define('PAYMILL_internal_server_error', 'Kommunikation mit dem PSP fehlgeschlagen');
 define('PAYMILL_invalid_public_key', ' Public Key ungültig');
 define('PAYMILL_invalid_payment_data', 'Für diesen Zahlungsmodus, Kreditkartentyp, Währung oder Land nicht zugelassen');
@@ -90,4 +96,5 @@ define('PAYMILL_field_invalid_iban', 'Fehlende oder ungültige IBAN');
 define('PAYMILL_field_invalid_bic', 'Fehlende oder ungültiger BIC');
 define('PAYMILL_field_invalid_country', 'Fehlendes oder nicht unterstütztes Land');
 define('PAYMILL_field_invalid_bank_data', 'Fehlende oder ungültige Bankdatenkombination');
+define('PAYMILL_0', 'Beim Ausführen der Zahlung ist ein Fehler aufgetreten.');
 ?>

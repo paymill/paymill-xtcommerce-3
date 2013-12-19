@@ -40,7 +40,7 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
     function paymill_abstract()
     {
         $this->description = '';
-        $this->description .= '<p style="font-weight: bold;">'.$this->version.'</p>';
+        $this->description = "<p style='font-weight: bold; text-align: center'>$this->version</p>";
         $this->paymentProcessor = new Services_Paymill_PaymentProcessor();
     }
     

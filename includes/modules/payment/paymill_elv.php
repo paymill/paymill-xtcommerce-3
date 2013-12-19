@@ -21,6 +21,7 @@ class paymill_elv extends paymill_abstract
             $this->logging = ((MODULE_PAYMENT_PAYMILL_ELV_LOGGING == 'True') ? true : false);
             $this->webHooksEnabled = ((MODULE_PAYMENT_PAYMILL_ELV_WEBHOOKS == 'True') ? true : false);
             $this->publicKey = MODULE_PAYMENT_PAYMILL_ELV_PUBLICKEY;
+            $this->form_action_url = 'paymill_confirmation_form'; //@todo check for uses
             $this->fastCheckoutFlag = ((MODULE_PAYMENT_PAYMILL_ELV_FASTCHECKOUT == 'True') ? true : false);
             $this->payments = new Services_Paymill_Payments($this->privateKey, $this->apiUrl);
             $this->clients = new Services_Paymill_Clients(trim($this->privateKey), $this->apiUrl);
@@ -32,11 +33,11 @@ class paymill_elv extends paymill_abstract
                 $this->description .= '<p><a href="' . xtc_href_link('paymill_logging.php') . '">' . MODULE_PAYMENT_PAYMILL_ELV_DESCRIPTION . '</a></p>';
             }
 
-
             if ($this->webHooksEnabled) {
                 $type = 'ELV';
                 $this->displayWebhookButton($type);
             }
+
         }
 
         if (is_object($order)) $this->update_status();
@@ -47,7 +48,7 @@ class paymill_elv extends paymill_abstract
         $selection = parent::selection();
         return $selection;
     }
-        
+
     function getPayment($userId)
     {
         $payment = array(
@@ -55,12 +56,12 @@ class paymill_elv extends paymill_abstract
             'holder' => '',
             'account' => ''
         );
-        
-        if ($this->fastCheckout->hasElvPaymentId($userId)) {
+
+        if ($this->fastCheckout->canCustomerFastCheckoutElv($userId)) {
             $data = $this->fastCheckout->loadFastCheckoutData($userId);
             $payment = $this->payments->getOne($data['paymentID_ELV']);
         }
-        
+
         return $payment;
     }
     
@@ -73,19 +74,23 @@ class paymill_elv extends paymill_abstract
         $this->fastCheckout->setFastCheckoutFlag($this->fastCheckoutFlag);
         $payment = $this->getPayment($_SESSION['customer_id']);
 
-        
         $script = '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>'
                 . '<script type="text/javascript">'
                 . 'var elvlogging = "' . MODULE_PAYMENT_PAYMILL_ELV_LOGGING . '";'
+                . 'var sepaActive ="' . MODULE_PAYMENT_PAYMILL_ELV_SEPA .'";'
                 . 'var elv_account_number_invalid = "' . utf8_decode(MODULE_PAYMENT_PAYMILL_ELV_TEXT_ACCOUNT_INVALID) . '";'
                 . 'var elv_bank_code_invalid = "' . utf8_decode(MODULE_PAYMENT_PAYMILL_ELV_TEXT_BANKCODE_INVALID) . '";'
                 . 'var elv_bank_owner_invalid = "' . utf8_decode(MODULE_PAYMENT_PAYMILL_ELV_TEXT_ACCOUNT_HOLDER_INVALID) . '";'
+                . 'var elv_iban_invalid = "' . utf8_decode(MODULE_PAYMENT_PAYMILL_ELV_TEXT_IBAN_INVALID) . '";'
+                . 'var elv_bic_invalid = "' . utf8_decode(MODULE_PAYMENT_PAYMILL_ELV_TEXT_BIC_INVALID) . '";'
                 . 'var paymill_account_name = ' . json_encode($order->billing['firstname'] . ' ' . $order->billing['lastname']) . ';'
                 . 'var paymill_elv_code = "' . $payment['code'] . '";'
                 . 'var paymill_elv_holder = "' . utf8_decode($payment['holder']) . '";'
+                . 'var paymill_elv_iban = "' . utf8_decode($payment['iban']) . '";'
+                . 'var paymill_elv_bic = "' . utf8_decode($payment['bic']) . '";'
                 . 'var paymill_elv_account = "' . $payment['account'] . '";'
                 . 'var paymill_elv_fastcheckout = ' . ($this->fastCheckout->canCustomerFastCheckoutElv($_SESSION['customer_id']) ? 'true': 'false') . ';'
-                . 'var checkout_payment_link = "' . xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'step=step2&payment_error=' . $this->code . '&error=300', 'SSL', true, false) . '";'
+                . 'var checkout_payment_link = "' . xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'step=step2&payment_error=' . $this->code . '&error=', 'SSL', true, false) . '";'
                 . '</script>'
                 . '<script type="text/javascript" src="ext/modules/payment/paymill/public/javascript/elv.js"></script>';
         
@@ -101,26 +106,44 @@ class paymill_elv extends paymill_abstract
                 'field' => '<span id="account-name-field"></span><span id="elv-holder-error" class="paymill-error"></span>'
             )
         );
-        
-        array_push($confirmation['fields'], 
-            array(
-                'title' => '<div class="paymill-label-field">' . MODULE_PAYMENT_PAYMILL_ELV_TEXT_ACCOUNT . '</div>',
-                'field' => '<span id="account-number-field"></span><span id="elv-account-error" class="paymill-error"></span>'
-            )
-        );
-        
-        array_push($confirmation['fields'], 
-            array(
-                'title' => '<div class="paymill-label-field">' . MODULE_PAYMENT_PAYMILL_ELV_TEXT_BANKCODE . '</div>',
-                'field' => '<span id="bank-code-field"></span><span id="elv-bankcode-error" class="paymill-error"></span>'
-            )
-        );       
+
+        if(MODULE_PAYMENT_PAYMILL_ELV_SEPA == 'True'){
+            array_push($confirmation['fields'],
+                array(
+                     'title' => '<div class="paymill-label-field">' . MODULE_PAYMENT_PAYMILL_ELV_TEXT_IBAN . '</div>',
+                     'field' => '<span id="iban-field"></span><span id="elv-iban-error" class="paymill-error"></span>'
+                )
+            );
+
+            array_push($confirmation['fields'],
+                array(
+                     'title' => '<div class="paymill-label-field">' . MODULE_PAYMENT_PAYMILL_ELV_TEXT_BIC . '</div>',
+                     'field' => '<span id="bic-field"></span><span id="elv-bic-error" class="paymill-error"></span>'
+                )
+            );
+
+        } else {
+            array_push($confirmation['fields'],
+                array(
+                     'title' => '<div class="paymill-label-field">' . MODULE_PAYMENT_PAYMILL_ELV_TEXT_ACCOUNT . '</div>',
+                     'field' => '<span id="account-number-field"></span><span id="elv-account-error" class="paymill-error"></span>'
+                )
+            );
+
+            array_push($confirmation['fields'],
+                array(
+                     'title' => '<div class="paymill-label-field">' . MODULE_PAYMENT_PAYMILL_ELV_TEXT_BANKCODE . '</div>',
+                     'field' => '<span id="bank-code-field"></span><span id="elv-bankcode-error" class="paymill-error"></span>'
+                )
+            );
+        }
         
         array_push($confirmation['fields'], 
             array(
                 'field' => '<form id="paymill_form" action="' . xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL') . '" method="post" style="display: none;"></form>'
             )
         );
+
 
         return $confirmation;
     }
@@ -141,6 +164,7 @@ class paymill_elv extends paymill_abstract
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PAYMENT_PAYMILL_ELV_STATUS', 'True', '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PAYMENT_PAYMILL_ELV_FASTCHECKOUT', 'False', '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PAYMENT_PAYMILL_ELV_WEBHOOKS', 'False', '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PAYMENT_PAYMILL_ELV_SEPA', 'False', '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_PAYMENT_PAYMILL_ELV_SORT_ORDER', '0', '6', '0', now())");
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_PAYMENT_PAYMILL_ELV_PRIVATEKEY', '0', '6', '0', now())");
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_PAYMENT_PAYMILL_ELV_PUBLICKEY', '0', '6', '0', now())");
@@ -157,6 +181,7 @@ class paymill_elv extends paymill_abstract
             'MODULE_PAYMENT_PAYMILL_ELV_STATUS',
             'MODULE_PAYMENT_PAYMILL_ELV_FASTCHECKOUT',
             'MODULE_PAYMENT_PAYMILL_ELV_WEBHOOKS',
+            'MODULE_PAYMENT_PAYMILL_ELV_SEPA',
             'MODULE_PAYMENT_PAYMILL_ELV_PRIVATEKEY',
             'MODULE_PAYMENT_PAYMILL_ELV_PUBLICKEY',
             'MODULE_PAYMENT_PAYMILL_ELV_ORDER_STATUS_ID',
