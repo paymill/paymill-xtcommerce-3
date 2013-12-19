@@ -77,7 +77,7 @@ define('PAYMILL_50501', 'Die Schnittstelle zum Acquirer reagiert nicht); daher b
 define('PAYMILL_50502', 'Es gibt eine Zeitüberschreitung bei der Risiko-Management Transaktion.');
 define('PAYMILL_50600', 'Doppelte Transaktion.');
 define('MODULE_PAYMENT_PAYMILL_ELV_SEPA_TITLE','Zahlungsformular auf IBAN/BIC umstellen.');
-define('MODULE_PAYMENT_PAYMILL_ELV_SEPA_DESC','Momentan nur aus Deutschland verfügbar');
+define('MODULE_PAYMENT_PAYMILL_ELV_SEPA_DESC','Momentan nur aus Deutschland verf&uuml;gbar');
 define('MODULE_PAYMENT_PAYMILL_ELV_TEXT_BIC','BIC');
 define('MODULE_PAYMENT_PAYMILL_ELV_TEXT_IBAN','IBAN');
 define('MODULE_PAYMENT_PAYMILL_ELV_TEXT_IBAN_INVALID','IBAN ungültig');

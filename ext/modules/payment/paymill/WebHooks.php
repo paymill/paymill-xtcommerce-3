@@ -29,13 +29,15 @@ class WebHooks extends WebHooksAbstract
      * @param String $id
      * @param String $url
      * @param String $mode
+     * @param String $type
      * @param String $created_at
+     *
      * @throws Exception
      * @return void
      */
-    function saveWebhook($id, $url, $mode, $created_at)
+    function saveWebhook($id, $url, $mode, $type, $created_at)
     {
-        $sql = "REPLACE INTO `pi_paymill_webhooks` (`id`, `url`, `mode`, `created_at`) VALUES('".$id."','".$url."','".$mode."','".$created_at."')";
+        $sql = "REPLACE INTO `pi_paymill_webhooks` (`id`, `url`, `mode`, `type`, `created_at`) VALUES('".$id."','".$url."','".$mode."','".$type."','".$created_at."')";
         $success = xtc_db_query($sql);
         if(!$success){
             throw new Exception("Webhook data could not be saved.");
@@ -63,12 +65,13 @@ class WebHooks extends WebHooksAbstract
     /**
      * Returns the ids of all web-hooks from the web-hook table
      *
-     * @throws Exception
+     * @param String $type
+     *
      * @return array
      */
-    function loadAllWebHooks()
+    function loadAllWebHooks($type)
     {
-        $sql = "SELECT `id` FROM `pi_paymill_webhooks`";
+        $sql = "SELECT `id` FROM `pi_paymill_webhooks` WHERE `type` = '".$type."'";
         $store = xtc_db_query($sql);
         $result = array();
         while($row = xtc_db_fetch_array($store)){

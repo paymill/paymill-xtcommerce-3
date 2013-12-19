@@ -72,7 +72,7 @@ abstract class WebHooksAbstract
                 'event_types' => array($eventName)
             );
             $hook = $webHooks->create($parameters);
-            $this->saveWebhook($hook['id'],$hook['url'], $hook['livemode']? 'live' : 'test', $hook['created_at']);
+            $this->saveWebhook($hook['id'],$hook['url'], $hook['livemode']? 'live' : 'test', $this->_request['type'], $hook['created_at']);
             $data[] = $hook;
         }
     }
@@ -83,8 +83,9 @@ abstract class WebHooksAbstract
     public function removeAction()
     {
         $this->requireWebhooks();
+        $type = $this->_request['type'];
         $webHooks = new Services_Paymill_Webhooks($this->_privateKey, $this->_apiUrl);
-        $hooks = $this->loadAllWebHooks();
+        $hooks = $this->loadAllWebHooks($type);
 
         foreach ($hooks as $hook) {
             $webHooks->delete($hook);
@@ -98,11 +99,12 @@ abstract class WebHooksAbstract
      * @param String $id
      * @param String $url
      * @param String $mode
+     * @param String $type
      * @param String $created_at
-     * @throws Exception
+     *
      * @return void
      */
-    abstract function saveWebhook($id, $url, $mode, $created_at);
+    abstract function saveWebhook($id, $url, $mode, $type, $created_at);
 
     /**
      * Removes the web-hook from the web-hook table
@@ -114,10 +116,12 @@ abstract class WebHooksAbstract
 
     /**
      * Returns the ids of all web-hooks from the web-hook table
-     * @throws Exception
+     *
+     * @param String $type
+     *
      * @return array
      */
-    abstract function loadAllWebHooks();
+    abstract function loadAllWebHooks($type);
 
     /**
      * Required the Libs WebHooks class
