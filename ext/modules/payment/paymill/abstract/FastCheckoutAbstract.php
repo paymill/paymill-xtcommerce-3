@@ -97,14 +97,10 @@ abstract class FastCheckoutAbstract
 
         //Validate Client
         $client = $this->_clients->getOne($newClientId);
-
         if($client && array_key_exists('id', $client) && !empty($client['id'])){
-
             //Validate Payment
             $payment = $this->_payments->getOne($newPaymentId);
-
             if($payment && array_key_exists('id', $payment) && !empty($payment['id'])){
-
                 //Check if valid data is present
                 $client = $this->_clients->getOne($data['clientID']);
                 if ($client && array_key_exists('id', $client) && !empty($client['id'])) {
@@ -114,7 +110,6 @@ abstract class FastCheckoutAbstract
                 }
             }
         }
-
         return $success;
     }
 
@@ -243,7 +238,7 @@ abstract class FastCheckoutAbstract
      */
     function _removeIds($userId)
     {
-        $sql = "REPLACE INTO `". $this->getFastCheckoutTableName() . "` (`userID`, `clientID`, `paymentID_CC`, `paymentID_ELV`) VALUES ('$userId', NULL, NULL, NULL)";
+        $sql = "DELETE FROM`". $this->getFastCheckoutTableName() . "` WHERE `userID` = '$userId'";
         $success = $this->dbQuery($sql);
         $success = $success === true;
         return $success;
