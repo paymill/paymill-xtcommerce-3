@@ -149,7 +149,8 @@ abstract class WebHooksAbstract
      */
     public function refundAction()
     {
-        if($this->getWebhookState()){
+        $type = $this->_request['type'];
+        if($this->getWebhookState($type)){
             $this->_request['action'] = 'Refund';
             $this->updateOrderStatus();
         } else {
@@ -162,7 +163,8 @@ abstract class WebHooksAbstract
      */
     public function chargebackAction()
     {
-        if($this->getWebhookState()){
+        $type = $this->_request['type'];
+        if($this->getWebhookState($type)){
             $this->_request['action'] = 'Chargeback';
             $this->updateOrderStatus();
         } else {
@@ -183,9 +185,10 @@ abstract class WebHooksAbstract
 
     /**
      * Returns the state of the webhook option
+     * @param $type
      * @return boolean
      */
-    abstract function getWebhookState();
+    abstract function getWebhookState($type);
 
     /**
      * Changes the Status of the current order (based on the notification)

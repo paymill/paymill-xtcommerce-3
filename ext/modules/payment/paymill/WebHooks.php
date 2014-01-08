@@ -141,11 +141,11 @@ class WebHooks extends WebHooksAbstract
 
     /**
      * Returns the state of the webhook option
-     *
+     * @param $type
      * @return boolean
      */
-    function getWebhookState()
+    function getWebhookState($type)
     {
-        return ((MODULE_PAYMENT_PAYMILL_CC_WEBHOOKS == 'True') ? true : false);
+        return ((constant('MODULE_PAYMENT_PAYMILL_'.$type.'_WEBHOOKS') == 'True') ? true : false);
     }
 }
