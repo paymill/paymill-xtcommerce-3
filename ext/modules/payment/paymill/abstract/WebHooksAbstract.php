@@ -130,6 +130,18 @@ abstract class WebHooksAbstract
     abstract function requireWebhooks();
 
     /**
+     * Required the Libs WebHooks class
+     * @return void
+     */
+    abstract function requireTransactions();
+
+    /**
+     * Required the Libs WebHooks class
+     * @return void
+     */
+    abstract function requireRefunds();
+
+    /**
      * Returns the list of events to be created
      *
      * @return array
@@ -150,7 +162,11 @@ abstract class WebHooksAbstract
     public function refundAction()
     {
         $type = $this->_request['type'];
-        if($this->getWebhookState($type)){
+        $refundId = $this->_request['event_resource']['id'];
+        $this->requireRefunds();
+        $refunds = new Services_Paymill_Refunds($this->_privateKey, $this->_apiUrl);
+        $refund = $refunds->getOne($refundId);
+        if($this->getWebhookState($type) && isset($refund['id'])){
             $this->_request['action'] = 'Refund';
             $this->updateOrderStatus();
         } else {
@@ -164,14 +180,24 @@ abstract class WebHooksAbstract
     public function chargebackAction()
     {
         $type = $this->_request['type'];
-        if($this->getWebhookState($type)){
+        $transactionId = $this->_request['event_resource']['id'];
+        $this->requireTransactions();
+        $transactions = new Services_Paymill_Transactions($this->_privateKey, $this->_apiUrl);
+        $transaction = $transactions->getOne($transactionId);
+        if($this->getWebhookState($type) && isset($transaction['id'])){
             $this->_request['action'] = 'Chargeback';
             $this->updateOrderStatus();
         } else {
+
             $this->successAction();
         }
     }
 
+    /**
+     * Returns the orderId obtained from the description
+     * @param $description
+     * @return null
+     */
     public function getOrderIdFromDescription($description)
     {
         if (preg_match("/OrderID: (\S*)/", $description, $description)) {
