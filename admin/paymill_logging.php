@@ -35,7 +35,7 @@ if (isset($_POST['submit']) || isset($_SESSION['search_key'])) {
 
 $data = xtc_db_query($sql);
 
-$recordCount = xtc_db_num_rows($data);
+$recordCount = xtc_db_num_rows(xtc_db_query("SELECT * FROM `pi_paymill_logging`"));
 $pageCount = $recordCount / $recordLimit;
 ?>
 <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
