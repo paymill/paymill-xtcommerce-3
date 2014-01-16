@@ -367,6 +367,10 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
             xtc_db_query("ALTER TABLE admin_access ADD paymill_log INT(1) NOT NULL DEFAULT '0'");
         }
 
+        if (xtc_db_num_rows(xtc_db_query("show columns from admin_access like 'paymill_webhook_%'")) == 0) {
+            xtc_db_query("ALTER TABLE admin_access ADD paymill_webhook_listener INT(1) NOT NULL DEFAULT '0'");
+        }
+
         xtc_db_query("UPDATE admin_access SET paymill_logging = '1', paymill_log = '1', paymill_webhook_listener = '1' WHERE customers_id= '1' OR customers_id = 'groups'");
         
         xtc_db_query("DROP TABLE IF EXISTS `pi_paymill_logging`");
@@ -402,10 +406,6 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
             . "PRIMARY KEY (`id`)"
             . ")"
         );
-
-        if (xtc_db_num_rows(xtc_db_query("show columns from admin_access like 'paymill_webhook_%'")) == 0) {
-            xtc_db_query("ALTER TABLE admin_access ADD paymill_webhook_listener INT(1) NOT NULL DEFAULT '0'");
-        }
 
         $this->addOrderState('Paymill [Refund]');
         $this->addOrderState('Paymill [Chargeback]');
