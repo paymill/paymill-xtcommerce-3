@@ -102,7 +102,7 @@ class paymill_cc extends paymill_abstract
 
         
         $script = '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>'
-                . '<script type="text/javascript">'
+                . '<script type="text/javascript" charset="utf-8">'
                     . 'var cclogging = "' . MODULE_PAYMENT_PAYMILL_CC_LOGGING . '";'
                     . 'var cc_expiery_invalid = "' . utf8_decode(MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_EXPIRY_INVALID) . '";'
                     . 'var cc_owner_invalid = "' . utf8_decode(MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_OWNER_INVALID) . '";'
@@ -115,6 +115,7 @@ class paymill_cc extends paymill_abstract
                     . 'var paymill_cc_years = ' . json_encode($years_array) . ';'
                     . 'var paymill_cc_number_val = "' . $payment['last4'] . '";'
                     . 'var paymill_cc_cvc_val = "' . $payment['cvc'] . '";'
+                    . 'var paymill_cc_card_type = "' . utf8_decode($payment['card_type']) . '";'
                     . 'var paymill_cc_holder_val = "' . utf8_decode($payment['card_holder']) . '";'
                     . 'var paymill_cc_expiry_month_val = "' . $payment['expire_month'] . '";'
                     . 'var paymill_cc_expiry_year_val = "' . $payment['expire_year'] . '";'

@@ -97,8 +97,36 @@ function PaymillCreateCCForm()
         $('<option/>').val(cc_year_value).text(cc_year_text).appendTo($('#paymill-card-expiry-year'));
     };
 
-    $('#paymill-card-expiry-month').val(paymill_cc_expiry_month_val);
+    $('#paymill-card-expiry-month option').eq(paymill_cc_expiry_month_val-1).prop('selected', true);
     $('#paymill-card-expiry-year').val(paymill_cc_expiry_year_val);
+    var cssClass = "paymill-card-number-";
+    console.log(paymill_cc_card_type);
+    switch (paymill_cc_card_type) {
+        case 'unknown':
+            $('#paymill-card-number').removeClass();
+            $('#paymill-card-number').addClass('form-row-paymill');
+            break;
+        case 'carte bleue':
+            $('#paymill-card-number').removeClass();
+            $('#paymill-card-number').addClass('form-row-paymill ' + cssClass + 'carte-bleue');
+            break;
+        case 'china_union_pay':
+            $('#paymill-card-number').removeClass();
+            $('#paymill-card-number').addClass('form-row-paymill ' + cssClass + 'unionpay');
+            break;
+        case 'diners':
+        case 'dankort':
+        case 'carta-si':
+        case 'maestro':
+        case 'discover':
+        case 'jcb':
+        case 'amex':
+        case 'mastercard':
+        case 'visa':
+            $('#paymill-card-number').removeClass();
+            $('#paymill-card-number').addClass('form-row-paymill ' + cssClass + brand);
+            break;
+    }
 }
 
 function PaymillAddCardDetection()
