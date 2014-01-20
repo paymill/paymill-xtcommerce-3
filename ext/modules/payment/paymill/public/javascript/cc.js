@@ -87,7 +87,7 @@ function PaymillCreateCCForm()
         var cc_month_value = paymill_cc_months[cc_month_counter][0];
         var cc_month_text = paymill_cc_months[cc_month_counter][1];
 
-        $('<option/>').val(cc_month_value).text(cc_month_text).appendTo($('#paymill-card-expiry-month'));
+        $('<option/>').val(cc_month_value).text(replaceUmlauts(cc_month_text)).appendTo($('#paymill-card-expiry-month'));
     };
 
     for ( var cc_year_counter in paymill_cc_years ) {
@@ -254,4 +254,22 @@ function detectCreditcardBranding(creditcardNumber) {
         }
     }
     return brand;
+}
+
+function replaceUmlauts(string){
+
+    string = string.replace(/&Auml;/,'\u00c4');
+    string = string.replace(/&auml;/,'\u00e4');
+    string = string.replace(/&Ouml;/,'\u00d6');
+    string = string.replace(/&ouml;/,'\u00f6');
+    string = string.replace(/&Uuml;/,'\u00dc');
+    string = string.replace(/&uuml;/,'\u00fc');
+    string = string.replace(/Ä;/,'\u00c4');
+    string = string.replace(/ä;/,'\u00e4');
+    string = string.replace(/Ö/,'\u00d6');
+    string = string.replace(/ö/,'\u00f6');
+    string = string.replace(/Ü/,'\u00dc');
+    string = string.replace(/ü/,'\u00fc');
+
+    return string;
 }
