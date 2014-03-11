@@ -1,3 +1,8 @@
+##1.5.0
+* Added Language Support for german, english, french, italian, spanish and portuguese
+* Added improved early pan detection
+* Added iban validation
+
 ##1.4.0
 * Added SEPA Payment Form for german Direct Debit
 * Added WebHooks. WebHooks will automatically synch your shops order states on refund or chargeback events
