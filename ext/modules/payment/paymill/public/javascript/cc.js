@@ -134,8 +134,17 @@ function PaymillAddCardDetection()
     var cssClass = "paymill-card-number-";
 
     $('#paymill-card-number').keyup(function() {
-        var brand = detectCreditcardBranding($('#paymill-card-number').val()).toLowerCase();
+        var cardNumber = $('#paymill-card-number').val();
+        var detector = new BrandDetection();
+        var brand = detector.detect(cardNumber);
         console.log("Brand detected: " + brand);
+
+        if (detector.validate(cardNumber)) {
+            suffix = '';
+        } else {
+            suffix = '-temp';
+        }
+
         switch (brand) {
             case 'unknown':
                 $('#paymill-card-number').removeClass();
@@ -143,26 +152,20 @@ function PaymillAddCardDetection()
                 break;
             case 'carte bleue':
                 $('#paymill-card-number').removeClass();
-                $('#paymill-card-number').addClass('form-row-paymill ' + cssClass + 'carte-bleue');
+                $('#paymill-card-number').addClass('form-row-paymill ' + cssClass + 'carte-bleue' + suffix);
                 break;
-            case 'china unionpay':
-                $('#paymill-card-number').removeClass();
-                $('#paymill-card-number').addClass('form-row-paymill ' + cssClass + 'unionpay');
-                break;
-            case 'diners club':
-                $('#paymill-card-number').removeClass();
-                $('#paymill-card-number').addClass('form-row-paymill ' + cssClass + 'diners');
-                break;
+            case 'maestro':
             case 'dankort':
             case 'carta-si':
-            case 'maestro':
             case 'discover':
             case 'jcb':
             case 'amex':
+            case 'china-unionpay':
+            case 'diners-club':
             case 'mastercard':
             case 'visa':
                 $('#paymill-card-number').removeClass();
-                $('#paymill-card-number').addClass('form-row-paymill ' + cssClass + brand);
+                $('#paymill-card-number').addClass('form-row-paymill ' + cssClass + brand + suffix);
                 break;
         }
     });

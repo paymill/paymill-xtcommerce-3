@@ -122,6 +122,7 @@ class paymill_cc extends paymill_abstract
                     . 'var paymill_cc_fastcheckout = ' . ($this->fastCheckout->canCustomerFastCheckoutCc($_SESSION['customer_id']) ? 'true' : 'false') . ';'
                     . 'var checkout_payment_link = "' . xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'step=step2&payment_error=' . $this->code . '&error=', 'SSL', true, false) . '";'
                 . '</script>'
+                . '<script type="text/javascript" src="ext/modules/payment/paymill/public/javascript/BrandDetection.js"></script>'
                 . '<script type="text/javascript" src="ext/modules/payment/paymill/public/javascript/cc.js"></script>';
         
         array_push($confirmation['fields'], 
