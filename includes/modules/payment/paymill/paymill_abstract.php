@@ -102,7 +102,7 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
             $error = urldecode($_GET['error']);
         }
 
-        $error_text['error'] = utf8_decode(constant('PAYMILL_'.$error));
+        $error_text['error'] = utf8_decode(constant('PAYMILL_'.strtoupper($error)));
 
         return $error_text;
     }
