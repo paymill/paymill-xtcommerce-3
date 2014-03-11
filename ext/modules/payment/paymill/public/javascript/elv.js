@@ -51,7 +51,9 @@ function PaymillValidateSepaForm()
 {
     console.log("Starting Validation for SEPA form...");
     var elvErrorFlag = true;
-    if(false === ($('#paymill-iban').val() != '')){
+    var iban = new Iban();
+
+    if(!iban.validate($('#paymill-iban').val())){
         $('#elv-iban-error').text(elv_iban_invalid);
         $('#elv-iban-error').css('display', 'block');
         elvErrorFlag = false;

@@ -81,8 +81,8 @@ class paymill_elv extends paymill_abstract
                 . 'var elv_account_number_invalid = "' . utf8_decode(MODULE_PAYMENT_PAYMILL_ELV_TEXT_ACCOUNT_INVALID) . '";'
                 . 'var elv_bank_code_invalid = "' . utf8_decode(MODULE_PAYMENT_PAYMILL_ELV_TEXT_BANKCODE_INVALID) . '";'
                 . 'var elv_bank_owner_invalid = "' . utf8_decode(MODULE_PAYMENT_PAYMILL_ELV_TEXT_ACCOUNT_HOLDER_INVALID) . '";'
-                . 'var elv_iban_invalid = "' . utf8_decode(MODULE_PAYMENT_PAYMILL_ELV_TEXT_IBAN_INVALID) . '";'
-                . 'var elv_bic_invalid = "' . utf8_decode(MODULE_PAYMENT_PAYMILL_ELV_TEXT_BIC_INVALID) . '";'
+                . 'var elv_iban_invalid = "' . utf8_decode(PAYMILL_FIELD_INVALID_IBAN) . '";'
+                . 'var elv_bic_invalid = "' . utf8_decode(PAYMILL_FIELD_INVALID_BIC) . '";'
                 . 'var paymill_account_name = ' . json_encode($order->billing['firstname'] . ' ' . $order->billing['lastname']) . ';'
                 . 'var paymill_elv_code = "' . $payment['code'] . '";'
                 . 'var paymill_elv_holder = "' . utf8_decode($payment['holder']) . '";'
@@ -92,8 +92,9 @@ class paymill_elv extends paymill_abstract
                 . 'var paymill_elv_fastcheckout = ' . ($this->fastCheckout->canCustomerFastCheckoutElv($_SESSION['customer_id']) ? 'true': 'false') . ';'
                 . 'var checkout_payment_link = "' . xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'step=step2&payment_error=' . $this->code . '&error=', 'SSL', true, false) . '";'
                 . '</script>'
+                . '<script type="text/javascript" src="ext/modules/payment/paymill/public/javascript/Iban.js"></script>'
                 . '<script type="text/javascript" src="ext/modules/payment/paymill/public/javascript/elv.js"></script>';
-        
+
         array_push($confirmation['fields'], 
             array(
                 'field' => $script
