@@ -1,5 +1,5 @@
 <?php
-define("MODULE_PAYMENT_PAYMILL_ELV_TEXT_TITLE", "PAYMILL Addebito diretto");
+define("MODULE_PAYMENT_PAYMILL_ELV_TEXT_PUBLIC_TITLE", "Addebito diretto");
 define("MODULE_PAYMENT_PAYMILL_ELV_STATUS_TITLE", "Attivare");
 define("MODULE_PAYMENT_PAYMILL_ELV_DESCRIPTION", "Registro PAYMILL");
 define("MODULE_PAYMENT_PAYMILL_ELV_TRANSACTION_ORDER_STATUS_ID_TITLE", "Stato dell'ordine della transazione");
@@ -90,6 +90,7 @@ define("PAYMILL_FIELD_INVALID_BIC", "Invalid BIC");
 define("PAYMILL_FIELD_INVALID_COUNTRY", "Invalid country for sepa transactions");
 define("PAYMILL_FIELD_INVALID_BANK_DATA", "Invalid bank data");
 define("PAYMILL_0", "Si &egrave; verificato un errore durante l'elaborazione del pagamento.");
+define("MODULE_PAYMENT_PAYMILL_ELV_TEXT_TITLE", "PAYMILL Addebito diretto");
 define("TEXT_INFO_API_VERSION", "API Version");
 define("MODULE_PAYMENT_PAYMILL_ELV_STATUS_DESC", "");
 ?>

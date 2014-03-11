@@ -1,5 +1,5 @@
 <?php
-define("MODULE_PAYMENT_PAYMILL_ELV_TEXT_TITLE", "PAYMILL Domiciliaci&oacute;n bancaria");
+define("MODULE_PAYMENT_PAYMILL_ELV_TEXT_PUBLIC_TITLE", "Domiciliaci&oacute;n bancaria");
 define("MODULE_PAYMENT_PAYMILL_ELV_STATUS_TITLE", "Activar");
 define("MODULE_PAYMENT_PAYMILL_ELV_DESCRIPTION", "Registro de PAYMILL");
 define("MODULE_PAYMENT_PAYMILL_ELV_TRANSACTION_ORDER_STATUS_ID_TITLE", "Estado de la Transacci&oacute;n");
@@ -90,6 +90,7 @@ define("PAYMILL_FIELD_INVALID_BIC", "Invalid BIC");
 define("PAYMILL_FIELD_INVALID_COUNTRY", "Invalid country for sepa transactions");
 define("PAYMILL_FIELD_INVALID_BANK_DATA", "Invalid bank data");
 define("PAYMILL_0", "Ha ocurrido un error mientras proces&aacute;bamos tu pago.");
+define("MODULE_PAYMENT_PAYMILL_ELV_TEXT_TITLE", "PAYMILL Domiciliaci&oacute;n bancaria");
 define("TEXT_INFO_API_VERSION", "API Version");
 define("MODULE_PAYMENT_PAYMILL_ELV_STATUS_DESC", "");
 ?>
