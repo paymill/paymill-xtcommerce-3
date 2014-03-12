@@ -134,6 +134,8 @@ function PaymillAddCardDetection()
     var cssClass = "paymill-card-number-";
 
     $('#paymill-card-number').keyup(function() {
+        $('#paymill-card-number').removeClass();
+        $('#paymill-card-number').addClass('form-row-paymill');
         var cardNumber = $('#paymill-card-number').val();
         var detector = new BrandDetection();
         var brand = detector.detect(cardNumber);
@@ -150,10 +152,7 @@ function PaymillAddCardDetection()
                 $('#paymill-card-number').removeClass();
                 $('#paymill-card-number').addClass('form-row-paymill');
                 break;
-            case 'carte bleue':
-                $('#paymill-card-number').removeClass();
-                $('#paymill-card-number').addClass('form-row-paymill ' + cssClass + 'carte-bleue' + suffix);
-                break;
+            case 'carte-bleue':
             case 'maestro':
             case 'dankort':
             case 'carta-si':
