@@ -14,7 +14,6 @@ define("MODULE_PAYMENT_PAYMILL_CC_TRANSACTION_ORDER_STATUS_ID_DESC", "Include tr
 define("MODULE_PAYMENT_PAYMILL_CC_LOGGING_TITLE", "Activate logging.");
 define("MODULE_PAYMENT_PAYMILL_CC_LOGGING_DESC", "If enabled, information regarding the progress of order processing will be written to the log. ");
 define("MODULE_PAYMENT_PAYMILL_CC_ORDER_STATUS_ID_TITLE", "Orderstate");
-define("MODULE_PAYMENT_PAYMILL_CC_ORDER_STATUS_ID_DESC", "config_order_state_description PLACEHOLDER");
 define("MODULE_PAYMENT_PAYMILL_CC_TRANS_ORDER_STATUS_ID_TITLE", "Transaction Order Status");
 define("MODULE_PAYMENT_PAYMILL_CC_TRANS_ORDER_STATUS_ID_DESC", "Include transaction information in this order status level.");
 define("MODULE_PAYMENT_PAYMILL_CC_ALLOWED_TITLE", "Accepted countries");
@@ -103,5 +102,6 @@ define("PAYMILL_0", "An error has occurred while processing your payment.");
 define("MODULE_PAYMENT_PAYMILL_CC_TEXT_TITLE", "PAYMILL Credit card");
 define("TEXT_INFO_API_VERSION", "API Version");
 define("MODULE_PAYMENT_PAYMILL_CC_STATUS_DESC", "");
+define("MODULE_PAYMENT_PAYMILL_CC_ORDER_STATUS_ID_DESC", "");
 define("MODULE_PAYMENT_PAYMILL_CC_ACCEPTED_CARDS", "Accepted Credit Cards");
 ?>

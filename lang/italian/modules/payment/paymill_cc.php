@@ -14,7 +14,6 @@ define("MODULE_PAYMENT_PAYMILL_CC_TRANSACTION_ORDER_STATUS_ID_DESC", "Inserire l
 define("MODULE_PAYMENT_PAYMILL_CC_LOGGING_TITLE", "Attivare la registrazione.");
 define("MODULE_PAYMENT_PAYMILL_CC_LOGGING_DESC", "Abilitando la funzione, le informazioni riguardanti lo stato di avanzamento dell'elaborazione dell'ordine verranno scritte nel registro.");
 define("MODULE_PAYMENT_PAYMILL_CC_ORDER_STATUS_ID_TITLE", "Stato dell'ordine");
-define("MODULE_PAYMENT_PAYMILL_CC_ORDER_STATUS_ID_DESC", "config_order_state_description PLACEHOLDER");
 define("MODULE_PAYMENT_PAYMILL_CC_TRANS_ORDER_STATUS_ID_TITLE", "Stato dell'ordine della transazione");
 define("MODULE_PAYMENT_PAYMILL_CC_TRANS_ORDER_STATUS_ID_DESC", "Inserire le informazioni di transazione in questo livello di stato dell'ordine.");
 define("MODULE_PAYMENT_PAYMILL_CC_ALLOWED_TITLE", "Paesi accettati");
@@ -103,5 +102,6 @@ define("PAYMILL_0", "Si &egrave; verificato un errore durante l'elaborazione del
 define("MODULE_PAYMENT_PAYMILL_CC_TEXT_TITLE", "PAYMILL Carta di credito");
 define("TEXT_INFO_API_VERSION", "API Version");
 define("MODULE_PAYMENT_PAYMILL_CC_STATUS_DESC", "");
+define("MODULE_PAYMENT_PAYMILL_CC_ORDER_STATUS_ID_DESC", "");
 define("MODULE_PAYMENT_PAYMILL_CC_ACCEPTED_CARDS", "Accepted Credit Cards");
 ?>

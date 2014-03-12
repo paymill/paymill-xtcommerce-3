@@ -14,7 +14,6 @@ define("MODULE_PAYMENT_PAYMILL_CC_TRANSACTION_ORDER_STATUS_ID_DESC", "API Ergebn
 define("MODULE_PAYMENT_PAYMILL_CC_LOGGING_TITLE", "Logging aktivieren");
 define("MODULE_PAYMENT_PAYMILL_CC_LOGGING_DESC", "Sofern Aktiviert, werden Informationen &uuml;ber den Ablauf der Bestellungensabwicklung ins Log geschrieben.");
 define("MODULE_PAYMENT_PAYMILL_CC_ORDER_STATUS_ID_TITLE", "Bestellungstatus");
-define("MODULE_PAYMENT_PAYMILL_CC_ORDER_STATUS_ID_DESC", "config_order_state_description PLACEHOLDER");
 define("MODULE_PAYMENT_PAYMILL_CC_TRANS_ORDER_STATUS_ID_TITLE", "API Ergebnisse");
 define("MODULE_PAYMENT_PAYMILL_CC_TRANS_ORDER_STATUS_ID_DESC", "API Ergebnisse in diesem Bestellstatus f&uuml;r Bestellungen speichern.");
 define("MODULE_PAYMENT_PAYMILL_CC_ALLOWED_TITLE", "Erlaubte L&auml;nder");
@@ -92,7 +91,7 @@ define("MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_AUGUST", "August");
 define("MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_SEPTEMBER", "September");
 define("MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_OCTOBER", "Oktober");
 define("MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_NOVEMBER", "November");
-define("MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_DECEMBER", "Dezemper");
+define("MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_DECEMBER", "Dezember");
 define("MODULE_PAYMENT_PAYMILL_CC_ZONE_TITLE", "Erlaubte Steuerzonen");
 define("MODULE_PAYMENT_PAYMILL_CC_ZONE_DESC", "Bitte geben Sie die Zonen einzeln an und trennen Sie diese durch Kommas (z.B. US, UK (Lassen Sie das Feld leer um alle Zonen zu erlauben.))");
 define("MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_EXPIRY_INVALID", "Ung&uuml;ltiges Ablaufdatum");
@@ -103,5 +102,6 @@ define("PAYMILL_0", "W&auml;hrend Ihrer Zahlung ist ein Fehler aufgetreten.");
 define("MODULE_PAYMENT_PAYMILL_CC_TEXT_TITLE", "PAYMILL Kreditkarte");
 define("TEXT_INFO_API_VERSION", "API Version");
 define("MODULE_PAYMENT_PAYMILL_CC_STATUS_DESC", "");
+define("MODULE_PAYMENT_PAYMILL_CC_ORDER_STATUS_ID_DESC", "");
 define("MODULE_PAYMENT_PAYMILL_CC_ACCEPTED_CARDS", "Accepted Credit Cards");
 ?>

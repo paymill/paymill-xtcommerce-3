@@ -14,7 +14,6 @@ define("MODULE_PAYMENT_PAYMILL_CC_TRANSACTION_ORDER_STATUS_ID_DESC", "Inclure le
 define("MODULE_PAYMENT_PAYMILL_CC_LOGGING_TITLE", "Activer la journalisation.");
 define("MODULE_PAYMENT_PAYMILL_CC_LOGGING_DESC", "Si ce mode est activ&eacute;, les informations concernant l'avancement du traitement de la commande seront &eacute;crites dans le journal.");
 define("MODULE_PAYMENT_PAYMILL_CC_ORDER_STATUS_ID_TITLE", "&Eacute;tat de l'ordre");
-define("MODULE_PAYMENT_PAYMILL_CC_ORDER_STATUS_ID_DESC", "config_order_state_description PLACEHOLDER");
 define("MODULE_PAYMENT_PAYMILL_CC_TRANS_ORDER_STATUS_ID_TITLE", "Etat de l'ordre d'op&eacute;ration");
 define("MODULE_PAYMENT_PAYMILL_CC_TRANS_ORDER_STATUS_ID_DESC", "Inclure les informations de l'op&eacute;ration &agrave; ce niveau du statut de l'ordre.");
 define("MODULE_PAYMENT_PAYMILL_CC_ALLOWED_TITLE", "Pays accept&eacute;s");
@@ -103,5 +102,6 @@ define("PAYMILL_0", "Une erreur s'est produit pendant le traiement de votre paie
 define("MODULE_PAYMENT_PAYMILL_CC_TEXT_TITLE", "PAYMILL Carte de cr&eacute;dit");
 define("TEXT_INFO_API_VERSION", "API Version");
 define("MODULE_PAYMENT_PAYMILL_CC_STATUS_DESC", "");
+define("MODULE_PAYMENT_PAYMILL_CC_ORDER_STATUS_ID_DESC", "");
 define("MODULE_PAYMENT_PAYMILL_CC_ACCEPTED_CARDS", "Accepted Credit Cards");
 ?>

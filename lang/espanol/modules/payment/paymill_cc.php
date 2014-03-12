@@ -14,7 +14,6 @@ define("MODULE_PAYMENT_PAYMILL_CC_TRANSACTION_ORDER_STATUS_ID_DESC", "Incluya in
 define("MODULE_PAYMENT_PAYMILL_CC_LOGGING_TITLE", "Activar el registro");
 define("MODULE_PAYMENT_PAYMILL_CC_LOGGING_DESC", "Si est&aacute; activado, la informaci&oacute;n en relaci&oacute;n con el progreso del proceso del pedido se escribir&aacute; en el registro.");
 define("MODULE_PAYMENT_PAYMILL_CC_ORDER_STATUS_ID_TITLE", "Estado del pedido");
-define("MODULE_PAYMENT_PAYMILL_CC_ORDER_STATUS_ID_DESC", "config_order_state_description PLACEHOLDER");
 define("MODULE_PAYMENT_PAYMILL_CC_TRANS_ORDER_STATUS_ID_TITLE", "Estado de la Transacci&oacute;n");
 define("MODULE_PAYMENT_PAYMILL_CC_TRANS_ORDER_STATUS_ID_DESC", "Incluya informaci&oacute;n de la transacci&oacute;n en este nivel de estado del pedido");
 define("MODULE_PAYMENT_PAYMILL_CC_ALLOWED_TITLE", "Pa&iacute;ses aceptados");
@@ -103,5 +102,6 @@ define("PAYMILL_0", "Ha ocurrido un error mientras proces&aacute;bamos tu pago."
 define("MODULE_PAYMENT_PAYMILL_CC_TEXT_TITLE", "PAYMILL Tarjeta de cr&eacute;dito");
 define("TEXT_INFO_API_VERSION", "API Version");
 define("MODULE_PAYMENT_PAYMILL_CC_STATUS_DESC", "");
+define("MODULE_PAYMENT_PAYMILL_CC_ORDER_STATUS_ID_DESC", "");
 define("MODULE_PAYMENT_PAYMILL_CC_ACCEPTED_CARDS", "Accepted Credit Cards");
 ?>
