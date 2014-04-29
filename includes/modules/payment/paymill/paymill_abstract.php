@@ -126,18 +126,6 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
         $_SESSION['paymill']['amount'] = $this->format_raw($order->info['total']);
         return array(
             'fields' => array(
-                array(
-                    'title' => '',
-                    'field' => '<link rel="stylesheet" type="text/css" href="ext/modules/payment/paymill/public/css/paymill.css" />'
-                ),
-                array(
-                    'title' => '',
-                    'field' => '<script type="text/javascript">var PAYMILL_PUBLIC_KEY = "' . $this->publicKey . '";</script>'
-                ),
-                array(
-                    'title' => '',
-                    'field' => '<script type="text/javascript" src="' . $this->bridgeUrl . '"></script>'
-                ),
             )
         );
     }
@@ -475,6 +463,14 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
 
         xtc_db_query("REPLACE INTO orders_status (orders_status_id, language_id, orders_status_name) VALUES($status_id, 1, '".$stateName."')");
         xtc_db_query("REPLACE INTO orders_status (orders_status_id, language_id, orders_status_name) VALUES($status_id, 2, '".$stateName."')");
+    }
+
+    function getScript() {
+        $script = '<link rel="stylesheet" type="text/css" href="ext/modules/payment/paymill/public/css/paymill.css" />';
+        $script .= '<script type="text/javascript">var PAYMILL_PUBLIC_KEY = "' . $this->publicKey . '";</script>';
+        $script .= '<script type="text/javascript" src="' . $this->bridgeUrl . '"></script>';
+
+        return $script;
     }
 
 }

@@ -74,7 +74,8 @@ class paymill_elv extends paymill_abstract
         $this->fastCheckout->setFastCheckoutFlag($this->fastCheckoutFlag);
         $payment = $this->getPayment($_SESSION['customer_id']);
 
-        $script = '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>'
+        $script = $this->getScript();
+        $script .= '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>'
                 . '<script type="text/javascript">'
                 . 'var elvlogging = "' . MODULE_PAYMENT_PAYMILL_ELV_LOGGING . '";'
                 . 'var sepaActive ="' . MODULE_PAYMENT_PAYMILL_ELV_SEPA .'";'
@@ -94,16 +95,10 @@ class paymill_elv extends paymill_abstract
                 . '</script>'
                 . '<script type="text/javascript" src="ext/modules/payment/paymill/public/javascript/Iban.js"></script>'
                 . '<script type="text/javascript" src="ext/modules/payment/paymill/public/javascript/elv.js"></script>';
-
-        array_push($confirmation['fields'], 
-            array(
-                'field' => $script
-            )
-        );
         
         array_push($confirmation['fields'], 
             array(
-                'title' => '<div class="paymill-label-field">' . MODULE_PAYMENT_PAYMILL_ELV_TEXT_ACCOUNT_HOLDER . '</div>',
+                'title' => $script . '<div class="paymill-label-field">' . MODULE_PAYMENT_PAYMILL_ELV_TEXT_ACCOUNT_HOLDER . '</div>',
                 'field' => '<span id="account-name-field"></span><span id="elv-holder-error" class="paymill-error"></span>'
             )
         );

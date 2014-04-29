@@ -100,8 +100,8 @@ class paymill_cc extends paymill_abstract
         $this->fastCheckout->setFastCheckoutFlag($this->fastCheckoutFlag);
         $payment = $this->getPayment($_SESSION['customer_id']);
 
-        
-        $script = '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>'
+        $script = $this->getScript();
+        $script .= '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>'
                 . '<script type="text/javascript" charset="utf-8">'
                     . 'var cclogging = "' . MODULE_PAYMENT_PAYMILL_CC_LOGGING . '";'
                     . 'var cc_expiery_invalid = "' . html_entity_decode(MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_EXPIRY_INVALID) . '";'
@@ -127,13 +127,7 @@ class paymill_cc extends paymill_abstract
         
         array_push($confirmation['fields'], 
             array(
-                'field' => $script
-            )
-        );
-        
-        array_push($confirmation['fields'], 
-            array(
-                'title' => '<div class="paymill-label-field">' . MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_OWNER . '</div>',
+                'title' => $script . '<div class="paymill-label-field">' . MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_OWNER . '</div>',
                 'field' => '<span id="card-owner-field"></span><span id="card-owner-error" class="paymill-error"></span>'
             )
         );
