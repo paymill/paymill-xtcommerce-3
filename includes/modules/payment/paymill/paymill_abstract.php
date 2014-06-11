@@ -123,7 +123,12 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
     function confirmation()
     {
         global $order;
-        $_SESSION['paymill']['amount'] = $this->format_raw($order->info['total']);
+        if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) {
+            $amount = $order->info['total'] + $order->info['tax'];
+        } else {
+            $amount = $order->info['total'];
+        }
+        $_SESSION['paymill']['amount'] = $this->format_raw($amount);
         return array(
             'fields' => array(
             )
