@@ -149,7 +149,7 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
         $this->paymentProcessor->setAmount((int) $_SESSION['paymill']['amount']);
         $this->paymentProcessor->setApiUrl((string) $this->apiUrl);
         $this->paymentProcessor->setCurrency((string) strtoupper($order->info['currency']));
-        $this->paymentProcessor->setDescription(utf8_encode((string) STORE_NAME . ' ' . $order->customer['lastname'] . ', ' . $order->customer['firstname']));
+        $this->paymentProcessor->setDescription(utf8_encode(substr((string) STORE_NAME . ' ' . $order->customer['lastname'] . ', ' . $order->customer['firstname'], 0, 128)));
         $this->paymentProcessor->setEmail((string) $order->customer['email_address']);
         $this->paymentProcessor->setName($order->customer['lastname'] . ', ' . $order->customer['firstname']);
         $this->paymentProcessor->setPrivateKey((string) $this->privateKey);
@@ -439,7 +439,7 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
     {
         $transactions = new Services_Paymill_Transactions($this->privateKey, $this->apiUrl);
         $transaction = $transactions->getOne($id);
-        $description = 'OrderID: ' . $orderId . ' ' . $transaction['description'];
+        $description = substr('OrderID: ' . $orderId . ' ' . $transaction['description'], 0, 128);
         $transactions->update(array(
                                    'id'          => $id,
                                    'description' => $description
