@@ -17,7 +17,7 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
     var $code, $title, $description = '', $enabled, $privateKey, $logging, $fastCheckoutFlag, $order_status, $publicKey;
     var $bridgeUrl = 'https://bridge.paymill.com/';
     var $apiUrl = 'https://api.paymill.com/v2/';
-    var $version = '1.5.0';
+    var $version = '1.6.0';
     var $api_version = '2';
 
 
@@ -360,6 +360,9 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
         if (xtc_db_num_rows(xtc_db_query("show columns from admin_access like 'paymill_%'")) == 0) {
             xtc_db_query("ALTER TABLE admin_access ADD paymill_logging INT(1) NOT NULL DEFAULT '0'");
             xtc_db_query("ALTER TABLE admin_access ADD paymill_log INT(1) NOT NULL DEFAULT '0'");
+        }
+        
+        if (xtc_db_num_rows(xtc_db_query("show columns from admin_access like 'paymill_refund'")) == 0) {
             xtc_db_query("ALTER TABLE admin_access ADD paymill_refund INT(1) NOT NULL DEFAULT '0'");
         }
 

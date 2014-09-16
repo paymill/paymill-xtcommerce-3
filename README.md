@@ -19,6 +19,8 @@ that all needed tables are created.
 # Installation
 
 Download the following zip file and upload the extracted files in the root directory of your xtCommerce shop.
+Download the following file, extract the zip file and upload the content of the copy_this folder in the root directory of your xtCommerce shop.
+There is also a folder named change_full
 
 https://github.com/paymill/paymill-xtcommerce-3/archive/master.zip
 
