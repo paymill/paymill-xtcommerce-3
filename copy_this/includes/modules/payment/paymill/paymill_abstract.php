@@ -411,7 +411,7 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
             . "`order_id` varchar(100),"
             . "`transaction_id` varchar(100),"
             . "`amount` varchar(100),"
-            . "PRIMARY KEY (`id`)"
+            . "PRIMARY KEY (`order_id`)"
             . ")"
         );
 
