@@ -18,9 +18,13 @@ that all needed tables are created.
 
 # Installation
 
-Download the following zip file and upload the extracted files in the root directory of your xtCommerce shop.
 Download the following file, extract the zip file and upload the content of the copy_this folder in the root directory of your xtCommerce shop.
-There is also a folder named change_full
+There is also a folder named changed_full:
+
+Inside this folder you will find the file changed_full/admin/orders.php
+
+Inside this file you will find some code between the marker "<!-- Paymill begin -->" at the beginning and "<!-- Paymill end -->"
+at the end. Find the equivalent point at your catalog/admin/orders.php and paste the code between the paymill markers.
 
 https://github.com/paymill/paymill-xtcommerce-3/archive/master.zip
 
