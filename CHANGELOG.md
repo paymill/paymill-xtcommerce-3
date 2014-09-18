@@ -1,3 +1,7 @@
+##1.6.0
+* Add refund button to order overview
+* limit transaction description to 128 signs
+
 ##1.5.0
 * Added Language Support for german, english, french, italian, spanish and portuguese
 * Added improved early pan detection
