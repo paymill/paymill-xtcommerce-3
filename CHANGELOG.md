@@ -1,3 +1,6 @@
+##1.6.1
+* Remove transaction id from order comment
+
 ##1.6.0
 * Add refund button to order overview
 * limit transaction description to 128 signs

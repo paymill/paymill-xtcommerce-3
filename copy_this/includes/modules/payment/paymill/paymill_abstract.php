@@ -17,7 +17,7 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
     var $code, $title, $description = '', $enabled, $privateKey, $logging, $fastCheckoutFlag, $order_status, $publicKey;
     var $bridgeUrl = 'https://bridge.paymill.com/';
     var $apiUrl = 'https://api.paymill.com/v2/';
-    var $version = '1.6.0';
+    var $version = '1.6.1';
     var $api_version = '2';
 
 
