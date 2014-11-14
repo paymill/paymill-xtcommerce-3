@@ -282,7 +282,7 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
             'orders_status_id' => $order_status_id,
             'date_added' => 'now()',
             'customer_notified' => '0',
-            'comments' => 'Payment approved, Transaction ID: ' . $_SESSION['paymill']['transaction_id']);
+            'comments' => 'Payment approved');
         $this->updateTransaction($_SESSION['paymill']['transaction_id'], $insert_id);
 
         xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
