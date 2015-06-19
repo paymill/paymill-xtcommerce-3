@@ -25,6 +25,8 @@ define("MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_EXPIRY", "Valida fino al");
 define("MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_CVC", "CVC");
 define("MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_CVC_TOOLTIP", "Il codice CVV o CVC &egrave; una funzione di sicurezza delle carte di credito. Di solito, &egrave; un numero composto da tre o quattro cifre. Sulle carte di credito VISA, &egrave; indicato come codice CVV. Lo stesso codice pu&ograve; essere trovato sulle carte di credito MasterCard, dove per&ograve; &egrave; denominato CVC. CVC &egrave; l'abbreviazione di  &quot;Card Validation Code&quot; (Codice di validazione della carta). Il codice CVV, invece, &egrave; l'abbreviazione di &quot;Card Validation Value code&quot; (Codice del valore di verifica della carta). Similmente alla MasterCard e alla Visa, altre marche come la Diners Club, la Discover e la JCB contengono un numero a tre cifre che di solito pu&ograve; essere trovato sul retro della carta di credito. Esistono carte MAESTRO con o senza un codice CVV a tre cifre. Nel caso in cui venga utilizzata una carta MAESTRO priva di CVV, &egrave; possibile inserire 000 nel modulo. L'American Express utilizza il CID (Numero di identificazione della carta). Il CID &egrave; un numero a quattro cifre che di solito si trova sulla parte anteriore della carta, in alto a destra dal numero della carta di credito.");
 define("MODULE_PAYMENT_PAYMILL_CC_PCI_MODE_TITLE","PCI-Compliance mode");
+define("MODULE_PAYMENT_PAYMILL_CC_PCI_LANG","it");
+define("MODULE_PAYMENT_PAYMILL_CC_PCI_BUTTON","Change");
 define("MODULE_PAYMENT_PAYMILL_CC_PCI_MODE_DESC","");
 define("PAYMILL_10001", "General undefined response.");
 define("PAYMILL_10002", "Still waiting on something.");

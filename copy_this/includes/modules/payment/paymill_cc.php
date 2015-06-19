@@ -126,7 +126,7 @@ class paymill_cc extends paymill_abstract
                     . 'var paymill_cc_pci_iframe = ' . ($this->pciShowIframe === true ? 'true' : 'false') . ';'
                     . 'var paymill_change_fastcheckout = "false";'
                     . 'var paymilliframe = new Object();'
-                    . 'var paymilliframe = {lang:"'."en".'"};'
+                    . 'paymilliframe.options = {lang:"'. MODULE_PAYMENT_PAYMILL_CC_PCI_LANG .'"};'
                     . 'var checkout_payment_link = "' . xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'step=step2&payment_error=' . $this->code . '&error=', 'SSL', true, false) . '";'
                 . '</script>'
                 . '<script type="text/javascript" src="ext/modules/payment/paymill/public/javascript/BrandDetection.js"></script>'
@@ -197,7 +197,7 @@ class paymill_cc extends paymill_abstract
             array_push($confirmation['fields'],
                 array(
                     'title' => '',
-                    'field' => '<button id="paymill_fast_checkout_iframe_change">TEST ME</button>'
+                    'field' => '<button id="paymill_fast_checkout_iframe_change">'. MODULE_PAYMENT_PAYMILL_CC_PCI_BUTTON .'</button>'
                 )
             );
         }
