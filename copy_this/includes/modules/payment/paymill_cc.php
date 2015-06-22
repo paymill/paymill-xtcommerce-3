@@ -24,7 +24,7 @@ class paymill_cc extends paymill_abstract
             $this->webHooksEnabled = ((MODULE_PAYMENT_PAYMILL_CC_WEBHOOKS == 'True') ? true : false);
             $this->publicKey = MODULE_PAYMENT_PAYMILL_CC_PUBLICKEY;
             $this->fastCheckoutFlag = ((MODULE_PAYMENT_PAYMILL_CC_FASTCHECKOUT == 'True') ? true : false);
-            $this->pciShowIframe = ((MODULE_PAYMENT_PAYMILL_CC_PCI_MODE == 'SAQ A') ? true : false);
+            $this->pciShowIframe = ((MODULE_PAYMENT_PAYMILL_CC_PCI_MODE == 'PayFrame (min. PCI SAQ A)') ? true : false);
             $this->payments = new Services_Paymill_Payments(trim($this->privateKey), $this->apiUrl);
             $this->clients = new Services_Paymill_Clients(trim($this->privateKey), $this->apiUrl);
             if ((int) MODULE_PAYMENT_PAYMILL_CC_ORDER_STATUS_ID > 0) {
@@ -235,7 +235,7 @@ class paymill_cc extends paymill_abstract
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_PAYMILL_CC_TRANSACTION_ORDER_STATUS_ID', '" . $this->getOrderStatusTransactionID() . "', '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name', now())");
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_PAYMILL_CC_ALLOWED', '', '6', '0', now())");
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) values ('MODULE_PAYMENT_PAYMILL_CC_ZONE', '0', '6', '2', 'xtc_get_zone_class_title', 'xtc_cfg_pull_down_zone_classes(', now())");
-        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PAYMENT_PAYMILL_CC_PCI_MODE', 'SAQ A-EP', '6', '1', 'xtc_cfg_select_option(array(\'SAQ A-EP\', \'SAQ A\'), ', now())");
+        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PAYMENT_PAYMILL_CC_PCI_MODE', 'direct integration (min. PCI SAQ A-EP)', '6', '1', 'xtc_cfg_select_option(array(\'direct integration (min. PCI SAQ A-EP)\', \'PayFrame (min. PCI SAQ A)\'), ', now())");
     }
 
     function keys()
