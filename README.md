@@ -16,19 +16,6 @@ that all needed tables are created.
 * Supported Languages: German, English, Spanish, French, Italian, Portuguese
 * Backend Log with custom View accessible from your shop backend
 
-# Installation
-
-Download the following file, extract the zip file and upload the content of the copy_this folder in the root directory of your xtCommerce or xtcmodified shop.
-There is also a folder named changed_full:
-
-Inside this folder you will find the file changed_full/xtc3/admin/orders.php for xtCommerce 3 
-or changed_full/xtcmodified/admin/orders.php for xtcModified
-
-Inside this file you will find some code between the marker "<!-- Paymill begin -->" at the beginning and "<!-- Paymill end -->"
-at the end. Find the equivalent point at your catalog/admin/orders.php and paste the code between the paymill markers.
-
-https://github.com/paymill/paymill-xtcommerce-3/archive/master.zip
-
 # PayFrame 
  
 We’ve introduced a “payment form” option for easier compliance with PCI 
@@ -41,8 +28,20 @@ PayFrame is enabled by default, but you can choose between both options in the
 plugin settings. Later this year, we’re bringing you the ability to customise the 
 appearance and text content of the PayFrame version. 
  
-To learn more about the benefits of PayFrame, please visit our FAQ: 
-https://www.paymill.com/en/faq/how­does­paymills­payframe­solution­work 
+To learn more about the benefits of PayFrame, please visit our [FAQ](https://www.paymill.com/en/faq/how-does-paymills-payframe-solution-work "FAQ").
+
+# Installation
+
+Download the following file, extract the zip file and upload the content of the copy_this folder in the root directory of your xtCommerce or xtcmodified shop.
+There is also a folder named changed_full:
+
+Inside this folder you will find the file changed_full/xtc3/admin/orders.php for xtCommerce 3 
+or changed_full/xtcmodified/admin/orders.php for xtcModified
+
+Inside this file you will find some code between the marker "<!-- Paymill begin -->" at the beginning and "<!-- Paymill end -->"
+at the end. Find the equivalent point at your catalog/admin/orders.php and paste the code between the paymill markers.
+
+https://github.com/paymill/paymill-xtcommerce-3/archive/master.zip
 
 # Configuration
 
