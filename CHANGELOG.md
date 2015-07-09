@@ -1,3 +1,6 @@
+##1.7.0
+* Integration of PayFrame to enable use of SAQ A for easier PCI DSS 3.0 compliance
+
 ##1.6.1
 * Remove transaction id from order comment
 
