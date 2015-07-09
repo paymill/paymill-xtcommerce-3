@@ -110,7 +110,7 @@ function paymillEmbedFrame()
 function PaymillCreateCCForm()
 {
     if (paymill_cc_pci_iframe) {
-        if (paymill_cc_holder_val && paymill_cc_number_val && paymill_cc_expiry_month_val && paymill_cc_expiry_year_val && paymill_cc_cvc_val) {
+        if (paymill_cc_fastcheckout) {
             $('#card-owner-field').html(paymill_cc_holder_val);
             $('#card-number-field').html(paymill_cc_number_val);
             $('#card-expiry-month-field').html(paymill_cc_months[paymill_cc_expiry_month_val][1]);
