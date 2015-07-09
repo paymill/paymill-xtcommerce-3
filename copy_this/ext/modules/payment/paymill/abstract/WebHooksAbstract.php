@@ -1,4 +1,5 @@
 <?php
+
 abstract class WebHooksAbstract
 {
     var $_apiUrl = 'https://api.paymill.com/v2/';

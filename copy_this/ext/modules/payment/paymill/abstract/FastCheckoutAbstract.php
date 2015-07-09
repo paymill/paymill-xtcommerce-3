@@ -50,6 +50,7 @@ abstract class FastCheckoutAbstract
         if(!$newClientId || $newClientId === null || $newClientId === ''){
             return false;
         }
+        
         return $this->_saveIds('CC', $userId, $newClientId, $newPaymentId);
     }
 
@@ -67,6 +68,7 @@ abstract class FastCheckoutAbstract
         if(!$newClientId || $newClientId === null || $newClientId === ''){
             return false;
         }
+        
         return $this->_saveIds('ELV', $userId, $newClientId, $newPaymentId);
     }
 
@@ -110,6 +112,7 @@ abstract class FastCheckoutAbstract
                 }
             }
         }
+        
         return $success;
     }
 
@@ -126,6 +129,7 @@ abstract class FastCheckoutAbstract
         $sql = "UPDATE `". $this->getFastCheckoutTableName() . "` SET `paymentID_". $paymentType ."` = '$newPaymentId' WHERE `userID` = '$userId'";
         $success = $this->dbQuery($sql);
         $success = $success === true;
+        
         return $success;
     }
 
@@ -144,6 +148,7 @@ abstract class FastCheckoutAbstract
         $sql = "REPLACE INTO `". $this->getFastCheckoutTableName() . "` (`userID`, `clientID`, `paymentID_". $paymentType ."`) VALUES ('$userId', '$newClientId', '$newPaymentId')";
         $success = $this->dbQuery($sql);
         $success = $success === true;
+        
         return $success;
     }
 
@@ -157,6 +162,7 @@ abstract class FastCheckoutAbstract
     {
         $sql = "SELECT * FROM `". $this->getFastCheckoutTableName() . "` WHERE `userID` = '$userId'";
         $fastCheckout = $this->dbFetchArray($sql);
+        
         return $fastCheckout;
     }
 
@@ -222,7 +228,7 @@ abstract class FastCheckoutAbstract
                 $hasClient = ($client && array_key_exists('id', $client) && !empty($client['id']));
             }
 
-            if(!$hasClient){
+            if(!$hasClient) {
                 $this->_removeIds($userId);
             }
         }

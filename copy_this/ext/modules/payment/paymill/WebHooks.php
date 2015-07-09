@@ -6,7 +6,8 @@ class WebHooks extends WebHooksAbstract
      * Returns the list of events to be created
      * @return array
      */
-    function getEventList(){
+    function getEventList()
+    {
         $eventList = array(
             xtc_href_link('../WebhookListener.php', '&action=chargeback&type='.$this->_request['type'], 'SSL', false, false) => 'chargeback.executed',
             xtc_href_link('../WebhookListener.php', '&action=refund&type='.$this->_request['type'], 'SSL', false, false) => 'refund.succeeded'
@@ -125,7 +126,7 @@ class WebHooks extends WebHooksAbstract
      */
     function getOrderStatusId($statusName)
     {
-        try{
+        try {
             $statusArray = xtc_db_fetch_array(xtc_db_query("select orders_status_id from " . TABLE_ORDERS_STATUS . " where orders_status_name = 'Paymill [$statusName]' limit 1"));
             $status_id = $statusArray['orders_status_id'];
 
