@@ -202,6 +202,11 @@ class paymill_cc extends paymill_abstract
         }
         
         array_push($confirmation['fields'], array(
+                'field' => '<form id="paymill_form" action="' . xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL') . '" method="post" style="display: none;"></form>'
+            )
+        );
+        
+        array_push($confirmation['fields'], array(
                 'title' => '',
                 'field' => '<div id="paymill_form_container"></div>'
             )

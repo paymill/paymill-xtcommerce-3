@@ -21,7 +21,7 @@ $(document).ready(function () {
                     paymill.createTokenViaFrame({
                         amount_int: paymill_total,
                         currency: paymill_currency
-                    }, PaymillResponseHandler);
+                    }, PaymillCcResponseHandler);
                 } else {
                     hideErrorBoxes();
                     var ccErrorFlag = true;
@@ -255,7 +255,9 @@ function PaymillCcResponseHandler(error, result)
     if (error) {
         isCcSubmitted = false;
         console.log(error);
-        window.location = $("<div/>").html(checkout_payment_link + error.apierror).text();
+        if (!paymill_cc_pci_iframe) {
+            window.location = $("<div/>").html(checkout_payment_link + error.apierror).text();
+        }
         return false;
     } else {
         $('#paymill_form').html('<input type="hidden" name="paymill_token" value="' + result.token + '" />');
