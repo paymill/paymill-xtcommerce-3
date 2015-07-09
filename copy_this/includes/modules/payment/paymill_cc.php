@@ -196,7 +196,7 @@ class paymill_cc extends paymill_abstract
             $confirmation = $this->getFormCC($confirmation);
             array_push($confirmation['fields'], array(
                     'title' => '',
-                    'field' => '<button id="paymill_fast_checkout_iframe_change" onclick="disableFastCheckout()">' . MODULE_PAYMENT_PAYMILL_CC_PCI_BUTTON . '</button>'
+                    'field' => '<button id="paymill_fast_checkout_iframe_change">' . MODULE_PAYMENT_PAYMILL_CC_PCI_BUTTON . '</button>'
                 )
             );
         }

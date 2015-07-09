@@ -81,6 +81,7 @@ $(document).ready(function () {
 
     PaymillAddCCFormFokusActions();
     $('#paymill_fast_checkout_iframe_change').click(function (event) {
+        disableFastCheckout();
         $('#card-owner-field').parent().parent().parent().remove();
         $('#card-number-field').parent().parent().parent().remove();
         $('#card-expiry-month-field').parent().parent().parent().remove();
