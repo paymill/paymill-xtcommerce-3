@@ -217,6 +217,11 @@ function PaymillAddCardDetection()
     });
 }
 
+function disableFastCheckout()
+{
+    paymill_cc_fastcheckout = false;
+}
+
 function PaymillAddCCFormFokusActions()
 {
     $('#paymill-card-number').focus(function () {
