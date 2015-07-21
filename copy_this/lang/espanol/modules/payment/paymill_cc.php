@@ -24,6 +24,10 @@ define("MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_NUMBER", "N&uacute;mero de tar
 define("MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_EXPIRY", "V&aacute;lida hasta");
 define("MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_CVC", "C&oacute;digo CVC");
 define("MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_CVC_TOOLTIP", "El c&oacute;digo CVV o CVC es una medida de seguridad de las tarjetas de cr&eacute;dito. Normalmente es un n&uacute;mero de tres a cuatro d&iacute;gitos de longitud. En las tarjetas de cr&eacute;dito VISA, se le llama c&oacute;digo CVV. Se puede encontrar este mismo c&oacute;digo en las tarjetas de cr&eacute;dito MasterCard -donde se le llama CVC. CVC es la abreviatura de &quot;c&oacute;digo de validez de la tarjeta&quot;. El c&oacute;digo CVV, por otro lado, es la abreviatura de &quot;c&oacute;digo de valor de verificaci&oacute;n de la tarjeta&quot;. Parecidas a MasterCard y Visa, otras tarjetas como Diners Club, Discover y JCB contienen un n&uacute;mero de tres d&iacute;gitos que se encuentra normalmente en el reverso de la tarjeta de cr&eacute;dito. Las tarjetas MAESTRO pueden tener o no el c&oacute;digo CVV de tres d&iacute;gitos. En caso de usar una tarjeta MAESTRO sin CVV, puede introducir 000 en el formulario en su lugar. American Express usa el CID (n&uacute;mero de identificaci&oacute;n de la tarjeta). El CID es un n&uacute;mero de cuatro d&iacute;gitos que normalmente se encuentra en el anverso de la tarjeta, arriba a la derecha del n&uacute;mero de la tarjeta de cr&eacute;dito.");
+define("MODULE_PAYMENT_PAYMILL_CC_PCI_MODE_TITLE","Payment form");
+define("MODULE_PAYMENT_PAYMILL_CC_PCI_MODE_DESC","");
+define("MODULE_PAYMENT_PAYMILL_CC_PCI_LANG","es");
+define("MODULE_PAYMENT_PAYMILL_CC_PCI_BUTTON","Change");
 define("PAYMILL_10001", "General undefined response.");
 define("PAYMILL_10002", "Still waiting on something.");
 define("PAYMILL_20000", "General success response.");

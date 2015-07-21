@@ -15,9 +15,9 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
 {
 
     var $code, $title, $description = '', $enabled, $privateKey, $logging, $fastCheckoutFlag, $order_status, $publicKey;
-    var $bridgeUrl = 'https://bridge.paymill.com/';
+    var $bridgeUrl = 'https://bridge.paymill.com/dss3';
     var $apiUrl = 'https://api.paymill.com/v2/';
-    var $version = '1.6.1';
+    var $version = '1.7.0';
     var $api_version = '2';
 
 
@@ -102,7 +102,7 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
             $error = urldecode($_GET['error']);
         }
 
-        $error_text['error'] = html_entity_decode(constant('PAYMILL_'.strtoupper($error)));
+        $error_text['error'] = html_entity_decode(constant('PAYMILL_' . strtoupper($error)));
 
         return $error_text;
     }
@@ -237,12 +237,16 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
         }
 
         $this->log(
-             $result ? "Payment saved.": "Payment not saved.",
-                 var_export(array(
-                                 'userId' => $_SESSION['customer_id'],
-                                 'clientId' => $this->paymentProcessor->getClientId(),
-                                 'paymentId' => $this->paymentProcessor->getPaymentId()
-                            ), true));
+            $result ? "Payment saved.": "Payment not saved.",
+            var_export(
+                array(
+                    'userId' => $_SESSION['customer_id'],
+                    'clientId' => $this->paymentProcessor->getClientId(),
+                    'paymentId' => $this->paymentProcessor->getPaymentId()
+                ), 
+                true
+            )
+        );
 
     }
     
@@ -259,11 +263,14 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
 
         $this->log(
              $result ? "Client has been saved.": "Client has not been saved.",
-                 var_export(array(
-                                 'userId' => $_SESSION['customer_id'],
-                                 'clientId' => $this->paymentProcessor->getClientId(),
-                            ), true));
-
+            var_export(
+                array(
+                    'userId' => $_SESSION['customer_id'],
+                    'clientId' => $this->paymentProcessor->getClientId(),
+                ), 
+                true
+            )
+        );
     }
     
     function after_process()
@@ -423,7 +430,8 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
      * Displays the register/remove Webhook button in the payment config.
      * @param String $type Can be either CC or ELV
      */
-    function displayWebhookButton($type){
+    function displayWebhookButton($type)
+    {
         if(empty($this->privateKey) || $this->privateKey == 0){
             return;
         }
@@ -435,13 +443,13 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
         if($action === 'remove'){
             $buttonAction = 'REMOVE';
         }
-        $buttonText = constant('MODULE_PAYMENT_PAYMILL_'.$type.'_WEBHOOKS_LINK_'.$buttonAction);
+        
+        $buttonText = constant('MODULE_PAYMENT_PAYMILL_' . $type . '_WEBHOOKS_LINK_' . $buttonAction);
 
         $this->description .= '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>';
         $this->description .= '<script type="text/javascript" src="javascript/paymill_button_webhook.js"></script>';
         $this->description .= '<p><form id="register_webhooks" method="POST">';
-        $parameters         = 'action='.$action.'&type='.$type;
-        $this->description .= '<input id="listener" type="hidden" value="'.xtc_href_link('../admin/paymill_webhook_listener.php',$parameters, 'SSL', false, false).'"> ';
+        $this->description .= '<input id="listener" type="hidden" value="' . xtc_href_link('../admin/paymill_webhook_listener.php', 'action=' . $action . '&type=' . $type, 'SSL', false, false) . '"> ';
         $this->description .= '<button type="submit">'.$buttonText.'</button></form></p>';
     }
 
@@ -455,10 +463,12 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
         $transactions = new Services_Paymill_Transactions($this->privateKey, $this->apiUrl);
         $transaction = $transactions->getOne($id);
         $description = substr('OrderID: ' . $orderId . ' ' . $transaction['description'], 0, 128);
-        $transactions->update(array(
-                                   'id'          => $id,
-                                   'description' => $description
-                              ));
+        $transactions->update(
+            array (
+                'id' => $id,
+                'description' => $description
+            )
+        );
 
     }
 
@@ -485,7 +495,8 @@ class paymill_abstract implements Services_Paymill_LoggingInterface
         xtc_db_query("REPLACE INTO orders_status (orders_status_id, language_id, orders_status_name) VALUES($status_id, 2, '".$stateName."')");
     }
 
-    function getScript() {
+    function getScript() 
+    {
         $script = '<link rel="stylesheet" type="text/css" href="ext/modules/payment/paymill/public/css/paymill.css" />';
         $script .= '<script type="text/javascript">var PAYMILL_PUBLIC_KEY = "' . $this->publicKey . '";</script>';
         $script .= '<script type="text/javascript" src="' . $this->bridgeUrl . '"></script>';

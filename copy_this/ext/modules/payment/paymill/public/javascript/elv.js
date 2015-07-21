@@ -1,7 +1,7 @@
 var isElvSubmitted = false;
 $(document).ready(function () {
     if (typeof $.fn.prop !== 'function') {
-        $.fn.prop = function(name, value) {
+        $.fn.prop = function (name, value) {
             if (typeof value === 'undefined') {
                 return this.attr(name);
             } else {
@@ -25,21 +25,21 @@ $(document).ready(function () {
                     elvErrorFlag = false;
                 }
 
-                if(getSepaState()){
+                if (getSepaState()) {
                     elvErrorFlag = PaymillValidateSepaForm();
                 } else {
                     elvErrorFlag = PaymillValidateOldElvForm();
                 }
 
                 if (!elvErrorFlag) {
-                        return elvErrorFlag;
+                    return elvErrorFlag;
                 }
 
                 PaymillCreateElvToken(getSepaState());
 
                 return false;
             } else {
-                    $('#paymill_form').html('<input type="hidden" name="paymill_token" value="dummyToken" />').submit();
+                $('#paymill_form').html('<input type="hidden" name="paymill_token" value="dummyToken" />').submit();
             }
         }
     });
@@ -53,13 +53,13 @@ function PaymillValidateSepaForm()
     var elvErrorFlag = true;
     var iban = new Iban();
 
-    if(!iban.validate($('#paymill-iban').val())){
+    if (!iban.validate($('#paymill-iban').val())) {
         $('#elv-iban-error').text(elv_iban_invalid);
         $('#elv-iban-error').css('display', 'block');
         elvErrorFlag = false;
     }
 
-    if(false === ($('#paymill-bic').val() != '')){
+    if (false === ($('#paymill-bic').val() != '')) {
         $('#elv-bic-error').text(elv_bic_invalid);
         $('#elv-bic-error').css('display', 'block');
         elvErrorFlag = false;
@@ -90,12 +90,12 @@ function PaymillValidateOldElvForm()
 
 function PaymillAddElvFormFokusActions(SEPA)
 {
-    $('#paymill-bank-owner').focus(function() {
+    $('#paymill-bank-owner').focus(function () {
         paymill_elv_fastcheckout = false;
     });
 
-    if(SEPA){
-        $('#paymill-iban').keyup(function() {
+    if (SEPA) {
+        $('#paymill-iban').keyup(function () {
             var iban = $('#paymill-iban').val();
             if (!iban.match(/^DE/)) {
                 var newVal = "DE";
@@ -106,19 +106,19 @@ function PaymillAddElvFormFokusActions(SEPA)
             }
         });
 
-        $('#paymill-iban').focus(function() {
+        $('#paymill-iban').focus(function () {
             paymill_elv_fastcheckout = false;
         });
 
-        $('#paymill-bic').focus(function() {
+        $('#paymill-bic').focus(function () {
             paymill_elv_fastcheckout = false;
         });
     } else {
-        $('#paymill-account-number').focus(function() {
+        $('#paymill-account-number').focus(function () {
             paymill_elv_fastcheckout = false;
         });
 
-        $('#paymill-bank-code').focus(function() {
+        $('#paymill-bank-code').focus(function () {
             paymill_elv_fastcheckout = false;
         });
     }
@@ -127,7 +127,7 @@ function PaymillAddElvFormFokusActions(SEPA)
 function PaymillCreateElvForm(SEPA)
 {
     $('#account-name-field').html('<input type="text" value="' + paymill_elv_holder + '" id="paymill-bank-owner" class="form-row-paymill" />');
-    if(SEPA){
+    if (SEPA) {
         $('#iban-field').html('<input type="text" value="' + paymill_elv_iban + '" id="paymill-iban" class="form-row-paymill" />');
         $('#bic-field').html('<input type="text" value="' + paymill_elv_bic + '" id="paymill-bic" class="form-row-paymill" />');
     } else {
@@ -138,16 +138,16 @@ function PaymillCreateElvForm(SEPA)
 
 function PaymillCreateElvToken(SEPA)
 {
-    if(SEPA){ //Sepa Form active
+    if (SEPA) { //Sepa Form active
         paymill.createToken({
-            iban:          $('#paymill-iban').val(),
-            bic:           $('#paymill-bic').val(),
+            iban: $('#paymill-iban').val(),
+            bic: $('#paymill-bic').val(),
             accountholder: $('#paymill-bank-owner').val()
         }, PaymillElvResponseHandler);
     } else {
         paymill.createToken({
-            number:        $('#paymill-account-number').val(),
-            bank:          $('#paymill-bank-code').val(),
+            number: $('#paymill-account-number').val(),
+            bank: $('#paymill-bank-code').val(),
             accountholder: $('#paymill-bank-owner').val()
         }, PaymillElvResponseHandler);
     }
@@ -162,7 +162,7 @@ function hideErrorBoxes()
 {
     $("#card-holder-error").css('display', 'none');
 
-    if(getSepaState()){ //Sepa Form active
+    if (getSepaState()) { //Sepa Form active
         $("#elv-iban-error").css('display', 'none');
         $("#elv-bic-error").css('display', 'none');
     } else {

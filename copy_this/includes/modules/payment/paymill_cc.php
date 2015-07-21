@@ -1,8 +1,11 @@
 <?php
+
 require_once('paymill/paymill_abstract.php');
 
 class paymill_cc extends paymill_abstract
 {
+
+    var $pciShowIframe;
 
     function paymill_cc()
     {
@@ -13,7 +16,7 @@ class paymill_cc extends paymill_abstract
         $this->code = 'paymill_cc';
         $this->title = MODULE_PAYMENT_PAYMILL_CC_TEXT_TITLE;
         $this->public_title = MODULE_PAYMENT_PAYMILL_CC_TEXT_PUBLIC_TITLE;
-        
+
         if (defined('MODULE_PAYMENT_PAYMILL_CC_STATUS')) {
             $this->enabled = ((MODULE_PAYMENT_PAYMILL_CC_STATUS == 'True') ? true : false);
             $this->sort_order = MODULE_PAYMENT_PAYMILL_CC_SORT_ORDER;
@@ -22,12 +25,13 @@ class paymill_cc extends paymill_abstract
             $this->webHooksEnabled = ((MODULE_PAYMENT_PAYMILL_CC_WEBHOOKS == 'True') ? true : false);
             $this->publicKey = MODULE_PAYMENT_PAYMILL_CC_PUBLICKEY;
             $this->fastCheckoutFlag = ((MODULE_PAYMENT_PAYMILL_CC_FASTCHECKOUT == 'True') ? true : false);
+            $this->pciShowIframe = ((MODULE_PAYMENT_PAYMILL_CC_PCI_MODE == 'PayFrame (min. PCI SAQ A)') ? true : false);
             $this->payments = new Services_Paymill_Payments(trim($this->privateKey), $this->apiUrl);
             $this->clients = new Services_Paymill_Clients(trim($this->privateKey), $this->apiUrl);
             if ((int) MODULE_PAYMENT_PAYMILL_CC_ORDER_STATUS_ID > 0) {
                 $this->order_status = MODULE_PAYMENT_PAYMILL_CC_ORDER_STATUS_ID;
             }
-            
+
             if ($this->logging) {
                 $this->description .= '<p><a href="' . xtc_href_link('paymill_logging.php') . '">' . MODULE_PAYMENT_PAYMILL_CC_DESCRIPTION . '</a></p>';
             }
@@ -36,18 +40,19 @@ class paymill_cc extends paymill_abstract
                 $type = 'CC';
                 $this->displayWebhookButton($type);
             }
-            
         }
 
-        if (is_object($order)) $this->update_status();
+        if (is_object($order)) {
+            $this->update_status();
+        }
     }
-    
+
     function selection()
     {
         $selection = parent::selection();
         return $selection;
     }
-    
+
     function getPayment($userId)
     {
         $payment = array(
@@ -58,43 +63,42 @@ class paymill_cc extends paymill_abstract
             'expire_year' => '',
             'card_type' => '',
         );
-        
+
         if ($this->fastCheckout->canCustomerFastCheckoutCc($userId)) {
             $data = $this->fastCheckout->loadFastCheckoutData($userId);
             $payment = $this->payments->getOne($data['paymentID_CC']);
             $payment['last4'] = '************' . $payment['last4'];
             $payment['cvc'] = '***';
         }
-        
+
         return $payment;
     }
-
 
     function confirmation()
     {
         global $order;
 
-        $confirmation = parent::confirmation();        
-        
-        $months_array     = array();
-        $months_array[1]  = array('01', MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_JANUARY);
-        $months_array[2]  = array('02', MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_FEBRUARY);
-        $months_array[3]  = array('03', MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_MARCH);
-        $months_array[4]  = array('04', MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_APRIL);
-        $months_array[5]  = array('05', MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_MAY);
-        $months_array[6]  = array('06', MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_JUNE);
-        $months_array[7]  = array('07', MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_JULY);
-        $months_array[8]  = array('08', MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_AUGUST);
-        $months_array[9]  = array('09', MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_SEPTEMBER);
+        $confirmation = parent::confirmation();
+
+        $months_array = array();
+        $months_array[1] = array('01', MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_JANUARY);
+        $months_array[2] = array('02', MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_FEBRUARY);
+        $months_array[3] = array('03', MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_MARCH);
+        $months_array[4] = array('04', MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_APRIL);
+        $months_array[5] = array('05', MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_MAY);
+        $months_array[6] = array('06', MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_JUNE);
+        $months_array[7] = array('07', MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_JULY);
+        $months_array[8] = array('08', MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_AUGUST);
+        $months_array[9] = array('09', MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_SEPTEMBER);
         $months_array[10] = array('10', MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_OCTOBER);
         $months_array[11] = array('11', MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_NOVEMBER);
         $months_array[12] = array('12', MODULE_PAYMENT_PAYMILL_CC_TEXT_MONTH_DECEMBER);
 
-        $today = getdate(); 
+        $today = getdate();
         $years_array = array();
 
-        for ($i=$today['year']; $i < $today['year']+10; $i++) {
-            $years_array[$i] = array(strftime('%Y', mktime(0, 0, 0, 1 , 1, $i)), strftime('%Y',mktime(0, 0, 0, 1, 1, $i)));
+        for ($i = $today['year']; $i < $today['year'] + 10; $i++) {
+            $years_array[$i] = array(strftime('%Y', mktime(0, 0, 0, 1, 1, $i)), strftime('%Y', mktime(0, 0, 0, 1, 1, $i)));
         }
 
         $this->fastCheckout->setFastCheckoutFlag($this->fastCheckoutFlag);
@@ -103,62 +107,111 @@ class paymill_cc extends paymill_abstract
         $script = $this->getScript();
         $script .= '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>'
                 . '<script type="text/javascript" charset="utf-8">'
-                    . 'var cclogging = "' . MODULE_PAYMENT_PAYMILL_CC_LOGGING . '";'
-                    . 'var cc_expiery_invalid = "' . html_entity_decode(MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_EXPIRY_INVALID) . '";'
-                    . 'var cc_owner_invalid = "' . html_entity_decode(MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_OWNER_INVALID) . '";'
-                    . 'var cc_card_number_invalid = "' . html_entity_decode(MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_CARDNUMBER_INVALID) . '";'
-                    . 'var cc_cvc_number_invalid = "' . html_entity_decode(MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_CVC_INVALID) . '";'
-                    . 'var brand = "' . $payment['card_type'] . '";'
-                    . 'var paymill_total = ' . json_encode((int) $_SESSION['paymill']['amount']) . ';'
-                    . 'var paymill_currency = ' . json_encode(strtoupper($order->info['currency'])) . ';'
-                    . 'var paymill_cc_months = ' . json_encode($months_array) . ';'
-                    . 'var paymill_cc_years = ' . json_encode($years_array) . ';'
-                    . 'var paymill_cc_number_val = "' . $payment['last4'] . '";'
-                    . 'var paymill_cc_cvc_val = "' . $payment['cvc'] . '";'
-                    . 'var paymill_cc_card_type = "' . utf8_decode($payment['card_type']) . '";'
-                    . 'var paymill_cc_holder_val = "' . utf8_decode($payment['card_holder']) . '";'
-                    . 'var paymill_cc_expiry_month_val = "' . $payment['expire_month'] . '";'
-                    . 'var paymill_cc_expiry_year_val = "' . $payment['expire_year'] . '";'
-                    . 'var paymill_cc_fastcheckout = ' . ($this->fastCheckout->canCustomerFastCheckoutCc($_SESSION['customer_id']) ? 'true' : 'false') . ';'
-                    . 'var checkout_payment_link = "' . xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'step=step2&payment_error=' . $this->code . '&error=', 'SSL', true, false) . '";'
+                . 'var cclogging = "' . MODULE_PAYMENT_PAYMILL_CC_LOGGING . '";'
+                . 'var cc_expiery_invalid = "' . html_entity_decode(MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_EXPIRY_INVALID) . '";'
+                . 'var cc_owner_invalid = "' . html_entity_decode(MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_OWNER_INVALID) . '";'
+                . 'var cc_card_number_invalid = "' . html_entity_decode(MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_CARDNUMBER_INVALID) . '";'
+                . 'var cc_cvc_number_invalid = "' . html_entity_decode(MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_CVC_INVALID) . '";'
+                . 'var brand = "' . $payment['card_type'] . '";'
+                . 'var paymill_total = ' . json_encode((int) $_SESSION['paymill']['amount']) . ';'
+                . 'var paymill_currency = ' . json_encode(strtoupper($order->info['currency'])) . ';'
+                . 'var paymill_cc_months = ' . json_encode($months_array) . ';'
+                . 'var paymill_cc_years = ' . json_encode($years_array) . ';'
+                . 'var paymill_cc_number_val = "' . $payment['last4'] . '";'
+                . 'var paymill_cc_cvc_val = "' . $payment['cvc'] . '";'
+                . 'var paymill_cc_card_type = "' . utf8_decode($payment['card_type']) . '";'
+                . 'var paymill_cc_holder_val = "' . utf8_decode($payment['card_holder']) . '";'
+                . 'var paymill_cc_expiry_month_val = "' . $payment['expire_month'] . '";'
+                . 'var paymill_cc_expiry_year_val = "' . $payment['expire_year'] . '";'
+                . 'var paymill_cc_fastcheckout = ' . ($this->fastCheckout->canCustomerFastCheckoutCc($_SESSION['customer_id']) ? 'true' : 'false') . ';'
+                . 'var paymill_cc_pci_iframe = ' . ($this->pciShowIframe === true ? 'true' : 'false') . ';'
+                . 'var paymill_change_fastcheckout = "false";'
+                . 'var paymilliframe = new Object();'
+                . 'paymilliframe.options = {lang:"' . MODULE_PAYMENT_PAYMILL_CC_PCI_LANG . '"};'
+                . 'var checkout_payment_link = "' . xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'step=step2&payment_error=' . $this->code . '&error=', 'SSL', true, false) . '";'
                 . '</script>'
                 . '<script type="text/javascript" src="ext/modules/payment/paymill/public/javascript/BrandDetection.js"></script>'
                 . '<script type="text/javascript" src="ext/modules/payment/paymill/public/javascript/cc.js"></script>';
-        
-        array_push($confirmation['fields'], 
+
+        array_push(
+            $confirmation['fields'], 
             array(
-                'title' => $script . '<div class="paymill-label-field">' . MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_OWNER . '</div>',
+                'title' => $script,
+                'field' => ''
+            )
+        );
+
+        if ($this->pciShowIframe) {
+            $confirmation = $this->getFormSAQ($confirmation);
+        } else {
+            $confirmation = $this->getFormCC($confirmation);
+        }
+
+        return $confirmation;
+    }
+
+    /**
+     * Form for SAQ A-EP checkout (without iframe)
+     * @param array $confirmation
+     * @return array
+     */
+    function getFormCC($confirmation)
+    {
+        array_push($confirmation['fields'], array(
+                'title' => '<div class="paymill-label-field">' . MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_OWNER . '</div>',
                 'field' => '<span id="card-owner-field"></span><span id="card-owner-error" class="paymill-error"></span>'
             )
         );
-                
-        array_push($confirmation['fields'], 
-            array(
+
+        array_push($confirmation['fields'], array(
                 'title' => '<div class="paymill-label-field">' . MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_NUMBER . '</div>',
                 'field' => '<span id="card-number-field"></span><span id="card-number-error" class="paymill-error"></span>'
             )
         );
-        
-        array_push($confirmation['fields'], 
-            array(
+
+        array_push($confirmation['fields'], array(
                 'title' => '<div class="paymill-label-field">' . MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_EXPIRY . '</div>',
                 'field' => '<span class="paymill-expiry"><span id="card-expiry-month-field"></span>&nbsp;<span id="card-expiry-year-field"></span></span><span id="card-expiry-error" class="paymill-error"></span>'
             )
         );
-        
-        array_push($confirmation['fields'], 
-            array(
+
+        array_push($confirmation['fields'], array(
                 'title' => '<div class="paymill-label-field">' . MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_CVC . '<span class="tooltip" title="' . MODULE_PAYMENT_PAYMILL_CC_TEXT_CREDITCARD_CVC_TOOLTIP . '">?</span></div>',
                 'field' => '<span id="card-cvc-field" class="card-cvc-row"></span><span id="card-cvc-error" class="paymill-error"></span>'
             )
         );
-        
-        array_push($confirmation['fields'], 
-            array(
+
+        array_push($confirmation['fields'], array(
                 'field' => '<form id="paymill_form" action="' . xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL') . '" method="post" style="display: none;"></form>'
             )
         );
         
+        return $confirmation;
+    }
+
+    function getFormSAQ($confirmation)
+    {
+        /* true when fastcheckout data is available */
+        if ($this->fastCheckout->canCustomerFastCheckoutCc($_SESSION['customer_id'])) {
+            $confirmation = $this->getFormCC($confirmation);
+            array_push($confirmation['fields'], array(
+                    'title' => '<button id="paymill_fast_checkout_iframe_change">' . MODULE_PAYMENT_PAYMILL_CC_PCI_BUTTON . '</button>',
+                    'field' => ''
+                )
+            );
+        }
+        
+        array_push($confirmation['fields'], array(
+                'field' => '<form id="paymill_form" action="' . xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL') . '" method="post" style="display: none;"></form>'
+            )
+        );
+        
+        array_push($confirmation['fields'], array(
+                'title' => '',
+                'field' => '<div id="paymill_form_container"></div>'
+            )
+        );
+
         return $confirmation;
     }
 
@@ -168,13 +221,14 @@ class paymill_cc extends paymill_abstract
             $check_query = xtc_db_query("SELECT configuration_value FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_PAYMENT_PAYMILL_CC_STATUS'");
             $this->_check = xtc_db_num_rows($check_query);
         }
+        
         return $this->_check;
     }
 
     function install()
     {
         parent::install();
-        
+
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PAYMENT_PAYMILL_CC_STATUS', 'True', '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PAYMENT_PAYMILL_CC_FASTCHECKOUT', 'False', '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PAYMENT_PAYMILL_CC_WEBHOOKS', 'False', '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
@@ -186,6 +240,7 @@ class paymill_cc extends paymill_abstract
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_PAYMILL_CC_TRANSACTION_ORDER_STATUS_ID', '" . $this->getOrderStatusTransactionID() . "', '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name', now())");
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_PAYMILL_CC_ALLOWED', '', '6', '0', now())");
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) values ('MODULE_PAYMENT_PAYMILL_CC_ZONE', '0', '6', '2', 'xtc_get_zone_class_title', 'xtc_cfg_pull_down_zone_classes(', now())");
+        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PAYMENT_PAYMILL_CC_PCI_MODE', 'direct integration (min. PCI SAQ A-EP)', '6', '1', 'xtc_cfg_select_option(array(\'direct integration (min. PCI SAQ A-EP)\', \'PayFrame (min. PCI SAQ A)\'), ', now())");
     }
 
     function keys()
@@ -201,8 +256,11 @@ class paymill_cc extends paymill_abstract
             'MODULE_PAYMENT_PAYMILL_CC_ZONE',
             'MODULE_PAYMENT_PAYMILL_CC_LOGGING',
             'MODULE_PAYMENT_PAYMILL_CC_ALLOWED',
-            'MODULE_PAYMENT_PAYMILL_CC_SORT_ORDER'
+            'MODULE_PAYMENT_PAYMILL_CC_SORT_ORDER',
+            'MODULE_PAYMENT_PAYMILL_CC_PCI_MODE'
         );
     }
+
 }
+
 ?>
